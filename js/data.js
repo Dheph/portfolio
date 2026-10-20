@@ -72,6 +72,15 @@ window.DATA = {
     },
 
     {
+      id: "blog",
+      accent: "#ec4899",
+      year: "2026",
+      tags: ["personal", "fullstack"],
+      tech: ["JavaScript", "Markdown", "GitHub Pages"],
+      media: { type: "cover", mono: "✎" },
+      links: [{ labelKey: "site", url: "https://dheph.github.io/blog/" }]
+    },
+    {
       id: "chiconanico",
       accent: "#6d5ef0",
       year: "2025",

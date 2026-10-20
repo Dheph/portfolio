@@ -354,16 +354,60 @@
     setLang(b.dataset.lang, true);
   });
 
+  /* ---------------- Writing / blog ---------------- */
+  var BLOG = "https://dheph.github.io/blog/";
+  var POSTS_URL = "https://raw.githubusercontent.com/Dheph/blog/main/posts.json";
+  var blogPosts = null;
+  var LOCALE = { en: "en-US", pt: "pt-BR", es: "es-ES" };
+  function renderWriting() {
+    var list = $("#writing-list"), sec = $("#writing");
+    if (!list) return;
+    if (!blogPosts) return; // ainda carregando / falhou
+    if (!blogPosts.length) { sec.style.display = "none"; return; }
+    sec.style.display = "";
+    list.innerHTML = "";
+    blogPosts.slice(0, 2).forEach(function (p) {
+      var a = el("a", "post");
+      a.href = BLOG + "#/post/" + encodeURIComponent(p.slug);
+      a.target = "_blank"; a.rel = "noopener";
+      a.setAttribute("data-reveal", "");
+      var d = p.date ? new Date(p.date + "T00:00:00") : null;
+      var dateStr = d ? new Intl.DateTimeFormat(LOCALE[lang] || "en-US", { day: "2-digit", month: "short", year: "numeric" }).format(d) : "";
+      var reading = p.reading ? (p.reading + " " + esc(t("ui.minRead"))) : "";
+      var tags = (p.tags || []).slice(0, 3).map(function (tg) { return "<span>#" + esc(tg) + "</span>"; }).join("");
+      a.innerHTML =
+        '<div class="post__meta mono">' + esc(dateStr) + (reading ? ' · ' + reading : "") + "</div>" +
+        '<h3 class="post__title">' + esc(p.title) + "</h3>" +
+        (p.description ? '<p class="post__desc">' + esc(p.description) + "</p>" : "") +
+        '<div class="post__tags">' + tags + "</div>";
+      list.appendChild(a);
+    });
+    reveal(list);
+  }
+  function loadPosts() {
+    if (!("fetch" in window)) { blogPosts = []; renderWriting(); return; }
+    fetch(POSTS_URL, { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (arr) {
+        if (!Array.isArray(arr)) arr = [];
+        arr.sort(function (a, b) { return (b.date || "").localeCompare(a.date || ""); });
+        blogPosts = arr;
+      })
+      .catch(function () { blogPosts = []; })
+      .then(function () { renderWriting(); });
+  }
+
   /* ---------------- Render all ---------------- */
   function renderAll() {
     applyI18n();
     renderHero(); renderAbout(); renderServices();
-    renderFilters(); renderWork(); renderExperience(); renderContact();
+    renderFilters(); renderWork(); renderExperience(); renderWriting(); renderContact();
     reveal(document);
   }
 
   /* ---------------- Init ---------------- */
   $("#year").textContent = new Date().getFullYear();
   setLang(detectLang(), false);
+  loadPosts();
   syncHash();
 })();

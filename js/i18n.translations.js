@@ -8,13 +8,15 @@ window.I18N.pt = {
     play: "Google Play", github: "GitHub", site: "Visitar",
     openToWork: "Disponível para trabalhar", langLabel: "Idioma",
     scrollHint: "Rolar",
+      seeMore: "Ver mais no blog", minRead: "min de leitura",
     filters: { all: "Todos", personal: "Pessoal", mobile: "Mobile", fullstack: "Fullstack", freelance: "Freelance", opensource: "Open source" },
     sections: {
       about:      { num: "01", title: "Sobre", em: "mim" },
       services:   { num: "02", title: "Como transformo ideias em", em: "realidade" },
       work:       { num: "03", title: "Trabalhos", em: "selecionados" },
       experience: { num: "04", title: "Por onde", em: "passei" },
-      contact:    { num: "05", title: "Tem uma ideia? Vamos", em: "conversar" }
+      writing:    { num: "05", title: "Do", em: "blog" },
+      contact:    { num: "06", title: "Tem uma ideia? Vamos", em: "conversar" }
     }
   },
 
@@ -90,6 +92,17 @@ window.I18N.pt = {
         "16 categorias de limpeza (caches, logs, DerivedData do Xcode, Docker, snapshots do Time Machine…) com confirmação em um clique.",
         "Limpeza agendada (ex.: toda segunda-feira) com alteração / remoção fácil.",
         "Relatório pós-execução com deltas de disco e memória e um detalhamento por categoria."
+      ]
+    },
+    "blog": {
+      name: "Blog de Dev",
+      tagline: "Blog estático gerenciado por git — Markdown, zero banco de dados.",
+      role: "Autor · pessoal",
+      summary: "Blog estático gerenciado 100% por git: cada post é um arquivo Markdown, um GitHub Action regenera o índice e publica no GitHub Pages — sem painel admin, sem banco de dados.",
+      bullets: [
+        "Os posts são arquivos Markdown; dê push para publicar.",
+        "Busca client-side por título, tags e conteúdo.",
+        "Índice e deploy automáticos via GitHub Actions."
       ]
     },
     "chiconanico": {
@@ -248,13 +261,15 @@ window.I18N.es = {
     play: "Google Play", github: "GitHub", site: "Visitar",
     openToWork: "Disponible para trabajar", langLabel: "Idioma",
     scrollHint: "Desplazar",
+      seeMore: "Ver más en el blog", minRead: "min de lectura",
     filters: { all: "Todos", personal: "Personal", mobile: "Mobile", fullstack: "Fullstack", freelance: "Freelance", opensource: "Open source" },
     sections: {
       about:      { num: "01", title: "Sobre", em: "mí" },
       services:   { num: "02", title: "Cómo convierto ideas en", em: "realidad" },
       work:       { num: "03", title: "Trabajos", em: "seleccionados" },
       experience: { num: "04", title: "Dónde", em: "trabajé" },
-      contact:    { num: "05", title: "¿Tienes una idea? Vamos a", em: "conversar" }
+      writing:    { num: "05", title: "Del", em: "blog" },
+      contact:    { num: "06", title: "¿Tienes una idea? Vamos a", em: "conversar" }
     }
   },
 
@@ -330,6 +345,17 @@ window.I18N.es = {
         "16 categorías de limpieza (cachés, logs, DerivedData de Xcode, Docker, snapshots de Time Machine…) con confirmación en un clic.",
         "Limpieza programada (ej.: cada lunes) con cambio / eliminación fácil.",
         "Reporte posterior a la ejecución con deltas de disco y memoria y un desglose por categoría."
+      ]
+    },
+    "blog": {
+      name: "Blog de Dev",
+      tagline: "Blog estático gestionado por git — Markdown, sin base de datos.",
+      role: "Autor · personal",
+      summary: "Blog estático gestionado 100% por git: cada post es un archivo Markdown, un GitHub Action regenera el índice y publica en GitHub Pages — sin panel admin, sin base de datos.",
+      bullets: [
+        "Los posts son archivos Markdown; haz push para publicar.",
+        "Búsqueda client-side por título, tags y contenido.",
+        "Índice y deploy automáticos con GitHub Actions."
       ]
     },
     "chiconanico": {

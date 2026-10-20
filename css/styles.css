@@ -249,7 +249,22 @@ em { font-style: italic; color: var(--accent); }
 .contact__card .k { font: 500 12px/1 var(--font-mono); color: var(--dim); }
 .contact__card .v { font-weight: 600; font-size: 14px; word-break: break-word; }
 
+/* ============================ Writing / blog ============================ */
+.writing { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.post { display: flex; flex-direction: column; gap: 10px; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 22px; transition: transform .2s, border-color .2s, box-shadow .2s; }
+.post:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--accent) 45%, var(--line-2)); box-shadow: var(--shadow); }
+.post__meta { font-size: 12px; color: var(--dim); }
+.post__title { font-size: 19px; font-weight: 700; letter-spacing: -.02em; }
+.post:hover .post__title { color: var(--accent); }
+.post__desc { color: var(--muted); font-size: 14.5px; margin: 0; }
+.post__tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto; }
+.post__tags span { font: 500 11.5px/1 var(--font-mono); color: var(--muted); background: var(--surface-2); border: 1px solid var(--line); padding: 4px 9px; border-radius: 999px; }
+.writing__more { display: inline-flex; align-items: center; gap: 7px; margin-top: 22px; font-weight: 600; font-size: 15px; color: var(--accent); }
+.writing__more:hover { text-decoration: underline; }
+
 /* ============================ Footer ============================ */
+.footer__blog:hover { color: var(--accent); }
 .footer { border-top: 1px solid var(--line); padding: 26px 0; }
 .footer__inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 13.5px; color: var(--muted); }
 

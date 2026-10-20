@@ -10,13 +10,15 @@ window.I18N = {
       play: "Google Play", github: "GitHub", site: "Visit",
       openToWork: "Open to work", langLabel: "Language",
       scrollHint: "Scroll",
+      seeMore: "Read more on the blog", minRead: "min read",
       filters: { all: "All", personal: "Personal", mobile: "Mobile", fullstack: "Fullstack", freelance: "Freelance", opensource: "Open source" },
       sections: {
         about:      { num: "01", title: "About", em: "me" },
         services:   { num: "02", title: "How I bring ideas to", em: "life" },
         work:       { num: "03", title: "Selected", em: "work" },
         experience: { num: "04", title: "Where I've", em: "worked" },
-        contact:    { num: "05", title: "Got an idea? Let's", em: "talk" }
+        writing:    { num: "05", title: "From the", em: "blog" },
+        contact:    { num: "06", title: "Got an idea? Let's", em: "talk" }
       }
     },
 
@@ -92,6 +94,17 @@ window.I18N = {
           "16 cleanup categories (caches, logs, Xcode DerivedData, Docker, Time Machine snapshots…) with one-click confirm.",
           "Scheduled cleanup (e.g. every Monday) with easy change / remove.",
           "Post-run report with disk and memory deltas and a per-category breakdown."
+        ]
+      },
+      "blog": {
+        name: "Dev Blog",
+        tagline: "A git-managed static blog — Markdown in, zero database.",
+        role: "Author · personal",
+        summary: "A static blog managed entirely through git: each post is a Markdown file, a GitHub Action rebuilds the index and publishes to GitHub Pages — no admin panel, no database.",
+        bullets: [
+          "Posts are Markdown files; push to publish.",
+          "Client-side search over title, tags and content.",
+          "Auto-built index and deploy via GitHub Actions."
         ]
       },
       "chiconanico": {
