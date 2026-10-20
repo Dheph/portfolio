@@ -335,6 +335,7 @@ em { font-style: italic; color: var(--accent); }
   .nav__burger { display: inline-flex; }
   .nav__actions .btn { display: none; }
   .work { grid-template-columns: 1fr; }
+  .writing { grid-template-columns: 1fr; }
   .contact__links { grid-template-columns: 1fr; }
   .case__panel { width: 100%; border-left: 0; }
   .floaters .f2, .floaters .f4 { right: -2%; }
