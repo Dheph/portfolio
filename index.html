@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jeffersom Ribeiro — Mobile & Fullstack Developer</title>
+  <meta name="description" content="Jeffersom Ribeiro — desenvolvedor mobile e fullstack sênior. ~6 anos de experiência, especialista em React Native (offline-first, módulos nativos) e Node.js. São Paulo, remoto." />
+  <meta name="author" content="Jeffersom Ribeiro" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Jeffersom Ribeiro — Mobile & Fullstack Developer" />
+  <meta property="og:description" content="Especialista em React Native e Node.js. ~6 anos construindo apps mobile offline-first, módulos nativos e backends." />
+  <meta property="og:locale" content="pt_BR" />
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#projetos">Pular para projetos</a>
+
+  <!-- NAVBAR -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="#inicio" class="nav__brand">
+        <span class="nav__logo">JR</span>
+        <span class="nav__name">Jeffersom<span class="dim">.dev</span></span>
+      </a>
+      <nav class="nav__links" aria-label="Navegação principal">
+        <a href="#sobre">Sobre</a>
+        <a href="#stack">Stack</a>
+        <a href="#projetos">Projetos</a>
+        <a href="#experiencia">Experiência</a>
+        <a href="#contato">Contato</a>
+      </nav>
+      <div class="nav__actions">
+        <button id="themeToggle" class="icon-btn" aria-label="Alternar tema" title="Alternar tema">
+          <span class="theme-icon"></span>
+        </button>
+        <a class="btn btn--sm" href="#contato">Fale comigo</a>
+        <button id="navToggle" class="icon-btn nav__burger" aria-label="Abrir menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="inicio">
+      <div class="container hero__inner">
+        <p class="hero__eyebrow">👋 Olá, eu sou</p>
+        <h1 class="hero__title">Jeffersom Ribeiro</h1>
+        <h2 class="hero__role">
+          <span class="grad">Mobile</span> &amp; <span class="grad">Fullstack</span> Developer
+        </h2>
+        <p class="hero__lead">
+          ~6 anos construindo apps que rodam de verdade no bolso das pessoas.
+          Especialista em <strong>React Native</strong> — offline-first, módulos nativos
+          em Swift/Java e publicação na App Store e Google Play — com backend em
+          <strong>Node.js</strong> e liderança técnica.
+        </p>
+        <div class="hero__cta">
+          <a class="btn" href="#projetos">Ver projetos</a>
+          <a class="btn btn--ghost" href="#contato">Entrar em contato</a>
+        </div>
+        <ul class="hero__meta">
+          <li><strong>6+</strong> anos de experiência</li>
+          <li><strong>App Store</strong> &amp; Google Play</li>
+          <li><strong>São Paulo</strong> · remoto</li>
+        </ul>
+        <div class="hero__socials">
+          <a href="https://github.com/Dheph" target="_blank" rel="noopener" aria-label="GitHub">GitHub</a>
+          <a href="https://www.linkedin.com/in/jeffersom-ribeiro" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
+          <a href="mailto:jeffersom.ribeiro@outlook.com" aria-label="E-mail">E-mail</a>
+        </div>
+      </div>
+      <div class="hero__glow" aria-hidden="true"></div>
+    </section>
+
+    <!-- SOBRE -->
+    <section class="section" id="sobre">
+      <div class="container">
+        <header class="section__head">
+          <span class="section__num">01</span>
+          <h2 class="section__title">Sobre</h2>
+        </header>
+        <div class="about">
+          <div class="about__text">
+            <p>
+              Sou desenvolvedor mobile e fullstack sênior, com foco em <strong>React Native</strong>
+              desde 2020. Gosto de apps que funcionam mesmo sem internet: arquiteturas
+              <strong>offline-first</strong> (SQLite, SmartStore, Redux Persist, Firebase) com
+              sincronização segura e confiável.
+            </p>
+            <p>
+              Quando a plataforma exige, desço para o nativo — <strong>módulos em Swift e Java</strong>
+              para push notifications, deep linking e integrações de mapas/streaming. Do outro lado,
+              cuido do <strong>backend em Node.js</strong>, CI/CD e da arquitetura (Clean, Hexagonal, MVVM).
+            </p>
+            <p>
+              Já atuei como <strong>tech lead</strong>: arquitetura de soluções do zero, mentoria,
+              Scrum e alinhamento direto com stakeholders. Hoje trabalho na <strong>Getronics</strong>
+              (apps RN integrados ao Salesforce) e como freelancer/tech lead na <strong>Nyx Consultoria</strong>.
+            </p>
+          </div>
+          <aside class="about__card">
+            <h3>Rápido</h3>
+            <dl class="facts">
+              <div><dt>Base</dt><dd>São Paulo, BR · remoto</dd></div>
+              <div><dt>Foco</dt><dd>React Native · Node.js</dd></div>
+              <div><dt>Nativo</dt><dd>Swift · Kotlin · Java</dd></div>
+              <div><dt>Idiomas</dt><dd>PT nativo · EN B2 · ES C1</dd></div>
+              <div><dt>Formação</dt><dd>Bacharel em S.I. · HND Mobile</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section class="section" id="stack">
+      <div class="container">
+        <header class="section__head">
+          <span class="section__num">02</span>
+          <h2 class="section__title">Stack</h2>
+        </header>
+        <div class="stack-grid" id="stackGrid"><!-- preenchido via JS --></div>
+      </div>
+    </section>
+
+    <!-- PROJETOS -->
+    <section class="section" id="projetos">
+      <div class="container">
+        <header class="section__head">
+          <span class="section__num">03</span>
+          <h2 class="section__title">Projetos</h2>
+          <p class="section__sub">Clique em um projeto para abrir o case completo.</p>
+        </header>
+        <div class="filters" id="filters" role="tablist" aria-label="Filtrar projetos"></div>
+        <div class="projects" id="projects"><!-- preenchido via JS --></div>
+      </div>
+    </section>
+
+    <!-- EXPERIÊNCIA -->
+    <section class="section" id="experiencia">
+      <div class="container">
+        <header class="section__head">
+          <span class="section__num">04</span>
+          <h2 class="section__title">Experiência</h2>
+        </header>
+        <ol class="timeline" id="timeline"><!-- preenchido via JS --></ol>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section class="section section--contact" id="contato">
+      <div class="container contact">
+        <header class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title">Contato</h2>
+        </header>
+        <p class="contact__lead">
+          Aberto a oportunidades e freelas em mobile / fullstack. Vamos conversar?
+        </p>
+        <div class="contact__links">
+          <a class="contact__card" href="mailto:jeffersom.ribeiro@outlook.com">
+            <span class="contact__k">E-mail</span>
+            <span class="contact__v">jeffersom.ribeiro@outlook.com</span>
+          </a>
+          <a class="contact__card" href="https://www.linkedin.com/in/jeffersom-ribeiro" target="_blank" rel="noopener">
+            <span class="contact__k">LinkedIn</span>
+            <span class="contact__v">in/jeffersom-ribeiro</span>
+          </a>
+          <a class="contact__card" href="https://github.com/Dheph" target="_blank" rel="noopener">
+            <span class="contact__k">GitHub</span>
+            <span class="contact__v">@Dheph</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span>© <span id="year"></span> Jeffersom Ribeiro</span>
+      <span class="dim">Feito com HTML, CSS e JS puro · hospedado no GitHub Pages</span>
+    </div>
+  </footer>
+
+  <!-- CASE-STUDY OVERLAY (navegação especial de projetos) -->
+  <div class="case" id="case" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="caseTitle">
+    <div class="case__backdrop" data-close></div>
+    <article class="case__panel" role="document">
+      <header class="case__bar">
+        <button class="icon-btn" data-case-prev aria-label="Projeto anterior" title="Anterior (←)">‹</button>
+        <button class="icon-btn" data-case-next aria-label="Próximo projeto" title="Próximo (→)">›</button>
+        <span class="case__counter" id="caseCounter"></span>
+        <button class="icon-btn case__close" data-close aria-label="Fechar (Esc)" title="Fechar (Esc)">✕</button>
+      </header>
+      <div class="case__body" id="caseBody"><!-- preenchido via JS --></div>
+    </article>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
