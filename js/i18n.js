@@ -227,7 +227,7 @@ window.I18N = {
       emailLabel: "Email", linkedinLabel: "LinkedIn", githubLabel: "GitHub"
     },
 
-    footer: { note: "Built from scratch with HTML, CSS & vanilla JS · hosted on GitHub Pages" }
+    footer: { note: "" }
   },
 
   /* Preenchidos pelo subagente tradutor. Enquanto vazios, herdam de EN. */

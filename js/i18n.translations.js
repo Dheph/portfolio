@@ -225,7 +225,7 @@ window.I18N.pt = {
     emailLabel: "E-mail", linkedinLabel: "LinkedIn", githubLabel: "GitHub"
   },
 
-  footer: { note: "Construído do zero com HTML, CSS & JS puro · hospedado no GitHub Pages" }
+  footer: { note: "" }
 };
 
 window.I18N.es = {
@@ -454,5 +454,5 @@ window.I18N.es = {
     emailLabel: "Correo", linkedinLabel: "LinkedIn", githubLabel: "GitHub"
   },
 
-  footer: { note: "Construido desde cero con HTML, CSS & JS puro · alojado en GitHub Pages" }
+  footer: { note: "" }
 };
