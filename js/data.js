@@ -183,6 +183,8 @@ window.DATA = {
   ],
 
   experience: [
+    { id: "getronics", period: "2025",        tech: ["React Native", "Salesforce", "Offline-first"] },
+    { id: "nyx",       period: "2025",        tech: ["React", "React Native", "Node.js"] },
     { id: "bwg",       period: "2024 – 2025", tech: ["React Native", "Swift", "Java"] },
     { id: "vw",        period: "Contract",    tech: ["Android · Java", "iOS · Swift"] },
     { id: "approva",   period: "2023 – 2024", tech: ["React Native", "Node.js"] },

@@ -209,6 +209,8 @@ window.I18N.pt = {
   },
 
   experience: {
+    "getronics": { role: "Desenvolvedor Mobile", company: "Getronics — Agro", desc: "Apps React Native integrados ao Salesforce, offline-first com sincronização segura (SQLite, SmartStore, Redux Persist, Firebase); publicados e mantidos nas lojas." },
+    "nyx":       { role: "Dev Mobile & Fullstack (Tech Lead, freelancer)", company: "Nyx — Consultoria em Software", desc: "Liderança técnica em projetos React, React Native e Node.js; infraestrutura, CI/CD e arquitetura de novas soluções, alinhadas direto com os stakeholders." },
     "bwg":       { role: "Desenvolvedor Mobile", company: "BWG — Rede Social Corporativa", desc: "React Native com módulos nativos em Swift & Java para push e deep linking; lançamentos nas lojas; conduziu a adoção de Scrum." },
     "vw":        { role: "Desenvolvedor Mobile (nativo)", company: "Volkswagen — Apps de caminhão", desc: "Módulos do sistema de travamento do caminhão e um app de rotas nativo — Java puro no Android, Swift no iOS." },
     "approva":   { role: "Desenvolvedor Fullstack", company: "Approva Fácil — Imobiliário", desc: "Reconstruí os apps principais em React Native + Node.js; nova arquitetura, refatoração de legado e mentoria." },
@@ -436,6 +438,8 @@ window.I18N.es = {
   },
 
   experience: {
+    "getronics": { role: "Desarrollador Mobile", company: "Getronics — Agro", desc: "Apps React Native integradas con Salesforce, offline-first con sincronización segura (SQLite, SmartStore, Redux Persist, Firebase); publicadas y mantenidas en las tiendas." },
+    "nyx":       { role: "Dev Mobile & Fullstack (Tech Lead, freelance)", company: "Nyx — Consultoría de Software", desc: "Liderazgo técnico en proyectos React, React Native y Node.js; infraestructura, CI/CD y arquitectura de nuevas soluciones, alineadas directamente con los stakeholders." },
     "bwg":       { role: "Desarrollador Mobile", company: "BWG — Red Social Corporativa", desc: "React Native con módulos nativos en Swift & Java para push y deep linking; publicaciones en tiendas; impulsó la adopción de Scrum." },
     "vw":        { role: "Desarrollador Mobile (nativo)", company: "Volkswagen — Apps de camión", desc: "Módulos del sistema de bloqueo del camión y una app de rutas nativa — Java puro en Android, Swift en iOS." },
     "approva":   { role: "Desarrollador Fullstack", company: "Approva Fácil — Inmobiliario", desc: "Reconstruí las apps principales en React Native + Node.js; nueva arquitectura, refactorización de legado y mentoría." },

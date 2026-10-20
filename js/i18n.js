@@ -211,6 +211,8 @@ window.I18N = {
     },
 
     experience: {
+      "getronics": { role: "Mobile Developer", company: "Getronics — Agriculture", desc: "React Native apps integrated with Salesforce, offline-first with safe sync (SQLite, SmartStore, Redux Persist, Firebase); published and maintained on the stores." },
+      "nyx":       { role: "Mobile & Fullstack Developer (Tech Lead, freelance)", company: "Nyx — Software Consultancy", desc: "Technical leadership on React, React Native and Node.js projects; infrastructure, CI/CD and architecture of new solutions, aligned directly with stakeholders." },
       "bwg":       { role: "Mobile Developer", company: "BWG — Corporate Social Network", desc: "React Native with native Swift & Java modules for push and deep linking; store releases; drove Scrum adoption." },
       "vw":        { role: "Mobile Developer (native)", company: "Volkswagen — Truck apps", desc: "Truck locking-system modules and a native routing app — pure Java on Android, Swift on iOS." },
       "approva":   { role: "Fullstack Developer", company: "Approva Fácil — Real estate", desc: "Rebuilt the core apps in React Native + Node.js; new architecture, legacy refactor and mentoring." },
