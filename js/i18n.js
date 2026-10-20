@@ -94,6 +94,17 @@ window.I18N = {
           "Post-run report with disk and memory deltas and a per-category breakdown."
         ]
       },
+      "chiconanico": {
+        name: "Chico Nanico",
+        tagline: "A fullstack literacy platform — 10 minutes a day with your kid.",
+        role: "Fullstack Developer",
+        summary: "A subscription web platform that guides parents through daily early-literacy activities: a ready-to-print activity, a quick guide for the grown-up, and a sticker to celebrate — organized into age-based tracks.",
+        bullets: [
+          "Fullstack build: landing, auth and subscription flow, and the daily-activity experience.",
+          "Age-based learning tracks with streaks and progress to keep kids going.",
+          "Ready-to-print activities generated for each day."
+        ]
+      },
       "acqio-lojistas": {
         name: "Acqio Lojistas",
         tagline: "Real-time sales tracking for card-machine (POS) merchants.",

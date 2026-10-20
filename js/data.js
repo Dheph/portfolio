@@ -72,6 +72,15 @@ window.DATA = {
     },
 
     {
+      id: "chiconanico",
+      accent: "#6d5ef0",
+      year: "2025",
+      tags: ["fullstack", "freelance"],
+      tech: ["Fullstack", "Web", "Auth", "Subscriptions"],
+      media: { type: "image", src: "assets/project-chiconanico.jpg", chrome: "browser", url: "🔒 chiconanico.com.br" },
+      links: [{ labelKey: "site", url: "https://chiconanico.com.br/" }]
+    },
+    {
       id: "acqio-lojistas",
       accent: "#17a398",
       year: "2023",

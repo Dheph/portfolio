@@ -92,6 +92,17 @@ window.I18N.pt = {
         "Relatório pós-execução com deltas de disco e memória e um detalhamento por categoria."
       ]
     },
+    "chiconanico": {
+      name: "Chico Nanico",
+      tagline: "Plataforma fullstack de alfabetização — 10 minutos por dia com seu filho.",
+      role: "Desenvolvedor Fullstack",
+      summary: "Plataforma web por assinatura que guia os pais em atividades diárias de alfabetização: uma atividade pronta para imprimir, um guia rápido para o adulto e uma figurinha para comemorar — organizadas em trilhas por idade.",
+      bullets: [
+        "Desenvolvimento fullstack: landing, fluxo de login e assinatura, e a experiência da atividade do dia.",
+        "Trilhas de aprendizado por idade, com sequências (streaks) e progresso para engajar a criança.",
+        "Atividades prontas para imprimir, geradas a cada dia."
+      ]
+    },
     "acqio-lojistas": {
       name: "Acqio Lojistas",
       tagline: "Acompanhamento de vendas em tempo real para lojistas de maquininha (POS).",
@@ -319,6 +330,17 @@ window.I18N.es = {
         "16 categorías de limpieza (cachés, logs, DerivedData de Xcode, Docker, snapshots de Time Machine…) con confirmación en un clic.",
         "Limpieza programada (ej.: cada lunes) con cambio / eliminación fácil.",
         "Reporte posterior a la ejecución con deltas de disco y memoria y un desglose por categoría."
+      ]
+    },
+    "chiconanico": {
+      name: "Chico Nanico",
+      tagline: "Plataforma fullstack de alfabetización — 10 minutos al día con tu hijo.",
+      role: "Desarrollador Fullstack",
+      summary: "Plataforma web por suscripción que guía a los padres en actividades diarias de alfabetización: una actividad lista para imprimir, una guía rápida para el adulto y una figurita para celebrar — organizadas en rutas por edad.",
+      bullets: [
+        "Desarrollo fullstack: landing, flujo de login y suscripción, y la experiencia de la actividad del día.",
+        "Rutas de aprendizaje por edad, con rachas y progreso para enganchar al niño.",
+        "Actividades listas para imprimir, generadas cada día."
       ]
     },
     "acqio-lojistas": {
