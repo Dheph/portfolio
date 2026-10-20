@@ -1,249 +1,194 @@
-/* Dados do portfólio — editar aqui para atualizar o conteúdo. */
-window.PORTFOLIO = {
-  stack: [
-    {
-      group: "Mobile",
-      items: ["React Native", "TypeScript", "Expo / RN CLI", "Flutter", "React Navigation", "i18n"]
-    },
-    {
-      group: "Nativo",
-      items: ["Swift", "Kotlin", "Java", "Módulos nativos", "Push & Deep linking"]
-    },
-    {
-      group: "Arquitetura",
-      items: ["Offline First", "SQLite · SmartStore", "Redux Persist", "Clean / Hexagonal", "MVVM", "Design Systems"]
-    },
-    {
-      group: "Backend & Infra",
-      items: ["Node.js", "PostgreSQL", "Docker", "Firebase", "CI/CD", "Linux"]
-    },
-    {
-      group: "Integrações",
-      items: ["Salesforce", "Google Maps SDK", "Mapbox · geofencing", "Streaming de vídeo", "AppCenter"]
-    },
-    {
-      group: "Qualidade",
-      items: ["Jest", "ESLint / Prettier", "Git (GitHub/Bitbucket)", "Jira", "Scrum", "Tech Lead"]
-    }
-  ],
+/* Dados estruturais (sem texto traduzível). Textos ficam em js/i18n.js, por id.
+   Imagens, tech, links, cores e "shots" (focos da fake-navigation) ficam aqui. */
+window.DATA = {
+  socials: {
+    github: "https://github.com/Dheph",
+    linkedin: "https://www.linkedin.com/in/jeffersom-ribeiro",
+    email: "jeffersom.ribeiro@outlook.com"
+  },
 
-  // Categorias para o filtro
-  filters: ["Todos", "Mobile", "Fullstack", "Pessoais", "Open source"],
+  /* chaves de filtro -> rótulo via i18n.ui.filters[key] */
+  filters: ["all", "personal", "mobile", "fullstack", "freelance", "opensource"],
+
+  /* skills que flutuam ao redor da foto no hero */
+  heroBadges: ["React Native", "TypeScript", "Swift", "Kotlin", "Node.js", "Offline-first"],
+
+  services: ["mobile", "native", "fullstack", "rebuild", "offline"],
 
   projects: [
     {
-      id: "poketibia",
-      name: "PokeTibia / PokeBrabo",
-      tagline: "MMORPG de Pokémon estilo OTPokemon — servidor e cliente do zero.",
-      tags: ["Pessoais"],
-      stack: ["C++17", "Lua", "LuaJIT", "C++20", "macOS arm64"],
-      year: "2025–",
-      accent: "#f4b942",
-      highlight: true,
-      summary:
-        "MMORPG completo no estilo OTPokemon: servidor TFS 1.x (C++17 + Lua) e cliente OTClient Redemption (C++20 + LuaJIT), protocolo 10.98, rodando nativo em macOS Apple Silicon.",
-      bullets: [
-        "Servidor (TheBraveServer) e cliente OTClient compilados nativamente para macOS arm64.",
-        "935 espécies, golpes, combate, captura (pokébola), sistemas de água/Surf/Fly/Teleport, NPCs, lojas, quests, ginásios e clãs.",
-        "Painel admin web (editor de mapa) e pipeline de importação de assets (dat/spr/otb, sprites, efeitos) via Python.",
-        "Launcher com atualização automática, releases e build Windows via GitHub Actions.",
-        "HUD e módulos de UI customizados no cliente (tema, game_pokemonhud)."
-      ],
-      role: "Autor / arquiteto (projeto pessoal)",
-      links: []
-    },
-    {
       id: "aiffice",
-      name: "the AIffice",
-      tagline: "Orquestração multiagente local-first com UI lúdica de escritório.",
-      tags: ["Pessoais", "Fullstack"],
-      stack: ["Rust", "React", "Vite", "WebSocket", "SQLite", "Godot 4"],
-      year: "2025–",
-      accent: "#7c5cff",
-      highlight: true,
-      summary:
-        "Ambiente local-first para orquestrar múltiplos agentes de IA (Claude, Codex, etc.) como 'funcionários' de um escritório. Core event-driven em Rust; cliente web React e trilha de 'modo jogo' em Godot 4.",
-      bullets: [
-        "Core em Rust headless-first: event bus, event log em SQLite/WAL com append idempotente (replay seguro após crash).",
-        "API HTTP + WebSocket /v1 (loopback + token + CORS, single-writer) que transmite eventos ao vivo para os clientes.",
-        "Runner PTY real (portable-pty) executando comandos de shell com streaming ao vivo, resize e cancelamento.",
-        "Fluxo ponta a ponta: gerente planeja → aprovação → agendador por dependências → tarefas isoladas em git worktree → diff → merge real → memória automática por projeto.",
-        "Agentes rodam isolados da config pessoal; uso/custo medidos por agente e por run."
-      ],
-      role: "Autor / arquiteto (projeto pessoal, orquestrando sessões paralelas)",
+      featured: true,
+      accent: "#2dd4bf",
+      year: "2025",
+      tags: ["personal", "fullstack"],
+      tech: ["Rust", "React", "WebSocket", "SQLite", "Godot 4"],
+      media: {
+        type: "image", src: "assets/project-aiffice.webp", chrome: "app",
+        url: "the AIffice — localhost:8787",
+        shots: [
+          { key: "office",   scale: 1,   ox: 50, oy: 36 },
+          { key: "terminal", scale: 1.9, ox: 42, oy: 96 },
+          { key: "projects", scale: 1.9, ox: 6,  oy: 46 }
+        ]
+      },
       links: []
     },
     {
-      id: "getronics",
-      name: "Getronics — Apps do agro + Salesforce",
-      tagline: "Apps React Native offline-first integrados ao Salesforce.",
-      tags: ["Mobile"],
-      stack: ["React Native", "Salesforce", "SmartStore", "SQLite", "Firebase"],
-      year: "2025–atual",
-      accent: "#38c172",
-      summary:
-        "Apps React Native para o setor agrícola integrados ao Salesforce, com arquitetura offline-first e sincronização segura, publicados e mantidos na Google Play e App Store.",
-      bullets: [
-        "Arquitetura Offline First com SQLite, SmartStore, Redux Persist e Firebase.",
-        "Decisões técnicas sobre estrutura do app e manutenção futura; decisões de design e priorização.",
-        "Publicação e atualizações contínuas nas lojas.",
-        "Boas práticas, documentação e comunicação próxima ao time de produto."
-      ],
-      role: "Desenvolvedor Mobile (remoto)",
+      id: "pokebrabo",
+      featured: true,
+      accent: "#f5a623",
+      year: "2025",
+      tags: ["personal", "mobile"],
+      tech: ["C++17", "Lua", "LuaJIT", "C++20", "macOS arm64"],
+      media: {
+        type: "image", src: "assets/project-pokebrabo.jpg", chrome: "game",
+        url: "PokeBrabo · OTClient",
+        shots: [
+          { key: "overworld", scale: 1,   ox: 50, oy: 45 },
+          { key: "moves",     scale: 1.7, ox: 45, oy: 78 },
+          { key: "chat",      scale: 2.0, ox: 26, oy: 95 }
+        ]
+      },
+      links: []
+    },
+    {
+      id: "macclean",
+      featured: true,
+      accent: "#8b7bff",
+      year: "2024",
+      tags: ["personal", "opensource"],
+      tech: ["Bash", "macOS", "CLI"],
+      media: {
+        type: "image", src: "assets/project-macclean.png", chrome: "terminal",
+        url: "~ mac-clean",
+        shots: [
+          { key: "picker",   scale: 1.7, ox: 10, oy: 18 },
+          { key: "schedule", scale: 1.8, ox: 88, oy: 20 },
+          { key: "report",   scale: 1.7, ox: 12, oy: 86 }
+        ]
+      },
+      links: [{ labelKey: "github", url: "https://github.com/Dheph/mac-clean" }]
+    },
+
+    {
+      id: "acqio-lojistas",
+      accent: "#17a398",
+      year: "2023",
+      tags: ["mobile", "freelance", "fullstack"],
+      tech: ["React Native", "TypeScript", "POS", "Fintech"],
+      media: { type: "image", src: "assets/app-acqio-lojistas.jpg", chrome: "play", url: "Google Play" },
+      links: [{ labelKey: "play", url: "https://play.google.com/store/apps/details?id=com.acqio.storeapp" }]
+    },
+    {
+      id: "acqio-franquias",
+      accent: "#17a398",
+      year: "2023",
+      tags: ["mobile", "freelance"],
+      tech: ["React Native", "i18n", "Hexagonal"],
+      media: { type: "image", src: "assets/app-acqio-franquias.jpg", chrome: "play", url: "Google Play" },
+      links: [{ labelKey: "play", url: "https://play.google.com/store/apps/details?id=com.acqio.franchiseeapp" }]
+    },
+    {
+      id: "bwg",
+      accent: "#6366f1",
+      year: "2024",
+      tags: ["mobile"],
+      tech: ["React Native", "Swift", "Java", "Fintech"],
+      media: { type: "image", src: "assets/app-bwg.jpg", chrome: "play", url: "Google Play" },
+      links: [{ labelKey: "play", url: "https://play.google.com/store/apps/details?id=com.bwg.app" }]
+    },
+    {
+      id: "approva-corretores",
+      accent: "#f59e0b",
+      year: "2023",
+      tags: ["mobile", "fullstack"],
+      tech: ["React Native", "Node.js", "Real estate"],
+      media: { type: "image", src: "assets/app-approva-corretores.jpg", chrome: "play", url: "Google Play" },
+      links: [{ labelKey: "play", url: "https://play.google.com/store/apps/details?id=com.aprovafacilcorretor" }]
+    },
+    {
+      id: "approva-credito",
+      accent: "#f59e0b",
+      year: "2023",
+      tags: ["mobile", "fullstack"],
+      tech: ["React Native", "Node.js"],
+      media: { type: "image", src: "assets/app-approva-credito.jpg", chrome: "play", url: "Google Play" },
+      links: [{ labelKey: "play", url: "https://play.google.com/store/apps/details?id=com.approvafacil.credito" }]
+    },
+    {
+      id: "minha-dz7",
+      accent: "#38bdf8",
+      year: "2020",
+      tags: ["mobile", "fullstack"],
+      tech: ["React Native", "Node.js"],
+      media: { type: "image", src: "assets/app-minha-dz7.jpg", chrome: "play", url: "Google Play" },
+      links: [{ labelKey: "play", url: "https://play.google.com/store/apps/details?id=br.com.dz7telecom.sistemas" }]
+    },
+    {
+      id: "teomidia",
+      accent: "#a855f7",
+      year: "2022",
+      tags: ["mobile"],
+      tech: ["React Native", "Streaming"],
+      media: { type: "image", src: "assets/app-teomidia.jpg", chrome: "play", url: "Google Play" },
+      links: [{ labelKey: "play", url: "https://play.google.com/store/apps/details?id=br.com.comev.teomidia" }]
+    },
+    {
+      id: "ima-halu",
+      accent: "#e879a6",
+      year: "2022",
+      tags: ["mobile"],
+      tech: ["React Native", "Offline", "Streaming"],
+      media: { type: "image", src: "assets/app-ima-halu.jpg", chrome: "play", url: "Google Play" },
+      links: []
+    },
+
+    {
+      id: "volkswagen",
+      accent: "#5a8def",
+      year: "Contract",
+      tags: ["mobile"],
+      tech: ["Android · Java", "iOS · Swift", "Automotive"],
+      media: { type: "cover", mono: "VW" },
+      links: []
+    },
+    {
+      id: "stone",
+      accent: "#22c55e",
+      year: "Freelance",
+      tags: ["mobile", "freelance"],
+      tech: ["React Native", "POS", "Maintenance"],
+      media: { type: "cover", mono: "St" },
       links: []
     },
     {
       id: "veloo",
-      name: "Veloo — Rotas para entregadores",
-      tagline: "Otimização de rotas e geolocalização para última milha.",
-      tags: ["Mobile"],
-      stack: ["React Native", "Google Maps SDK", "Mapbox", "Geolocation", "Geofencing"],
-      year: "Sambatech",
       accent: "#2bb3c0",
-      summary:
-        "App de mapeamento e otimização de rotas para entregadores, com geolocalização em tempo real e geofencing — parte do meu trabalho na Sambatech.",
-      bullets: [
-        "Integração com Google Maps SDK, Geolocation e Mapbox.",
-        "Geofencing para eventos por área e cálculo/otimização de rotas.",
-        "Foco em performance e estabilidade em uso contínuo em campo."
-      ],
-      role: "Desenvolvedor Fullstack (remoto)",
-      links: []
-    },
-    {
-      id: "gvbim",
-      name: "GVBIM — Mapeamento 3D de ambientes",
-      tagline: "App 3D integrado ao AutoCAD e engines gráficas, do zero.",
-      tags: ["Mobile"],
-      stack: ["React Native", "AutoCAD", "3D", "Engines gráficas"],
       year: "Sambatech",
-      accent: "#e8795a",
-      summary:
-        "App de mapeamento 3D de ambientes integrado ao AutoCAD e a engines gráficas, construído do zero na Sambatech.",
-      bullets: [
-        "Arquitetura e escolha de stack definidas desde o início do projeto.",
-        "Integração com fluxo de AutoCAD e renderização 3D.",
-        "Foco em performance e escalabilidade."
-      ],
-      role: "Desenvolvedor Fullstack (remoto)",
-      links: []
-    },
-    {
-      id: "leve",
-      name: "Leve Educação — Cursos mobile offline",
-      tagline: "Plataforma de cursos completa, offline-first.",
-      tags: ["Mobile"],
-      stack: ["React Native", "SQLite", "Redux Persist", "Firebase", "Streaming"],
-      year: "Sambatech",
-      accent: "#5a8def",
-      summary:
-        "Plataforma mobile de cursos completa com arquitetura Offline First e integração com vídeo/streaming.",
-      bullets: [
-        "Conteúdo disponível offline com SQLite, Redux Persist e Firebase.",
-        "Integração com streaming de vídeo para as aulas.",
-        "Experiência fluida mesmo em conectividade instável."
-      ],
-      role: "Desenvolvedor Fullstack (remoto)",
-      links: []
-    },
-    {
-      id: "approva",
-      name: "Approva Fácil — Setor imobiliário",
-      tagline: "Reconstrução dos apps core em RN + Node.js.",
-      tags: ["Fullstack", "Mobile"],
-      stack: ["React Native", "Node.js", "Firebase", "AppCenter", "Bitbucket"],
-      year: "2023–2024",
-      accent: "#c77dff",
-      summary:
-        "Reconstrução dos apps core em React Native + Node.js, com nova arquitetura baseada em design patterns, foco em modularidade e performance.",
-      bullets: [
-        "Nova arquitetura, correção de bugs críticos e refatoração de legado.",
-        "Treinamento de novos desenvolvedores.",
-        "Firebase, AppCenter, Bitbucket, Jira e CI."
-      ],
-      role: "Desenvolvedor Fullstack (remoto)",
-      links: []
-    },
-    {
-      id: "dz7",
-      name: "Dz7 — Chatbot + gestão",
-      tagline: "Primeiro dev da empresa: chatbot que cortou ~60% dos tickets.",
-      tags: ["Fullstack"],
-      stack: ["React", "Node.js", "PostgreSQL", "Docker", "Linux"],
-      year: "2020–2021",
-      accent: "#38c172",
-      summary:
-        "Como primeiro desenvolvedor da empresa, levantei requisitos direto com os setores e entreguei do chatbot ao sistema de gestão, cuidando também de servidores e deploy.",
-      bullets: [
-        "Chatbot integrado ao CRM que reduziu ~60% dos tickets manuais.",
-        "App de controle de veículos (fotos/avarias) e app de rankings com gamificação.",
-        "Sistema de gestão em React + Node.js + PostgreSQL, deploy com Docker em Linux."
-      ],
-      role: "Desenvolvedor Fullstack (presencial)",
+      tags: ["mobile", "fullstack"],
+      tech: ["React Native", "Google Maps", "Geofencing"],
+      media: { type: "cover", mono: "Ve" },
       links: []
     },
     {
       id: "nativecn",
-      name: "Nativecn-ui — Open source",
-      tagline: "Componente Select customizável para React Native.",
-      tags: ["Open source", "Mobile"],
-      stack: ["React Native", "TypeScript", "Styled Components"],
+      accent: "#2dd4bf",
       year: "2024",
-      accent: "#2bb3c0",
-      summary:
-        "Contribuição open source: componente Select customizável para a biblioteca Nativecn-ui, com conversão de opções e suporte a formulários controlados.",
-      bullets: [
-        "Componente Select com conversão de opções.",
-        "Refatoração e documentação para formulários controlados.",
-        "Revisão de PRs da comunidade."
-      ],
-      role: "Contribuidor open source",
-      links: [{ label: "Nativecn-ui", url: "https://github.com/Dheph" }]
+      tags: ["opensource", "mobile"],
+      tech: ["React Native", "TypeScript", "Styled"],
+      media: { type: "cover", mono: "{ }" },
+      links: [{ labelKey: "github", url: "https://github.com/Dheph" }]
     }
   ],
 
   experience: [
-    {
-      company: "Getronics",
-      role: "Desenvolvedor Mobile",
-      period: "ago/2025 – atual",
-      desc: "Apps React Native integrados ao Salesforce, offline-first, publicados nas lojas. Decisões técnicas e de design."
-    },
-    {
-      company: "Nyx Consultoria em Software",
-      role: "Dev Mobile & Fullstack (Tech Lead, freelancer)",
-      period: "mai/2025 – atual",
-      desc: "Liderança técnica em projetos React, React Native e Node.js; infraestrutura, CI/CD e arquitetura de novas soluções."
-    },
-    {
-      company: "BWG — Rede Social Corporativa",
-      role: "Desenvolvedor Mobile",
-      period: "mai/2024 – mai/2025",
-      desc: "React Native com integração de APIs; módulos nativos em Swift e Java para push e deep linking. Disseminação de Scrum."
-    },
-    {
-      company: "Approva Fácil — Imobiliário",
-      role: "Desenvolvedor Fullstack",
-      period: "jun/2023 – mai/2024",
-      desc: "Reconstrução dos apps core em RN + Node.js, nova arquitetura, refatoração de legado e mentoria."
-    },
-    {
-      company: "Acqio — Fintech",
-      role: "Desenvolvedor Mobile (freelancer)",
-      period: "ago/2023 – set/2023",
-      desc: "i18n dos apps principais, modelagem hexagonal/modular e mentoria do time."
-    },
-    {
-      company: "Sambatech — Audiovisual",
-      role: "Desenvolvedor Fullstack",
-      period: "abr/2021 – jun/2023",
-      desc: "Apps em RN, Flutter, Kotlin e Java. Veloo (rotas/Maps), GVBIM (3D/AutoCAD), Ourofino (assistente multilíngue) e Leve Educação (offline-first)."
-    },
-    {
-      company: "Dz7 Telecomunicações",
-      role: "Desenvolvedor Fullstack",
-      period: "mai/2020 – abr/2021",
-      desc: "Primeiro dev da empresa: chatbot (~60% menos tickets), apps internos e sistema de gestão full-stack."
-    }
+    { id: "bwg",       period: "2024 – 2025", tech: ["React Native", "Swift", "Java"] },
+    { id: "vw",        period: "Contract",    tech: ["Android · Java", "iOS · Swift"] },
+    { id: "approva",   period: "2023 – 2024", tech: ["React Native", "Node.js"] },
+    { id: "accio",     period: "2023",        tech: ["React Native", "POS", "i18n"] },
+    { id: "stone",     period: "Freelance",   tech: ["React Native", "POS"] },
+    { id: "sambatech", period: "2021 – 2023", tech: ["React Native", "Flutter", "Kotlin"] },
+    { id: "dz7",       period: "2020 – 2021", tech: ["React", "Node.js", "PostgreSQL"] }
   ]
 };
