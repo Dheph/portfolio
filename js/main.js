@@ -361,26 +361,42 @@
   var POSTS_URL = "https://raw.githubusercontent.com/Dheph/blog/main/posts.json";
   var blogPosts = null;
   var LOCALE = { en: "en-US", pt: "pt-BR", es: "es-ES" };
+  // Conteúdo do post no idioma atual (fallback: pt -> primeiro disponível).
+  function postContent(p) {
+    var i = p.i18n || {};
+    return i[lang] || i.pt || i[(p.langs || [])[0]] || i[Object.keys(i)[0]] || {};
+  }
+  // Posts disponíveis no idioma escolhido (fallback: todos, se nenhum tiver o idioma).
+  function postsForLang() {
+    if (!blogPosts) return [];
+    var inLang = blogPosts.filter(function (p) {
+      var langs = p.langs || Object.keys(p.i18n || {});
+      return langs.indexOf(lang) >= 0;
+    });
+    return inLang.length ? inLang : blogPosts;
+  }
   function renderWriting() {
     var list = $("#writing-list"), sec = $("#writing");
     if (!list) return;
-    if (!blogPosts) return; // ainda carregando / falhou
-    if (!blogPosts.length) { sec.style.display = "none"; return; }
+    if (!blogPosts) return; // ainda carregando
+    var posts = postsForLang();
+    if (!posts.length) { sec.style.display = "none"; return; }
     sec.style.display = "";
     list.innerHTML = "";
-    blogPosts.slice(0, 2).forEach(function (p) {
+    posts.slice(0, 2).forEach(function (p) {
+      var c = postContent(p);
       var a = el("a", "post");
       a.href = BLOG + "#/post/" + encodeURIComponent(p.slug);
       a.target = "_blank"; a.rel = "noopener";
       a.setAttribute("data-reveal", "");
       var d = p.date ? new Date(p.date + "T00:00:00") : null;
       var dateStr = d ? new Intl.DateTimeFormat(LOCALE[lang] || "en-US", { day: "2-digit", month: "short", year: "numeric" }).format(d) : "";
-      var reading = p.reading ? (p.reading + " " + esc(t("ui.minRead"))) : "";
-      var tags = (p.tags || []).slice(0, 3).map(function (tg) { return "<span>#" + esc(tg) + "</span>"; }).join("");
+      var reading = c.reading ? (c.reading + " " + esc(t("ui.minRead"))) : "";
+      var tags = (c.tags || []).slice(0, 3).map(function (tg) { return "<span>#" + esc(tg) + "</span>"; }).join("");
       a.innerHTML =
         '<div class="post__meta mono">' + esc(dateStr) + (reading ? ' · ' + reading : "") + "</div>" +
-        '<h3 class="post__title">' + esc(p.title) + "</h3>" +
-        (p.description ? '<p class="post__desc">' + esc(p.description) + "</p>" : "") +
+        '<h3 class="post__title">' + esc(c.title) + "</h3>" +
+        (c.description ? '<p class="post__desc">' + esc(c.description) + "</p>" : "") +
         '<div class="post__tags">' + tags + "</div>";
       list.appendChild(a);
     });
