@@ -27,7 +27,7 @@ window.I18N.pt = {
     lead: "Especialista em React Native — arquiteturas offline-first, módulos nativos em Swift/Java e lançamentos na App Store / Google Play — com Node.js no back end e liderança técnica na prática.",
     stats: [
       { v: "Desde 2018", k: "construindo apps" },
-      { v: "15+", k: "projetos entregues" },
+      { v: "60+", k: "projetos entregues" },
       { v: "Nativo", k: "iOS & Android" }
     ]
   },
@@ -256,7 +256,7 @@ window.I18N.es = {
     lead: "Especialista en React Native — arquitecturas offline-first, módulos nativos en Swift/Java y publicaciones en App Store / Google Play — con Node.js en el back end y liderazgo técnico en la práctica.",
     stats: [
       { v: "Desde 2018", k: "construyendo apps" },
-      { v: "15+", k: "proyectos entregados" },
+      { v: "60+", k: "proyectos entregados" },
       { v: "Nativo", k: "iOS & Android" }
     ]
   },

@@ -29,7 +29,7 @@ window.I18N = {
       lead: "React Native specialist — offline-first architectures, native Swift/Java modules, and App Store / Google Play releases — with Node.js on the back end and hands-on tech leadership.",
       stats: [
         { v: "Since 2018", k: "building apps" },
-        { v: "15+", k: "projects shipped" },
+        { v: "60+", k: "projects delivered" },
         { v: "Native", k: "iOS & Android" }
       ]
     },
