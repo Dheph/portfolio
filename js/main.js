@@ -21,7 +21,7 @@
     return v;
   }
   function detectLang() {
-    try { var s = localStorage.getItem("lang"); if (s && LANGS.indexOf(s) >= 0) return s; } catch (e) {}
+    try { var s = localStorage.getItem("lang"); if (s && LANGS.indexOf(s) >= 0) return s; } catch (e) { }
     var n = (navigator.language || navigator.userLanguage || "en").slice(0, 2).toLowerCase();
     if (n === "pt") return "pt";
     if (n === "es") return "es";
@@ -36,11 +36,11 @@
 
   /* ---------------- Theme ---------------- */
   var root = document.documentElement;
-  try { var th = localStorage.getItem("theme"); if (th) root.setAttribute("data-theme", th); } catch (e) {}
+  try { var th = localStorage.getItem("theme"); if (th) root.setAttribute("data-theme", th); } catch (e) { }
   $("#themeToggle").addEventListener("click", function () {
     var next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
     root.setAttribute("data-theme", next);
-    try { localStorage.setItem("theme", next); } catch (e) {}
+    try { localStorage.setItem("theme", next); } catch (e) { }
   });
 
   /* ---------------- Nav ---------------- */
@@ -81,9 +81,11 @@
   if ("IntersectionObserver" in window) {
     var secs = navAnchors.map(function (a) { return document.querySelector(a.getAttribute("href")); }).filter(Boolean);
     var spy = new IntersectionObserver(function (ents) {
-      ents.forEach(function (en) { if (en.isIntersecting) {
-        navAnchors.forEach(function (a) { a.classList.toggle("is-active", a.getAttribute("href") === "#" + en.target.id); });
-      } });
+      ents.forEach(function (en) {
+        if (en.isIntersecting) {
+          navAnchors.forEach(function (a) { a.classList.toggle("is-active", a.getAttribute("href") === "#" + en.target.id); });
+        }
+      });
     }, { rootMargin: "-45% 0px -50% 0px" });
     secs.forEach(function (s) { spy.observe(s); });
   }
@@ -171,13 +173,13 @@
       var tags = (s.tags || []).map(function (x) { return "<span>" + esc(x) + "</span>"; }).join("");
       item.innerHTML =
         '<button class="acc__head" aria-expanded="' + (i === 0) + '">' +
-          '<span class="acc__num">0' + (i + 1) + '</span>' +
-          '<span class="acc__title">' + esc(s.title) + '</span>' +
-          '<span class="acc__plus" aria-hidden="true">+</span>' +
+        '<span class="acc__num">0' + (i + 1) + '</span>' +
+        '<span class="acc__title">' + esc(s.title) + '</span>' +
+        '<span class="acc__plus" aria-hidden="true">+</span>' +
         '</button>' +
         '<div class="acc__panel"><div class="acc__inner">' +
-          '<p class="acc__desc">' + esc(s.desc) + '</p>' +
-          '<div class="acc__tags">' + tags + '</div>' +
+        '<p class="acc__desc">' + esc(s.desc) + '</p>' +
+        '<div class="acc__tags">' + tags + '</div>' +
         '</div></div>';
       item.querySelector(".acc__head").addEventListener("click", function () {
         var open = item.classList.contains("is-open");
@@ -260,7 +262,7 @@
     var box = $("#contactLinks");
     box.innerHTML =
       '<a class="contact__card" href="mailto:' + esc(email) + '"><span class="k">' + esc(t("contact.emailLabel")) + '</span><span class="v">' + esc(email) + '</span></a>' +
-      '<a class="contact__card" href="' + esc(s.linkedin) + '" target="_blank" rel="noopener"><span class="k">' + esc(t("contact.linkedinLabel")) + '</span><span class="v">in/jeffersom-ribeiro</span></a>' +
+      '<a class="contact__card" href="' + esc(s.linkedin) + '" target="_blank" rel="noopener"><span class="k">' + esc(t("contact.linkedinLabel")) + '</span><span class="v">in/jeffersom</span></a>' +
       '<a class="contact__card" href="' + esc(s.github) + '" target="_blank" rel="noopener"><span class="k">' + esc(t("contact.githubLabel")) + '</span><span class="v">@Dheph</span></a>';
   }
   $("#copyEmail").addEventListener("click", function () {
@@ -339,7 +341,7 @@
   /* ---------------- Language switcher ---------------- */
   function setLang(l, persist) {
     lang = l; root.setAttribute("lang", l);
-    if (persist) { try { localStorage.setItem("lang", l); } catch (e) {} }
+    if (persist) { try { localStorage.setItem("lang", l); } catch (e) { } }
     [].forEach.call($("#langbar").children, function (c) {
       if (c.dataset && c.dataset.lang) c.classList.toggle("is-active", c.dataset.lang === l);
     });
