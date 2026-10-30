@@ -279,6 +279,77 @@
     </div>
   </section>
 
+  <!-- ===================== PAINEL ADMIN (escritório contábil) ===================== -->
+  <section class="screen" id="admin" data-label="Painel admin" data-label-en="Admin panel" data-label-es="Panel admin">
+    <div class="app">
+      <aside class="app__side">
+        <a href="#site" class="logo"><i></i>escritório</a>
+        <a data-view="c-home" class="is-on"><i>▦</i>Visão geral</a>
+        <a data-view="c-cli"><i>☺</i>Carteira de clientes</a>
+        <a data-view="c-obr"><i>✓</i>Obrigações</a>
+        <a data-view="c-docs"><i>⇪</i>Documentos recebidos</a>
+        <span class="spacer"></span>
+        <div class="card" style="padding:14px;font-size:13px"><b>Fechamento de novembro</b><div class="bar" style="margin-top:10px"><i style="--v:72%"></i></div><div class="muted small" style="margin-top:6px">72% das obrigações entregues</div></div>
+      </aside>
+      <div class="app__main">
+        <div class="app__top">
+          <div><p class="muted small">Escritório · 86 clientes ativos</p><h2 data-view-title>Visão geral</h2></div>
+          <div class="row"><button class="cmdk-btn" data-cmdk>⌕ <span class="t">Buscar cliente, CNPJ, guia…</span><span class="kbd">⌘K</span></button><button class="bell" data-n="4" data-drawer="#c-notif" aria-label="Notificações">🔔</button><span class="avatar">LP</span></div>
+        </div>
+
+        <div class="view" id="c-home">
+          <div class="kpis">
+            <div class="kpi"><small>Clientes ativos</small><strong data-count="86">0</strong><em>+4 em outubro</em></div>
+            <div class="kpi"><small>Receita recorrente</small><strong data-count="21940" data-pre="R$ ">0</strong><em>▲ 6%</em></div>
+            <div class="kpi"><small>Docs pendentes</small><strong data-count="7">0</strong><em style="color:var(--warn)">cobrança automática ativa</em></div>
+            <div class="kpi"><small>Guias enviadas</small><strong data-count="214">0</strong><em>no app e por e-mail</em></div>
+          </div>
+          <div class="dash">
+            <div class="panel">
+              <div class="panel__h"><h3>Fechamento do mês</h3><span class="badge badge--info">vence dia 20</span></div>
+              <div style="display:grid;gap:16px" id="fech"></div>
+            </div>
+            <div class="panel">
+              <div class="panel__h"><h3>Precisa da sua atenção</h3><span class="muted small">alertas automáticos</span></div>
+              <div class="list" id="alertas"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="view" id="c-cli">
+          <div class="toolbar">
+            <input class="input" data-filter="#cliList" placeholder="Buscar cliente ou CNPJ…" aria-label="Buscar clientes">
+            <div class="chips" data-group="reg" data-chips="#cliList"><button class="opt is-on" data-value="all">Todos</button><button class="opt" data-value="mei">MEI</button><button class="opt" data-value="sn">Simples</button><button class="opt" data-value="lp">Presumido</button><button class="opt" data-value="pend">Com pendência</button></div>
+          </div>
+          <div class="panel"><div class="table-wrap"><table class="table"><thead><tr><th>Cliente</th><th>Regime</th><th>Faturamento out</th><th>Documentos</th><th>Resp.</th></tr></thead><tbody id="cliList"></tbody></table></div></div>
+        </div>
+
+        <div class="view" id="c-obr">
+          <div class="toolbar"><span class="muted small">Arraste as guias pelo fluxo. Ao entregar, o cliente recebe a guia no app e por e-mail.</span></div>
+          <div class="kanban" id="obr">
+            <div class="kcol"><h4>A fazer <span data-n></span></h4><div class="kcards"></div></div>
+            <div class="kcol"><h4>Em apuração <span data-n></span></h4><div class="kcards"></div></div>
+            <div class="kcol"><h4>Revisão <span data-n></span></h4><div class="kcards"></div></div>
+            <div class="kcol"><h4>Entregue <span data-n></span></h4><div class="kcards"></div></div>
+          </div>
+        </div>
+
+        <div class="view" id="c-docs">
+          <div class="toolbar"><span class="muted small">Notas, extratos e recibos chegam pelo app/WhatsApp e são classificados automaticamente.</span><span class="spacer"></span><button class="btn btn--sm" id="lancarTodos">Lançar todos</button></div>
+          <div class="panel"><div class="list" id="docs"></div></div>
+        </div>
+      </div>
+    </div>
+    <template id="c-notif" data-title="Notificações">
+      <div class="list">
+        <div><span class="icon">⚠</span><div><b>Atlas Engenharia mudou de faixa</b><div class="muted small">Faturamento 12 meses passou de R$ 720 mil</div></div></div>
+        <div><span class="icon">⇪</span><div><b>12 documentos novos</b><div class="muted small">Enviados por 5 clientes via app</div></div></div>
+        <div><span class="icon">✓</span><div><b>DAS de outubro pago</b><div class="muted small">Bloom Studio · confirmação bancária</div></div></div>
+        <div><span class="icon">✉</span><div><b>Nova empresa para abrir</b><div class="muted small">Formulário do site · Ana Lima · serviços</div></div></div>
+      </div>
+    </template>
+  </section>
+
 </main></div>
 <script src="kit.js"></script>
 <script>
@@ -347,6 +418,65 @@
   }
   $("#drop").addEventListener("click", upload);
   $("#drop").addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); upload(); } });
+})();
+</script>
+<script>
+/* Painel admin do escritório contábil */
+(function () {
+  var D = window.Demo, $ = D.$, esc = D.esc;
+
+  $("#fech").innerHTML = [["DAS · Simples Nacional", 64, 78], ["DCTFWeb", 40, 52], ["eSocial · folha", 30, 52], ["FGTS Digital", 48, 52], ["Notas de serviço (ISS)", 70, 86]]
+    .map(function (o, i) { var p = Math.round(o[1] / o[2] * 100); return '<div><div class="row" style="justify-content:space-between;font-size:14px"><b>' + o[0] + '</b><span class="muted">' + o[1] + "/" + o[2] + '</span></div><div class="bar" style="margin-top:8px"><i style="--v:' + p + "%;--c:" + (p > 85 ? "var(--ok)" : p > 65 ? "var(--accent-2)" : "var(--warn)") + ";animation-delay:" + i * 90 + 'ms"></i></div></div>'; }).join("");
+  $("#alertas").innerHTML = [["Atlas Engenharia mudou de faixa no Simples", "Revisar alíquota de novembro (7,3% → 9,5%)"], ["Casa Ipê sem extrato de outubro", "Lembrete automático enviado 2× no WhatsApp"],
+    ["Vértice Tech: pró-labore acima do teto do INSS", "Sugerir ajuste ao cliente"], ["Nórdica Café perto do limite do MEI", "R$ 74 mil de R$ 81 mil no ano"]]
+    .map(function (a) { return '<div class="todo"><span class="box"></span><div><b>' + esc(a[0]) + '</b><div class="muted small">' + esc(a[1]) + "</div></div></div>"; }).join("");
+
+  /* carteira */
+  var REG = { mei: "MEI", sn: "Simples", lp: "Presumido" };
+  var C = [["Bloom Studio", "12.345.678/0001-90", "sn", 84320, 0, "LP"], ["Atlas Engenharia", "23.456.789/0001-01", "sn", 162000, 0, "LP"], ["Casa Ipê", "34.567.890/0001-12", "sn", 38900, 2, "RM"],
+    ["Nórdica Café", "45.678.901/0001-23", "mei", 6200, 0, "RM"], ["Vértice Tech", "56.789.012/0001-34", "lp", 310000, 1, "LP"], ["Lume Odonto", "67.890.123/0001-45", "sn", 97400, 0, "AS"],
+    ["Rota 9 Logística", "78.901.234/0001-56", "lp", 455000, 3, "AS"], ["Ana Lima Design", "89.012.345/0001-67", "mei", 5100, 1, "RM"]];
+  $("#cliList").innerHTML = C.map(function (c, i) {
+    return '<tr data-i="' + i + '" data-tag="' + c[2] + (c[4] ? " pend" : "") + '"><td><b>' + esc(c[0]) + '</b><div class="muted small">' + c[1] + "</div></td><td>" + REG[c[2]] + "</td><td>" + D.brl(c[3]).replace(",00", "") +
+      "</td><td>" + (c[4] ? '<span class="badge badge--warn">' + c[4] + " pendente" + (c[4] > 1 ? "s" : "") + "</span>" : '<span class="badge badge--ok">Completo</span>') + '</td><td><span class="avatar" style="width:30px;height:30px;font-size:11px">' + c[5] + "</span></td></tr>";
+  }).join("");
+  $("#cliList").addEventListener("click", function (e) {
+    var tr = e.target.closest("tr"); if (!tr) return;
+    var c = C[+tr.dataset.i], m = c[3] / 12;
+    D.drawer(c[0], '<p class="muted small">' + c[1] + " · " + REG[c[2]] + '</p>' +
+      '<div class="kpis" style="margin:0"><div class="kpi"><small>Faturamento out</small><strong>' + D.brl(c[3]).replace(",00", "") + '</strong></div><div class="kpi"><small>Imposto estimado</small><strong>' + D.brl(c[3] * (c[2] === "mei" ? 0 : c[2] === "sn" ? .065 : .1133)).replace(",00", "") + "</strong></div></div>" +
+      '<div class="panel" style="padding:16px"><div class="panel__h" style="margin-bottom:10px"><h3>Checklist de novembro</h3></div><div class="list">' +
+      ["Extratos bancários recebidos", "Notas de entrada conferidas", "Folha e pró-labore calculados", "Guia gerada e enviada"].map(function (t, k) { return '<div class="todo' + (k < 2 && !c[4] ? " is-done" : "") + '"><span class="box"></span><b style="font-size:14px">' + t + "</b></div>"; }).join("") + "</div></div>" +
+      '<div class="bars" style="height:110px" data-bars="' + [.8, .9, .85, 1, .95, 1.1].map(function (k) { return Math.round(m * k); }).join(",") + '" data-labels="mai,jun,jul,ago,set,out" data-pre="R$ "></div>' +
+      '<div class="row"><button class="btn btn--sm" data-act="Pedido de documentos enviado no WhatsApp do cliente">Pedir documentos</button><button class="btn btn--ghost btn--sm" data-act="Relatório gerencial em PDF enviado ao cliente">Enviar relatório</button></div>');
+  });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-act]"); if (b) D.toast(b.dataset.act); });
+
+  /* obrigações (kanban) */
+  var O = [["DAS", "Casa Ipê", "20/11", 0], ["DCTFWeb", "Vértice Tech", "15/11", 0], ["FGTS Digital", "Rota 9 Logística", "20/11", 0], ["DAS", "Atlas Engenharia", "20/11", 1],
+    ["eSocial", "Lume Odonto", "15/11", 1], ["DAS", "Bloom Studio", "20/11", 2], ["IRPJ/CSLL", "Rota 9 Logística", "29/11", 2], ["DAS", "Nórdica Café", "20/11", 3], ["DCTFWeb", "Bloom Studio", "15/11", 3]];
+  var cols = D.$$("#obr .kcards");
+  O.forEach(function (o) {
+    cols[o[3]].insertAdjacentHTML("beforeend", '<div class="kcard" draggable="true"><b>' + o[0] + " · " + esc(o[1]) + '</b>vence ' + o[2] + '<footer><span class="badge badge--' + (o[2] === "15/11" ? "warn" : "info") + '">' + (o[2] === "15/11" ? "esta semana" : "no prazo") + '</span><button class="kadv" aria-label="Avançar">→</button></footer></div>');
+  });
+  D.kcount($("#obr"));
+  $("#obr").addEventListener("kmove", function (e) { if (e.detail.to === cols[3].parentNode) e.detail.msg = "Entregue! Guia enviada ao cliente no app e por e-mail"; });
+
+  /* documentos recebidos */
+  var DOCS = [["🧾", "NF-e 2046 · Vértice Tech", "Bloom Studio", "Nota de saída"], ["🏦", "Extrato Itaú · outubro", "Casa Ipê", "Extrato"], ["🧾", "Recibo de aluguel", "Lume Odonto", "Despesa"],
+    ["🏦", "Extrato Nubank PJ · outubro", "Atlas Engenharia", "Extrato"], ["📄", "Contrato social alterado", "Vértice Tech", "Societário"]];
+  $("#docs").innerHTML = DOCS.map(function (d) {
+    return '<div><span class="icon">' + d[0] + '</span><div style="flex:1"><b>' + esc(d[1]) + '</b><div class="muted small">' + esc(d[2]) + ' · classificado como <b style="color:var(--accent)">' + d[3] + '</b></div></div><button class="btn btn--sm btn--ghost" data-lanc>Lançar</button></div>';
+  }).join("");
+  function lancar(b) { b.outerHTML = '<span class="badge badge--ok">Lançado</span>'; }
+  $("#docs").addEventListener("click", function (e) { var b = e.target.closest("[data-lanc]"); if (b) { lancar(b); D.toast("Lançamento contábil criado"); } });
+  $("#lancarTodos").addEventListener("click", function () {
+    D.$$("#docs [data-lanc]").forEach(function (b, i) { setTimeout(function () { lancar(b); }, i * 160); });
+    D.toast("Todos os documentos foram lançados na contabilidade");
+  });
+
+  D.cmd("Lançar documentos pendentes", function () { D.go("admin"); D.$('[data-view="c-docs"]').click(); });
+  D.cmd("Clientes com pendência", function () { D.go("admin"); D.$('[data-view="c-cli"]').click(); D.$('[data-chips="#cliList"] [data-value="pend"]').click(); });
 })();
 </script>
 </body>

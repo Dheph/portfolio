@@ -298,6 +298,85 @@
     </div>
   </section>
 
+  <!-- ===================== PAINEL ADMIN (escritório) ===================== -->
+  <section class="screen" id="admin" data-label="Painel admin" data-label-en="Admin panel" data-label-es="Panel admin">
+    <div class="app">
+      <aside class="app__side">
+        <a href="#site" class="logo"><span class="mono-logo">F&amp;A</span>Escritório</a>
+        <a data-view="adv-home" class="is-on"><i>◆</i>Visão geral</a>
+        <a data-view="adv-proc"><i>§</i>Processos</a>
+        <a data-view="adv-crm"><i>◎</i>Clientes &amp; leads</a>
+        <a data-view="adv-fin"><i>$</i>Financeiro</a>
+        <span class="spacer"></span>
+        <span class="chip small">⟳ DJe sincronizado às 07:00</span>
+      </aside>
+      <div class="app__main">
+        <div class="app__top">
+          <div><p class="muted small">Bom dia, Dra. Helena · 3 prazos vencem até sexta</p><h2 data-view-title>Visão geral</h2></div>
+          <div class="row"><button class="cmdk-btn" data-cmdk>⌕ <span class="t">Buscar processos, clientes…</span><span class="kbd">⌘K</span></button><button class="bell" data-n="3" data-drawer="#adv-notif" aria-label="Notificações">🔔</button><span class="avatar">HF</span></div>
+        </div>
+
+        <div class="view" id="adv-home">
+          <div class="kpis">
+            <div class="kpi"><small>Processos ativos</small><strong data-count="128">0</strong><em>+6 este mês</em></div>
+            <div class="kpi"><small>Prazos da semana</small><strong data-count="9">0</strong><em style="color:var(--bad)">2 fatais</em></div>
+            <div class="kpi"><small>Honorários a receber</small><strong data-count="84300" data-pre="R$ ">0</strong><em>R$ 12,4 mil em atraso</em></div>
+            <div class="kpi"><small>Novos contatos</small><strong data-count="14">0</strong><em>pelo site e WhatsApp</em></div>
+          </div>
+          <div class="dash">
+            <div class="panel">
+              <div class="panel__h"><h3>Prazos da semana</h3><span class="muted small">clique para concluir</span></div>
+              <div class="list" id="prazos"></div>
+            </div>
+            <div style="display:grid;gap:18px">
+              <div class="panel"><div class="panel__h"><h3>Audiências</h3><span class="muted small">próximos 7 dias</span></div><div class="list" id="auds"></div></div>
+              <div class="panel"><div class="panel__h"><h3>Contatos pelo site</h3><span class="badge badge--ok">+32%</span></div><div class="bars" style="height:120px" data-bars="3,5,2,6,4,8,7" data-labels="qui,sex,sáb,dom,seg,ter,qua" data-suf=" contatos"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="view" id="adv-proc">
+          <div class="toolbar">
+            <input class="input" data-filter="#procList" placeholder="Buscar cliente, número ou ação…" aria-label="Buscar processos">
+            <div class="chips" data-group="area" data-chips="#procList"><button class="opt is-on" data-value="all">Todos</button><button class="opt" data-value="trab">Trabalhista</button><button class="opt" data-value="fam">Família</button><button class="opt" data-value="emp">Empresarial</button><button class="opt" data-value="trib">Tributário</button></div>
+            <span class="spacer"></span><button class="btn btn--sm" id="novoProc">+ Novo processo</button>
+          </div>
+          <div class="panel"><div class="table-wrap"><table class="table"><thead><tr><th>Número</th><th>Cliente</th><th>Ação</th><th>Status</th><th>Resp.</th></tr></thead><tbody id="procList"></tbody></table></div></div>
+        </div>
+
+        <div class="view" id="adv-crm">
+          <div class="toolbar"><span class="muted small">Arraste os cards entre as etapas (ou use →). Ao contratar, o contrato sai para assinatura digital.</span><span class="spacer"></span><button class="btn btn--sm" id="novoLead">+ Novo lead</button></div>
+          <div class="kanban" id="crm">
+            <div class="kcol"><h4>Novo contato <span data-n></span></h4><div class="kcards"></div></div>
+            <div class="kcol"><h4>Consulta agendada <span data-n></span></h4><div class="kcards"></div></div>
+            <div class="kcol"><h4>Proposta enviada <span data-n></span></h4><div class="kcards"></div></div>
+            <div class="kcol"><h4>Contratado <span data-n></span></h4><div class="kcards"></div></div>
+          </div>
+        </div>
+
+        <div class="view" id="adv-fin">
+          <div class="kpis">
+            <div class="kpi"><small>Recebido em outubro</small><strong data-count="96400" data-pre="R$ ">0</strong><em>▲ 11%</em></div>
+            <div class="kpi"><small>A receber</small><strong data-count="84300" data-pre="R$ ">0</strong><em style="color:var(--muted)">23 parcelas</em></div>
+            <div class="kpi"><small>Em atraso</small><strong data-count="12400" data-pre="R$ ">0</strong><em style="color:var(--bad)">4 clientes</em></div>
+            <div class="kpi"><small>Êxito previsto</small><strong data-count="230000" data-pre="R$ ">0</strong><em>em 17 ações</em></div>
+          </div>
+          <div class="dash">
+            <div class="panel"><div class="panel__h"><h3>Honorários</h3><span class="muted small">cobrança por Pix + boleto</span></div><div class="list" id="hon"></div></div>
+            <div class="panel"><div class="panel__h"><h3>Receita · 6 meses</h3></div><div class="bars" data-bars="71,78,69,84,87,96" data-labels="mai,jun,jul,ago,set,out" data-pre="R$ " data-suf=" mil"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <template id="adv-notif" data-title="Notificações">
+      <div class="list">
+        <div><span class="icon">§</span><div><b>Nova publicação no DJe</b><div class="muted small">Lima x Banco Sigma · intimação para manifestação em 5 dias</div></div></div>
+        <div><span class="icon">✉</span><div><b>Mariana Souza respondeu no portal</b><div class="muted small">"Preciso levar algum documento?"</div></div></div>
+        <div><span class="icon">✍</span><div><b>Contrato assinado</b><div class="muted small">Atlas Engenharia · assinatura digital concluída</div></div></div>
+      </div>
+    </template>
+  </section>
+
 </main></div>
 <script src="kit.js"></script>
 <script>
@@ -344,6 +423,98 @@
     inp.value = ""; chat.scrollTop = chat.scrollHeight;
     setTimeout(function () { var t = D.$("#typing"); t.removeAttribute("id"); t.textContent = "Recebido! Vou analisar e te retorno ainda hoje. 👍"; chat.scrollTop = chat.scrollHeight; }, 1400);
   });
+})();
+</script>
+<script>
+/* Painel admin do escritório */
+(function () {
+  var D = window.Demo, $ = D.$, esc = D.esc;
+
+  D.$("#prazos").innerHTML = [
+    ["Contestação · Souza x Metalúrgica Alfa", "Fatal · hoje 18h", "bad"], ["Réplica · Mariana Souza", "Amanhã", "warn"],
+    ["Recurso ordinário · Lima x Banco Sigma", "Sex, 15/11", "warn"], ["Manifestação sobre laudo · Inventário Rocha", "Seg, 18/11", "info"],
+    ["Juntar procuração · Atlas Engenharia", "Ter, 19/11", "info"]
+  ].map(function (p) { return '<div class="todo"><span class="box"></span><div style="flex:1"><b>' + esc(p[0]) + '</b></div><span class="badge badge--' + p[2] + '">' + p[1] + "</span></div>"; }).join("");
+  D.$("#auds").innerHTML = [["12/11 · 14h", "Conciliação · Mariana Souza", "Vídeo"], ["13/11 · 10h", "Instrução · Lima x Banco Sigma", "Fórum"], ["14/11 · 16h", "Mediação · Família Rocha", "Presencial"]]
+    .map(function (a) { return '<div><span class="chip small">' + a[0] + '</span><b style="flex:1;font-size:14px">' + esc(a[1]) + '</b><span class="muted small">' + a[2] + "</span></div>"; }).join("");
+
+  /* processos + drawer de detalhes */
+  var AREA = { trab: "Trabalhista", fam: "Família", emp: "Empresarial", trib: "Tributário" };
+  var P = [
+    ["0012345-67.2025.5.02.0011", "Mariana Souza", "Reclamação trabalhista", "trab", ["Audiência marcada", "info"], "CN"],
+    ["1009876-54.2024.8.26.0100", "Mariana Souza", "Revisão de contrato bancário", "emp", ["Perícia", "warn"], "RA"],
+    ["0021458-11.2025.5.02.0003", "Souza x Metalúrgica Alfa", "Horas extras", "trab", ["Prazo fatal hoje", "bad"], "CN"],
+    ["1102233-90.2025.8.26.0002", "Família Rocha", "Inventário judicial", "fam", ["Em andamento", "warn"], "CN"],
+    ["5004411-23.2024.4.03.6100", "Atlas Engenharia", "Anulatória de débito fiscal", "trib", ["Liminar deferida", "ok"], "RA"],
+    ["1077712-45.2025.8.26.0100", "Vértice Tech", "Dissolução parcial de sociedade", "emp", ["Citação", "info"], "HF"],
+    ["0033451-02.2025.5.02.0045", "Lima x Banco Sigma", "Equiparação salarial", "trab", ["Recurso", "warn"], "CN"],
+    ["1003320-77.2025.8.26.0011", "Paula & Diego", "Divórcio consensual", "fam", ["Concluído", "ok"], "CN"],
+    ["5011290-63.2025.4.03.6100", "Casa Ipê", "Recuperação de PIS/COFINS", "trib", ["Em andamento", "warn"], "RA"],
+    ["1120045-18.2025.8.26.0100", "Bloom Studio", "Cobrança de contrato", "emp", ["Acordo proposto", "info"], "HF"]
+  ];
+  function row(p, i) {
+    return '<tr data-i="' + i + '" data-tag="' + p[3] + '"><td style="font-family:\'JetBrains Mono\',monospace;font-size:12px;color:var(--accent-2)">' + p[0] + "</td><td><b>" + esc(p[1]) + "</b></td><td>" + esc(p[2]) + '</td><td><span class="badge badge--' + p[4][1] + '">' + p[4][0] + '</span></td><td><span class="avatar" style="width:30px;height:30px;font-size:11px">' + p[5] + "</span></td></tr>";
+  }
+  function renderProcs() { $("#procList").innerHTML = P.map(row).join(""); D.applyFilter("#procList"); }
+  renderProcs();
+  $("#procList").addEventListener("click", function (e) {
+    var tr = e.target.closest("tr"); if (!tr) return;
+    var p = P[+tr.dataset.i];
+    D.drawer(p[1], '<span class="badge badge--' + p[4][1] + '">' + p[4][0] + '</span>' +
+      '<dl class="summary"><div><dt>Processo</dt><dd style="font-size:12.5px">' + p[0] + "</dd></div><div><dt>Ação</dt><dd>" + esc(p[2]) + "</dd></div><div><dt>Área</dt><dd>" + AREA[p[3]] + '</dd></div><div><dt>Valor da causa</dt><dd>' + D.brl(18000 + i3(p[0]) * 1370) + "</dd></div></dl>" +
+      '<h4 class="muted small" style="text-transform:uppercase;letter-spacing:.08em">Movimentações</h4>' +
+      '<div class="tl"><div><small>Hoje · 07:02 · importado do DJe</small><p>Intimação para manifestação no prazo de 5 dias.</p></div><div><small>28/10</small><p>Petição protocolada pelo escritório.</p></div><div><small>14/10</small><p>Juntada de documentos pela parte contrária.</p></div></div>' +
+      '<div class="row"><button class="btn btn--sm" data-act="Petição gerada a partir do modelo do escritório">✍ Gerar petição</button><button class="btn btn--ghost btn--sm" data-act="Cliente avisado no portal e por WhatsApp">✉ Atualizar cliente</button></div>');
+  });
+  function i3(s) { return +s.slice(4, 7); }
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-act]"); if (b) D.toast(b.dataset.act); });
+
+  /* novo processo (drawer com formulário) */
+  function novoProc() {
+    D.go("admin");
+    D.drawer("Novo processo", '<form class="form" id="fProc" data-mock="Processo cadastrado. Cliente notificado no portal.">' +
+      '<label class="field">Cliente<input class="input" name="cli" required placeholder="Nome do cliente"></label>' +
+      '<label class="field">Ação<input class="input" name="acao" required placeholder="Ex.: Ação de cobrança"></label>' +
+      '<label class="field">Área<select class="input" name="area"><option value="trab">Trabalhista</option><option value="fam">Família</option><option value="emp">Empresarial</option><option value="trib">Tributário</option></select></label>' +
+      '<button class="btn btn--block">Cadastrar</button></form>');
+  }
+  $("#novoProc").addEventListener("click", novoProc);
+  document.addEventListener("submit", function (e) { // captura: lê antes do kit resetar o form
+    if (e.target.id !== "fProc") return;
+    var f = e.target;
+    P.unshift(["1" + String(Date.now()).slice(-6) + "-00.2025.8.26.0100", f.cli.value, f.acao.value, f.area.value, ["Distribuído", "info"], "HF"]);
+    renderProcs(); D.closeLayer();
+    D.$('[data-view="adv-proc"]').click();
+  }, true);
+
+  /* CRM */
+  var LEADS = [["Juliana Prado", "Trabalhista · site", 4500, 0], ["Marcos Teles", "Empresarial · indicação", 12000, 0], ["Renata Alves", "Família · WhatsApp", 6800, 0],
+    ["Construtora Horizonte", "Tributário · LinkedIn", 38000, 1], ["André Gomes", "Consumidor · site", 3200, 1], ["Nórdica Café", "Empresarial · indicação", 9500, 2],
+    ["Patrícia Rocha", "Família · site", 7200, 2], ["Atlas Engenharia", "Tributário · cliente", 42000, 3]];
+  var cols = D.$$("#crm .kcards");
+  function lead(l) { return '<div class="kcard" draggable="true"><b>' + esc(l[0]) + "</b>" + esc(l[1]) + '<footer><span class="badge">' + D.brl(l[2]).replace(",00", "") + '</span><button class="kadv" aria-label="Avançar etapa">→</button></footer></div>'; }
+  LEADS.forEach(function (l) { cols[l[3]].insertAdjacentHTML("beforeend", lead(l)); });
+  D.kcount($("#crm"));
+  $("#crm").addEventListener("kmove", function (e) { if (e.detail.to === cols[3].parentNode) e.detail.msg = "Contratado! Contrato enviado para assinatura digital ✍"; });
+  var novos = ["Camila Freitas", "Bruno Lacerda", "Helena Duarte"], nl = 0;
+  function novoLead() {
+    D.go("admin"); D.$('[data-view="adv-crm"]').click();
+    cols[0].insertAdjacentHTML("afterbegin", lead([novos[nl++ % 3], "Trabalhista · formulário do site", 5000]));
+    D.kcount($("#crm")); D.toast("Lead criado e respondido automaticamente no WhatsApp");
+  }
+  $("#novoLead").addEventListener("click", novoLead);
+
+  /* financeiro */
+  $("#hon").innerHTML = [["Atlas Engenharia", "Parcela 3/6", 8500, "ok"], ["Vértice Tech", "Mensalidade de assessoria", 4200, "warn"], ["Família Rocha", "Parcela 2/4", 3100, "bad"], ["Bloom Studio", "Êxito · acordo", 9800, "warn"], ["Mariana Souza", "Consulta", 350, "ok"]]
+    .map(function (h) {
+      var st = { ok: "Pago", warn: "Vence em 3 dias", bad: "12 dias em atraso" }[h[3]];
+      return '<div><div style="flex:1"><b>' + esc(h[0]) + '</b><div class="muted small">' + h[1] + " · " + D.brl(h[2]) + '</div></div><span class="badge badge--' + h[3] + '">' + st + "</span>" + (h[3] === "ok" ? "" : '<button class="btn btn--sm btn--ghost" data-cobrar>Cobrar</button>') + "</div>";
+    }).join("");
+  $("#hon").addEventListener("click", function (e) { var b = e.target.closest("[data-cobrar]"); if (b) { b.outerHTML = '<span class="muted small">✓ enviado</span>'; D.toast("Cobrança enviada por WhatsApp e e-mail (Pix + boleto)"); } });
+
+  D.cmd("Novo processo", novoProc);
+  D.cmd("Novo lead", novoLead);
+  D.cmd("Ver prazos da semana", function () { D.go("admin"); D.$('[data-view="adv-home"]').click(); });
 })();
 </script>
 </body>

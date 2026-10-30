@@ -72,7 +72,23 @@
     .q-row .avatar { border-radius: 4px; }
     .timer { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--accent); }
 
+    /* painel admin: agenda por barbeiro */
+    .sched { display: grid; grid-template-columns: 56px repeat(3, minmax(150px, 1fr)); gap: 6px; min-width: 540px; }
+    .sched .hd { display: flex; align-items: center; gap: 10px; padding: 4px; font: 400 24px/1 var(--font-d); letter-spacing: .04em; }
+    .sched .hd .avatar { width: 34px; height: 34px; border-radius: 4px; font: 700 12px/1 var(--font-b); }
+    .sched .hr { padding-top: 14px; font: 600 12px/1 "JetBrains Mono", monospace; color: var(--muted); }
+    .slot { min-height: 54px; padding: 8px 10px; border-radius: 4px; border: 1px dashed var(--line); background: transparent; color: var(--muted); font-size: 12px; text-align: left; cursor: pointer; transition: border-color .2s, color .2s; }
+    .slot:hover { border-color: var(--accent); color: var(--accent); }
+    .slot.bk { border: 0; border-left: 3px solid var(--c); background: color-mix(in srgb, var(--c) 15%, var(--surface)); color: var(--fg); animation: kIn .4s var(--ease) both; }
+    .slot.bk b { display: block; font-size: 13px; } .slot.bk small { color: var(--muted); }
+    .slot.done { opacity: .5; } .slot.done b::after { content: " ✓"; color: var(--ok); }
+    .slot.noshow b { text-decoration: line-through; }
+    .slot.off { cursor: not-allowed; border-style: solid; background: repeating-linear-gradient(45deg, transparent 0 6px, var(--line) 6px 7px); }
+    .crow { display: grid; grid-template-columns: 1.3fr .8fr 1fr .7fr 1fr; gap: 12px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .crow.h { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 0; }
+
     @container (max-width: 760px) {
+      .crow { grid-template-columns: 1.2fr 1fr .8fr; } .crow > :nth-child(2), .crow > :nth-child(3) { display: none; }
       .menu { grid-template-columns: 1fr; }
       .gal { grid-template-columns: repeat(2, 1fr); }
       .stamp { right: -40px; width: 110px; height: 110px; }
@@ -188,7 +204,7 @@
   </section>
 
   <!-- ===================== CLUBE + PAINEL ===================== -->
-  <section class="screen" id="clube" data-label="Clube & painel" data-label-en="Club & panel" data-label-es="Club y panel">
+  <section class="screen" id="clube" data-label="Clube & fila" data-label-en="Club & queue" data-label-es="Club y fila">
     <div class="wrap" style="padding-top:34px;padding-bottom:50px">
       <div class="dash">
         <div style="display:grid;gap:18px">
@@ -218,6 +234,65 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ===================== PAINEL ADMIN ===================== -->
+  <section class="screen" id="admin" data-label="Painel admin" data-label-en="Admin panel" data-label-es="Panel admin">
+    <div class="app">
+      <aside class="app__side">
+        <a href="#site" class="logo" style="font-size:22px">NAVALHA <b>✂</b></a>
+        <a data-view="b-agenda" class="is-on"><i>▦</i>Agenda do dia</a>
+        <a data-view="b-caixa"><i>$</i>Caixa &amp; comissões</a>
+        <a data-view="b-cli"><i>☺</i>Clientes</a>
+        <span class="spacer"></span>
+        <a href="#clube"><i>💈</i>Clube &amp; fila</a>
+      </aside>
+      <div class="app__main">
+        <div class="app__top">
+          <div><p class="muted small" id="bHoje"></p><h2 data-view-title style="font-size:38px">Agenda do dia</h2></div>
+          <div class="row"><button class="cmdk-btn" data-cmdk>⌕ <span class="t">Buscar cliente, serviço…</span><span class="kbd">⌘K</span></button><button class="bell" data-n="2" data-drawer="#b-notif" aria-label="Notificações">🔔</button><span class="avatar" style="border-radius:4px">MA</span></div>
+        </div>
+
+        <div class="view" id="b-agenda">
+          <div class="toolbar"><span class="muted small">Toque num horário livre para encaixar · toque num agendamento para concluir</span><span class="spacer"></span><span class="chip" id="ocupB"></span></div>
+          <div class="panel table-wrap"><div class="sched" id="sched"></div></div>
+        </div>
+
+        <div class="view" id="b-caixa">
+          <div class="kpis">
+            <div class="kpi"><small>Caixa de hoje</small><strong id="cx">R$ 0</strong><em id="cxN"></em></div>
+            <div class="kpi"><small>Ticket médio</small><strong>R$ 68</strong><em>▲ R$ 6 com combos</em></div>
+            <div class="kpi"><small>Assinantes ativos</small><strong data-count="142">0</strong><em>R$ 17.420/mês recorrente</em></div>
+            <div class="kpi"><small>Produtos vendidos</small><strong data-count="9">0</strong><em>pomadas e óleos</em></div>
+          </div>
+          <div class="dash">
+            <div class="panel">
+              <div class="panel__h"><h3 style="font-size:26px">Comissões</h3><span class="muted small">clique no % para editar</span></div>
+              <div class="crow h"><span>Barbeiro</span><span>Atend.</span><span>Faturado</span><span>%</span><span>A pagar</span></div>
+              <div id="com"></div>
+            </div>
+            <div style="display:grid;gap:18px">
+              <div class="panel"><div class="panel__h"><h3 style="font-size:26px">Formas de pagamento</h3></div><div style="display:grid;gap:14px" id="pag"></div></div>
+              <button class="btn btn--block" id="fechar">Fechar caixa do dia</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="view" id="b-cli">
+          <div class="toolbar">
+            <input class="input" data-filter="#cliB" placeholder="Buscar cliente…" aria-label="Buscar cliente">
+            <div class="chips" data-group="bf" data-chips="#cliB"><button class="opt is-on" data-value="all">Todos</button><button class="opt" data-value="sumido">Sumidos +30 dias</button><button class="opt" data-value="assin">Assinantes</button><button class="opt" data-value="niver">Aniversariantes</button></div>
+          </div>
+          <div class="panel"><div class="list" id="cliB"></div></div>
+        </div>
+      </div>
+    </div>
+    <template id="b-notif" data-title="Notificações">
+      <div class="list">
+        <div><span class="icon">✂</span><div><b>Novo agendamento pelo site</b><div class="muted small">Gustavo · corte com Thiago · 17h</div></div></div>
+        <div><span class="icon">🔁</span><div><b>Assinatura renovada</b><div class="muted small">Pedro H. · Clube Completo · cartão</div></div></div>
+      </div>
+    </template>
   </section>
 
 </main></div>
@@ -280,6 +355,99 @@
     render();
   }, 1500);
   render();
+
+  /* ===================== Painel admin ===================== */
+  $("#bHoje").textContent = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long" }).format(new Date());
+  var BARB = [["TH", "Thiago", "#e0a526"], ["RB", "Rafa", "#c2372a"], ["LU", "Lu", "#6b8cff"]];
+  var PRICE = { "Corte": 55, "Barba": 40, "Corte + barba": 85, "Pigmentação": 35, "Sobrancelha": 20, "Platinado": 180 };
+  var BK = { // "barbeiro-hora": [cliente, serviço, estado]
+    "0-9": ["Pedro H.", "Corte + barba", "done"], "0-10": ["Caio M.", "Corte", "done"], "0-11": ["Felipe A.", "Corte", ""], "0-14": ["Gustavo", "Corte", ""], "0-17": ["Rodrigo S.", "Corte + barba", ""], "0-18": ["Vini", "Corte", ""],
+    "1-9": ["André S.", "Barba", "done"], "1-10": ["Léo P.", "Pigmentação", "noshow"], "1-12": ["Murilo", "Corte + barba", ""], "1-15": ["Bruno K.", "Barba", ""], "1-19": ["Davi", "Corte", ""],
+    "2-9": ["Igor N.", "Platinado", "done"], "2-11": ["Nando", "Corte", ""], "2-14": ["Samuel", "Sobrancelha", ""], "2-16": ["Marcelo A.", "Corte", ""], "2-18": ["Henrique", "Corte + barba", ""]
+  };
+  var cur = null;
+  function renderSched() {
+    var h = '<span></span>' + BARB.map(function (b) { return '<div class="hd"><span class="avatar" style="background:' + b[2] + '">' + b[0] + "</span>" + b[1] + "</div>"; }).join("");
+    for (var hr = 9; hr <= 20; hr++) {
+      h += '<span class="hr">' + hr + ":00</span>";
+      BARB.forEach(function (b, i) {
+        var k = i + "-" + hr, x = BK[k];
+        if (hr === 13) h += '<button class="slot off" disabled>almoço</button>';
+        else if (x) h += '<button class="slot bk ' + x[2] + '" style="--c:' + b[2] + '" data-k="' + k + '"><b>' + esc(x[0]) + "</b><small>" + x[1] + "</small></button>";
+        else h += '<button class="slot" data-k="' + k + '">+ livre</button>';
+      });
+    }
+    $("#sched").innerHTML = h;
+    var n = Object.keys(BK).length;
+    $("#ocupB").textContent = n + " de 33 horários ocupados";
+    caixa();
+  }
+  $("#sched").addEventListener("click", function (e) {
+    var s = e.target.closest(".slot"); if (!s || s.disabled) return;
+    var k = cur = s.dataset.k, b = BARB[+k.split("-")[0]], hr = k.split("-")[1] + ":00", x = BK[k];
+    if (!x) {
+      D.drawer("Encaixe · " + b[1] + " às " + hr, '<form class="form" id="fEnc">' +
+        '<label class="field">Cliente<input class="input" name="cli" required placeholder="Nome do cliente" list="cliSug"></label>' +
+        '<datalist id="cliSug"><option>Marcelo A.</option><option>Pedro H.</option><option>Gustavo</option><option>Caio M.</option></datalist>' +
+        '<p class="field">Serviço</p><div class="opts" data-group="srv" style="grid-template-columns:1fr 1fr">' + Object.keys(PRICE).slice(0, 4).map(function (p, i) { return '<button type="button" class="opt' + (i ? "" : " is-on") + '" data-value="' + p + '"><span><b>' + p + "</b><small>R$ " + PRICE[p] + "</small></span></button>"; }).join("") + "</div>" +
+        '<button class="btn btn--block">Confirmar encaixe</button></form>');
+    } else {
+      D.drawer(x[0], '<dl class="summary"><div><dt>Serviço</dt><dd>' + x[1] + '</dd></div><div><dt>Barbeiro</dt><dd>' + b[1] + "</dd></div><div><dt>Horário</dt><dd>" + hr + "</dd></div><div><dt>Valor</dt><dd>R$ " + PRICE[x[1]] + "</dd></div></dl>" +
+        '<p class="muted small">7º corte · cartão fidelidade 7/10 · prefere degradê baixo</p>' +
+        '<div class="row"><button class="btn btn--sm" data-b="done">Concluir · cobrar</button><button class="btn btn--ghost btn--sm" data-b="noshow">Não veio</button><button class="btn btn--ghost btn--sm" data-b="lemb">Lembrete</button></div>');
+    }
+  });
+  document.addEventListener("submit", function (e) {
+    if (e.target.id !== "fEnc") return;
+    e.preventDefault();
+    var f = e.target, srv = D.$('[data-group="srv"] .is-on', f);
+    BK[cur] = [f.cli.value.trim() || "Cliente", srv ? srv.dataset.value : "Corte", ""];
+    D.closeLayer(); renderSched();
+    D.toast("Encaixe confirmado · cliente avisado no WhatsApp");
+  });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-b]"); if (!b) return;
+    var x = BK[cur], a = b.dataset.b;
+    if (a === "lemb") { D.toast("Lembrete enviado para " + x[0]); return; }
+    var prev = x[2]; x[2] = a;
+    D.closeLayer(); renderSched();
+    D.toast(a === "done" ? x[0] + " atendido · R$ " + PRICE[x[1]] + " no caixa" : x[0] + " marcado como falta", a !== "done", function () { x[2] = prev; renderSched(); });
+  });
+
+  /* caixa e comissões */
+  var pct = [45, 40, 40];
+  function caixa() {
+    var tot = 0, n = 0, per = [0, 0, 0], cnt = [0, 0, 0];
+    Object.keys(BK).forEach(function (k) { var x = BK[k]; if (x[2] === "done") { var i = +k[0], v = PRICE[x[1]]; per[i] += v; cnt[i]++; tot += v; n++; } });
+    tot += 1180; n += 14; per = per.map(function (v, i) { return v + [520, 360, 300][i]; }); cnt = cnt.map(function (c, i) { return c + [6, 5, 3][i]; }); // atendimentos da manhã já fechados
+    $("#cx").textContent = "R$ " + tot.toLocaleString("pt-BR"); $("#cxN").textContent = n + " atendimentos";
+    $("#com").innerHTML = BARB.map(function (b, i) {
+      return '<div class="crow"><span class="row" style="gap:10px"><span class="avatar" style="width:30px;height:30px;font-size:11px;border-radius:4px;background:' + b[2] + '">' + b[0] + "</span><b>" + b[1] + "</b></span><span>" + cnt[i] + "</span><span>R$ " + per[i] + '</span><span><span data-edit="Comissão atualizada" data-pct="' + i + '">' + pct[i] + '%</span></span><b style="color:var(--accent)">R$ ' + Math.round(per[i] * pct[i] / 100) + "</b></div>";
+    }).join("");
+  }
+  $("#com").addEventListener("edited", function (e) { var v = parseInt(e.target.textContent, 10); if (v >= 0 && v <= 100) pct[+e.target.dataset.pct] = v; caixa(); });
+  $("#pag").innerHTML = [["Pix", 58, "var(--accent)"], ["Cartão", 34, "#6b8cff"], ["Dinheiro", 8, "#7a7468"]].map(function (p) {
+    return '<div><div class="row" style="justify-content:space-between;font-size:14px"><b>' + p[0] + '</b><span class="muted">' + p[1] + '%</span></div><div class="bar" style="margin-top:8px"><i style="--v:' + p[1] + "%;--c:" + p[2] + '"></i></div></div>';
+  }).join("");
+  $("#fechar").addEventListener("click", function () { D.toast("Caixa fechado · relatório e comissões enviados aos barbeiros"); });
+
+  /* clientes */
+  var CL = [["Marcelo A.", "há 12 dias", "assin"], ["Pedro H.", "hoje", "assin"], ["Rafael T.", "há 47 dias", "sumido"], ["Caio M.", "hoje", ""], ["Júlio C.", "há 63 dias", "sumido niver"],
+    ["Gustavo", "há 20 dias", "niver"], ["Fábio R.", "há 38 dias", "sumido"], ["Leandro", "há 5 dias", "assin"]];
+  $("#cliB").innerHTML = CL.map(function (c) {
+    var sum = c[2].indexOf("sumido") >= 0;
+    return '<div data-tag="' + c[2] + '"><span class="avatar" style="border-radius:4px">' + c[0].slice(0, 2).toUpperCase() + '</span><div style="flex:1"><b>' + esc(c[0]) + '</b><div class="muted small">último corte ' + c[1] + (c[2].indexOf("assin") >= 0 ? " · assinante" : "") + (c[2].indexOf("niver") >= 0 ? " · 🎂 faz aniversário esta semana" : "") + "</div></div>" +
+      (sum ? '<button class="btn btn--sm" data-cupom="' + esc(c[0]) + '">Enviar cupom 15%</button>' : '<span class="badge badge--ok">ativo</span>') + "</div>";
+  }).join("");
+  $("#cliB").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-cupom]"); if (!b) return;
+    b.outerHTML = '<span class="badge">cupom enviado</span>';
+    D.toast("WhatsApp: \"Saudade, " + b.dataset.cupom.split(" ")[0] + "! Volta essa semana com 15% off 💈\"");
+  });
+
+  renderSched();
+  D.cmd("Encaixar cliente", function () { D.go("admin"); D.$('[data-view="b-agenda"]').click(); });
+  D.cmd("Reativar clientes sumidos", function () { D.go("admin"); D.$('[data-view="b-cli"]').click(); D.$('[data-chips="#cliB"] [data-value="sumido"]').click(); });
 })();
 </script>
 </body>

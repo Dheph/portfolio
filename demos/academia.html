@@ -90,6 +90,14 @@
     .meter i { display: block; height: 100%; width: var(--v, 40%); border-radius: inherit; background: linear-gradient(90deg, var(--accent), #facc15 70%, #ef4444); background-size: 300% 100%; transition: width 1.2s var(--ease); }
     .spots { font: 900 italic 22px/1 var(--font-d); }
 
+    /* painel admin */
+    .heat { display: grid; grid-template-columns: 34px repeat(17, minmax(0, 1fr)); gap: 3px; font-size: 10px; color: var(--muted); }
+    .heat span { align-self: center; }
+    .heat i { aspect-ratio: 1; border-radius: 3px; background: var(--accent); opacity: calc(.06 + var(--v) * .0094); transition: transform .15s; }
+    .heat i:hover { transform: scale(1.35); opacity: 1; }
+    .feed > div { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); animation: kIn .5s var(--ease) both; }
+    .feed .avatar { width: 34px; height: 34px; font-size: 11px; }
+
     @container (max-width: 900px) { .app-wrap { grid-template-columns: 1fr; } .phone { max-width: 420px; margin: 0 auto; width: 100%; } }
     @container (max-width: 760px) {
       .class-row { grid-template-columns: 70px 1fr; } .class-row .chip, .class-row .btn { grid-column: 2; justify-self: start; }
@@ -222,6 +230,70 @@
     </div>
   </section>
 
+  <!-- ===================== PAINEL ADMIN ===================== -->
+  <section class="screen" id="admin" data-label="Painel admin" data-label-en="Admin panel" data-label-es="Panel admin">
+    <div class="app">
+      <aside class="app__side">
+        <a href="#site" class="logo">PULSE<b>/</b>ADMIN</a>
+        <a data-view="a-home" class="is-on"><i>⚡</i>Visão geral</a>
+        <a data-view="a-alunos"><i>☺</i>Alunos</a>
+        <a data-view="a-fin"><i>$</i>Financeiro</a>
+        <span class="spacer"></span>
+        <span class="live" style="font-size:12px"><i></i>catracas online</span>
+      </aside>
+      <div class="app__main">
+        <div class="app__top">
+          <div><p class="muted small">Unidade Centro · aberta 24h</p><h2 data-view-title style="font-style:italic;font-weight:900;text-transform:uppercase">Visão geral</h2></div>
+          <div class="row"><button class="cmdk-btn" data-cmdk>⌕ <span class="t">Buscar aluno, plano…</span><span class="kbd">⌘K</span></button><button class="bell" data-n="3" data-drawer="#a-notif" aria-label="Notificações">🔔</button><span class="avatar">GR</span></div>
+        </div>
+
+        <div class="view" id="a-home">
+          <div class="kpis">
+            <div class="kpi"><small>Alunos ativos</small><strong data-count="3214">0</strong><em>+58 este mês</em></div>
+            <div class="kpi"><small>Check-ins hoje</small><strong id="ckN">612</strong><em>pico às 19h</em></div>
+            <div class="kpi"><small>Receita recorrente</small><strong data-count="412300" data-pre="R$ ">0</strong><em>▲ 4,2%</em></div>
+            <div class="kpi"><small>Risco de evasão</small><strong data-count="37">0</strong><em style="color:var(--warn)">sem treinar há 14+ dias</em></div>
+          </div>
+          <div class="dash">
+            <div class="panel"><div class="panel__h"><h3 style="font-style:italic;text-transform:uppercase">Movimento por horário</h3><span class="muted small">últimas 4 semanas</span></div><div class="heat" id="heat"></div></div>
+            <div class="panel"><div class="panel__h"><h3 style="font-style:italic;text-transform:uppercase">Check-ins ao vivo</h3><span class="live"><i></i>agora</span></div><div class="feed" id="feed"></div></div>
+          </div>
+        </div>
+
+        <div class="view" id="a-alunos">
+          <div class="toolbar">
+            <input class="input" data-filter="#alList" placeholder="Buscar aluno…" aria-label="Buscar aluno">
+            <div class="chips" data-group="af" data-chips="#alList"><button class="opt is-on" data-value="all">Todos</button><button class="opt" data-value="ok">Em dia</button><button class="opt" data-value="inad">Inadimplentes</button><button class="opt" data-value="risco">Risco de evasão</button></div>
+          </div>
+          <div class="panel"><div class="table-wrap"><table class="table"><thead><tr><th>Aluno</th><th>Plano</th><th>Último treino</th><th>Frequência</th><th>Status</th></tr></thead><tbody id="alList"></tbody></table></div></div>
+        </div>
+
+        <div class="view" id="a-fin">
+          <div class="kpis">
+            <div class="kpi"><small>Recebido em outubro</small><strong data-count="398700" data-pre="R$ ">0</strong><em>96,7% da carteira</em></div>
+            <div class="kpi"><small>Inadimplência</small><strong data-count="3.3" data-suf="%">0</strong><em>▼ 1,1 p.p. com Pix automático</em></div>
+            <div class="kpi"><small>Novas matrículas</small><strong data-count="121">0</strong><em>62% pelo site</em></div>
+            <div class="kpi"><small>Cancelamentos</small><strong data-count="63">0</strong><em style="color:var(--muted)">churn 1,9%</em></div>
+          </div>
+          <div class="dash">
+            <div class="panel"><div class="panel__h"><h3 style="font-style:italic;text-transform:uppercase">Inadimplentes</h3><button class="btn btn--sm" id="cobrarTodos">Cobrar todos</button></div><div class="list" id="inad"></div></div>
+            <div style="display:grid;gap:18px">
+              <div class="panel"><div class="panel__h"><h3 style="font-style:italic;text-transform:uppercase">Receita · 6 meses</h3></div><div class="bars" style="height:140px" data-bars="371,379,384,392,401,412" data-labels="mai,jun,jul,ago,set,out" data-pre="R$ " data-suf=" mil"></div></div>
+              <div class="panel"><div class="panel__h"><h3 style="font-style:italic;text-transform:uppercase">Planos</h3></div><div style="display:grid;gap:12px" id="planos"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <template id="a-notif" data-title="Notificações">
+      <div class="list">
+        <div><span class="icon">⚠</span><div><b>Spinning 18h30 lotado</b><div class="muted small">12 alunos na lista de espera · abrir turma extra?</div></div></div>
+        <div><span class="icon">☺</span><div><b>8 matrículas pelo site hoje</b><div class="muted small">6 no plano Black</div></div></div>
+        <div><span class="icon">⚙</span><div><b>Esteira 07 em manutenção</b><div class="muted small">Chamado aberto às 10:12</div></div></div>
+      </div>
+    </template>
+  </section>
+
 </main></div>
 <script src="kit.js"></script>
 <script>
@@ -300,6 +372,60 @@
     $("#lotTxt").textContent = lot < 45 ? "Tranquilo · ótimo horário" : lot < 70 ? "Movimentado" : "Pico · espere ~15 min";
   }
   setLot(); setInterval(setLot, 2500);
+  /* ===================== Painel admin ===================== */
+  var heat = '<span></span>' + Array.from({ length: 17 }, function (_, h) { return "<span>" + (h % 3 ? "" : 6 + h + "h") + "</span>"; }).join("");
+  ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"].forEach(function (d, di) {
+    heat += "<span>" + d + "</span>";
+    for (var h = 6; h <= 22; h++) {
+      var peak = Math.max(Math.exp(-Math.pow(h - 7, 2) / 2) * .75, Math.exp(-Math.pow(h - 12.5, 2) / 2) * .45, Math.exp(-Math.pow(h - 19, 2) / 3));
+      if (di >= 5) peak = Math.exp(-Math.pow(h - 10, 2) / 6) * (di === 5 ? .8 : .45);
+      var v = Math.round(Math.min(100, peak * (di === 4 ? 85 : 100) + ((h * 7 + di * 13) % 10)));
+      heat += '<i style="--v:' + v + '" title="' + d + " " + h + "h · " + Math.round(v * 1.8) + ' pessoas"></i>';
+    }
+  });
+  $("#heat").innerHTML = heat;
+
+  var NOMES = ["Ana Clara", "Bruno Reis", "Carla Mota", "Diego Lins", "Eduarda K.", "Felipe Sá", "Gabi Torres", "Hugo Alves", "Isis Rocha", "João Vitor"], ck = 612, fi = 0;
+  function checkin() {
+    var n = NOMES[fi++ % NOMES.length], f = $("#feed");
+    f.insertAdjacentHTML("afterbegin", '<div><span class="avatar">' + n.split(" ").map(function (x) { return x[0]; }).join("") + '</span><div style="flex:1"><b>' + n + '</b><div class="muted small">' + ["Black", "Smart", "Duo"][fi % 3] + " · catraca " + (1 + fi % 3) + '</div></div><span class="muted small">agora</span></div>');
+    while (f.children.length > 6) f.lastChild.remove();
+    $("#ckN").textContent = ++ck;
+  }
+  for (var c0 = 0; c0 < 5; c0++) checkin();
+  setInterval(checkin, 2600);
+
+  var AL = [["Lucas Carvalho", "Black", "hoje", 4.5, "ok"], ["Mariana Reis", "Smart", "há 2 dias", 3, "ok"], ["Paulo Henrique", "Black", "há 18 dias", .5, "risco"], ["Renata Souza", "Duo", "há 1 dia", 4, "ok"],
+    ["Tiago Lopes", "Smart", "há 9 dias", 1.5, "inad"], ["Vanessa Lima", "Black", "há 21 dias", .3, "risco"], ["Caio Nogueira", "Smart", "hoje", 5, "ok"], ["Bianca Moraes", "Black", "há 4 dias", 2.5, "inad"],
+    ["Rafael Dias", "Duo", "há 15 dias", .8, "risco"], ["Sofia Martins", "Smart", "ontem", 3.5, "ok"]];
+  var ST = { ok: ["Em dia", "ok"], inad: ["Mensalidade atrasada", "bad"], risco: ["Risco de evasão", "warn"] };
+  $("#alList").innerHTML = AL.map(function (a, i) {
+    return '<tr data-i="' + i + '" data-tag="' + a[4] + '"><td><b>' + a[0] + "</b></td><td>" + a[1] + "</td><td>" + a[2] + '</td><td><div class="bar" style="width:90px"><i style="--v:' + a[3] * 20 + '%"></i></div></td><td><span class="badge badge--' + ST[a[4]][1] + '">' + ST[a[4]][0] + "</span></td></tr>";
+  }).join("");
+  $("#alList").addEventListener("click", function (e) {
+    var tr = e.target.closest("tr"); if (!tr) return;
+    var a = AL[+tr.dataset.i], k = a[3];
+    D.drawer(a[0], '<span class="badge badge--' + ST[a[4]][1] + '">' + ST[a[4]][0] + '</span>' +
+      '<dl class="summary"><div><dt>Plano</dt><dd>' + a[1] + "</dd></div><div><dt>Objetivo</dt><dd>" + ["Hipertrofia", "Emagrecimento", "Condicionamento"][a[0].length % 3] + "</dd></div><div><dt>Último treino</dt><dd>" + a[2] + "</dd></div><div><dt>Média</dt><dd>" + String(k).replace(".", ",") + "× por semana</dd></div></dl>" +
+      '<p class="muted small" style="text-transform:uppercase;letter-spacing:.08em">Treinos por semana</p><div class="bars" style="height:100px" data-bars="' + [4, 5, 4, 3, 4, 3, 2, 1].map(function (x) { return Math.max(0, Math.round(x * k / 4)); }).join(",") + '" data-labels="S5,S6,S7,S8,S9,S10,S11,S12" data-suf=" treinos"></div>' +
+      '<div class="row">' + (a[4] === "inad" ? '<button class="btn btn--sm" data-act="Link de pagamento Pix enviado no WhatsApp">Cobrar via Pix</button>' : "") +
+      '<button class="btn btn--sm' + (a[4] === "inad" ? " btn--ghost" : "") + '" data-act="Novo treino publicado no app do aluno">Montar treino</button><button class="btn btn--ghost btn--sm" data-act="Mensagem de incentivo enviada pelo app">Enviar incentivo</button></div>');
+  });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-act]"); if (b) D.toast(b.dataset.act); });
+
+  $("#inad").innerHTML = AL.filter(function (a) { return a[4] === "inad"; }).concat([["Pedro Arantes", "Black", "", 0, "inad"], ["Luiza F.", "Smart", "", 0, "inad"]]).map(function (a, i) {
+    return '<div><span class="avatar">' + a[0].split(" ").map(function (x) { return x[0]; }).join("") + '</span><div style="flex:1"><b>' + a[0] + '</b><div class="muted small">' + a[1] + " · " + (5 + i * 4) + ' dias de atraso</div></div><button class="btn btn--sm btn--ghost" data-pix>Cobrar via Pix</button></div>';
+  }).join("");
+  function pix(b) { b.outerHTML = '<span class="badge badge--ok">link enviado</span>'; }
+  $("#inad").addEventListener("click", function (e) { var b = e.target.closest("[data-pix]"); if (b) { pix(b); D.toast("Link Pix enviado no WhatsApp e por e-mail"); } });
+  $("#cobrarTodos").addEventListener("click", function () { D.$$("#inad [data-pix]").forEach(function (b, i) { setTimeout(function () { pix(b); }, i * 150); }); D.toast("Cobranças enviadas em lote"); });
+  $("#planos").innerHTML = [["Black", 54, "var(--accent)"], ["Smart", 33, "var(--accent-2)"], ["Duo", 13, "#22d3ee"]].map(function (p) {
+    return '<div><div class="row" style="justify-content:space-between;font-size:14px"><b>' + p[0] + '</b><span class="muted">' + p[1] + '%</span></div><div class="bar" style="margin-top:8px"><i style="--v:' + p[1] + "%;--c:" + p[2] + '"></i></div></div>';
+  }).join("");
+
+  D.cmd("Alunos em risco de evasão", function () { D.go("admin"); D.$('[data-view="a-alunos"]').click(); D.$('[data-chips="#alList"] [data-value="risco"]').click(); });
+  D.cmd("Cobrar inadimplentes", function () { D.go("admin"); D.$('[data-view="a-fin"]').click(); });
+
   $("#hoje").innerHTML = G.Qui.map(function (c) {
     return '<div><b style="font:900 italic 20px/1 var(--font-d);color:var(--accent);width:64px">' + c[0] + '</b><div style="flex:1"><b>' + esc(c[1]) + '</b><div class="muted small">com ' + c[2] + '</div></div><span class="spots">' + c[3] + '</span><span class="muted small">vagas</span><button class="btn btn--sm" data-book="' + esc(c[1]) + '">Reservar</button></div>';
   }).join("");

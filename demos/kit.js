@@ -14,10 +14,16 @@
   })();
   var T = {
     en: { back: "Back to portfolio", live: "Live demo · mock data", cta: "Want one like this?", screens: "Screens", pick: "Choose an option to continue",
+      views: "Admin panel", actions: "Actions", search: "Search screens and actions…", none: "Nothing found", nav: "navigate", open: "open", close: "close",
+      undo: "Undo", moved: "Moved to", done: "Marked as done", saved: "Saved",
       sectors: { advocacia: "Law firm", contabilidade: "Accounting firm", restaurante: "Restaurant", clinica: "Dental clinic", barbearia: "Barbershop", academia: "Gym & fitness", game: "Mini game" } },
     pt: { back: "Voltar ao portfólio", live: "Demo ao vivo · dados fictícios", cta: "Quero um assim", screens: "Telas", pick: "Escolha uma opção para continuar",
+      views: "Painel admin", actions: "Ações", search: "Buscar telas e ações…", none: "Nada encontrado", nav: "navegar", open: "abrir", close: "fechar",
+      undo: "Desfazer", moved: "Movido para", done: "Concluído", saved: "Salvo",
       sectors: { advocacia: "Advocacia", contabilidade: "Contabilidade", restaurante: "Restaurante", clinica: "Clínica odontológica", barbearia: "Barbearia", academia: "Academia", game: "Mini game" } },
     es: { back: "Volver al portafolio", live: "Demo en vivo · datos ficticios", cta: "Quiero uno así", screens: "Pantallas", pick: "Elige una opción para continuar",
+      views: "Panel admin", actions: "Acciones", search: "Buscar pantallas y acciones…", none: "Nada encontrado", nav: "navegar", open: "abrir", close: "cerrar",
+      undo: "Deshacer", moved: "Movido a", done: "Completado", saved: "Guardado",
       sectors: { advocacia: "Despacho de abogados", contabilidade: "Contabilidad", restaurante: "Restaurante", clinica: "Clínica dental", barbearia: "Barbería", academia: "Gimnasio", game: "Mini juego" } }
   }[LANG];
 
@@ -114,12 +120,18 @@
   var toastEl = document.createElement("div"), toastT;
   toastEl.className = "toast"; toastEl.setAttribute("role", "status");
   body.appendChild(toastEl);
-  function toast(msg, warn) {
+  function toast(msg, warn, undo) {
     toastEl.textContent = msg;
+    if (undo) {
+      var b = document.createElement("button");
+      b.textContent = T.undo;
+      b.onclick = function () { toastEl.classList.remove("is-on"); undo(); };
+      toastEl.appendChild(b);
+    }
     toastEl.classList.toggle("is-warn", !!warn);
     toastEl.classList.add("is-on");
     clearTimeout(toastT);
-    toastT = setTimeout(function () { toastEl.classList.remove("is-on"); }, 3200);
+    toastT = setTimeout(function () { toastEl.classList.remove("is-on"); }, undo ? 5000 : 3200);
   }
   function shake(n) { n.classList.remove("shake"); void n.offsetWidth; n.classList.add("shake"); }
 
@@ -158,10 +170,181 @@
     to(0);
   });
 
+  /* ---------- Painel admin: views internas (sidebar + abas no mobile) ---------- */
+  function linkText(l) { return [].filter.call(l.childNodes, function (n) { return n.nodeType === 3; }).map(function (n) { return n.textContent; }).join("").trim(); }
+  function view(link) {
+    var app = link.closest(".app"), id = link.dataset.view, v = document.getElementById(id);
+    $$(".view", app).forEach(function (x) { x.classList.toggle("is-active", x === v); });
+    $$("[data-view]", app).forEach(function (l) { l.classList.toggle("is-on", l.dataset.view === id); });
+    var title = $("[data-view-title]", app);
+    if (title) title.textContent = linkText(link);
+    vp.scrollTop = 0;
+    reveal(v);
+    document.dispatchEvent(new CustomEvent("demo:view", { detail: id }));
+  }
+  $$(".app").forEach(function (app) {
+    var links = $$(".app__side [data-view]", app);
+    if (!links.length) return;
+    var nav = document.createElement("nav");
+    nav.className = "app__tabs";
+    nav.innerHTML = links.map(function (l) { return '<button data-view="' + l.dataset.view + '">' + l.innerHTML + "</button>"; }).join("");
+    var main = $(".app__main", app), top = $(".app__top", main);
+    main.insertBefore(nav, top ? top.nextSibling : main.firstChild);
+    view(links.filter(function (l) { return l.classList.contains("is-on"); })[0] || links[0]);
+  });
+
+  /* ---------- Camada de overlays: drawer de detalhes + paleta ⌘K ---------- */
+  var layer = document.createElement("div");
+  layer.className = "layer";
+  layer.innerHTML = '<div class="layer__bk"></div><aside class="drawer" role="dialog" aria-modal="true"></aside>' +
+    '<div class="cmdk" role="dialog" aria-label="Command palette"><input class="input" placeholder="' + esc(T.search) + '" aria-label="' + esc(T.search) + '"><div class="cmdk__list"></div>' +
+    '<div class="cmdk__foot"><span><span class="kbd">↑↓</span> ' + T.nav + '</span><span><span class="kbd">↵</span> ' + T.open + '</span><span><span class="kbd">esc</span> ' + T.close + "</span></div></div>";
+  $(".stage").appendChild(layer);
+  var drawerEl = $(".drawer", layer);
+  function closeLayer() { layer.className = "layer"; }
+  function drawer(title, html) {
+    drawerEl.innerHTML = '<div class="drawer__h"><h3>' + esc(title) + '</h3><button class="drawer__x" aria-label="' + esc(T.close) + '">✕</button></div>' + html;
+    layer.className = "layer is-open is-drawer";
+    drawerEl.scrollTop = 0;
+    $$("[data-count], [data-p]", drawerEl).forEach(show);
+    $$("[data-bars]", drawerEl).forEach(bars);
+    return drawerEl;
+  }
+  layer.addEventListener("click", function (e) { if (e.target.closest(".drawer__x") || e.target.classList.contains("layer__bk")) closeLayer(); });
+
+  var cmdk = $(".cmdk", layer), cIn = $("input", cmdk), cList = $(".cmdk__list", cmdk), cItems = [], cSel = 0, extra = [];
+  function cmdAll() {
+    var items = screens.map(function (s, i) { return { g: T.screens, label: tabs.children[i].lastChild.textContent, run: function () { go(s.id); } }; });
+    $$(".app__side [data-view]").forEach(function (l) {
+      items.push({ g: T.views, label: linkText(l), run: function () { go(l.closest(".screen").id); view(l); } });
+    });
+    return items.concat(extra);
+  }
+  function cmdRender() {
+    var q = cIn.value.trim().toLowerCase(), last = "";
+    cItems = cmdAll().filter(function (it) { return !q || (it.label + " " + it.g).toLowerCase().indexOf(q) >= 0; });
+    cSel = 0;
+    cList.innerHTML = cItems.map(function (it, i) {
+      var h = it.g !== last ? '<div class="cmdk__g">' + esc(it.g) + "</div>" : "";
+      last = it.g;
+      return h + '<button class="cmdk__i" data-i="' + i + '">' + esc(it.label) + "</button>";
+    }).join("") || '<p class="cmdk__empty">' + esc(T.none) + "</p>";
+    mark();
+  }
+  function mark() { $$(".cmdk__i", cList).forEach(function (b, i) { b.classList.toggle("is-sel", i === cSel); if (i === cSel) b.scrollIntoView({ block: "nearest" }); }); }
+  function openCmdk() { layer.className = "layer is-open is-cmdk"; cIn.value = ""; cmdRender(); setTimeout(function () { cIn.focus(); }, 40); }
+  function runCmd(i) { var it = cItems[i]; if (it) { closeLayer(); it.run(); } }
+  cIn.addEventListener("input", cmdRender);
+  cIn.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowDown") { e.preventDefault(); cSel = Math.min(cItems.length - 1, cSel + 1); mark(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); cSel = Math.max(0, cSel - 1); mark(); }
+    else if (e.key === "Enter") runCmd(cSel);
+  });
+  cList.addEventListener("click", function (e) { var b = e.target.closest(".cmdk__i"); if (b) runCmd(+b.dataset.i); });
+  document.addEventListener("keydown", function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); if (layer.classList.contains("is-cmdk")) closeLayer(); else openCmdk(); }
+    else if (e.key === "Escape" && layer.classList.contains("is-open")) closeLayer();
+  });
+
+  /* ---------- Kanban: arrastar e soltar + botão avançar ---------- */
+  function kcount(board) { $$(".kcol", board).forEach(function (c) { var n = $("[data-n]", c); if (n) n.textContent = $$(".kcard", c).length; }); }
+  function kmove(card, col, silent) {
+    var from = card.closest(".kcol");
+    if (!col || from === col) return;
+    $(".kcards", col).prepend(card);
+    card.style.animation = "none"; void card.offsetWidth; card.style.animation = "";
+    kcount(col.closest(".kanban"));
+    var d = { from: from, to: col, msg: "" }; // a página pode trocar a mensagem do toast (d.msg)
+    card.dispatchEvent(new CustomEvent("kmove", { bubbles: true, detail: d }));
+    if (!silent) toast(d.msg || T.moved + " " + $("h4", col).firstChild.textContent.trim(), false, function () { kmove(card, from, true); });
+  }
+  var dragCard = null;
+  document.addEventListener("dragstart", function (e) {
+    var c = e.target.closest && e.target.closest(".kcard");
+    if (!c) return;
+    dragCard = c; c.classList.add("is-drag");
+    e.dataTransfer.effectAllowed = "move";
+    try { e.dataTransfer.setData("text/plain", ""); } catch (x) { }
+  });
+  document.addEventListener("dragend", function () {
+    if (dragCard) dragCard.classList.remove("is-drag");
+    dragCard = null;
+    $$(".kcol.is-over").forEach(function (c) { c.classList.remove("is-over"); });
+  });
+  document.addEventListener("dragover", function (e) {
+    var col = dragCard && e.target.closest(".kcol");
+    if (!col) return;
+    e.preventDefault();
+    $$(".kcol.is-over").forEach(function (c) { if (c !== col) c.classList.remove("is-over"); });
+    col.classList.add("is-over");
+  });
+  document.addEventListener("drop", function (e) {
+    var col = dragCard && e.target.closest(".kcol");
+    if (col) { e.preventDefault(); kmove(dragCard, col); }
+  });
+
+  /* ---------- Filtros: input[data-filter="#lista"] + .chips[data-chips="#lista"] (linhas com data-tag) ---------- */
+  var FS = {};
+  function applyFilter(sel) {
+    var st = FS[sel] || (FS[sel] = { q: "", tag: "all" });
+    $$(sel + " > *").forEach(function (row) {
+      var okQ = !st.q || row.textContent.toLowerCase().indexOf(st.q) >= 0;
+      var okT = st.tag === "all" || (" " + (row.dataset.tag || "") + " ").indexOf(" " + st.tag + " ") >= 0;
+      row.hidden = !(okQ && okT);
+    });
+  }
+  document.addEventListener("input", function (e) {
+    var f = e.target.closest && e.target.closest("[data-filter]");
+    if (!f) return;
+    (FS[f.dataset.filter] = FS[f.dataset.filter] || { q: "", tag: "all" }).q = f.value.trim().toLowerCase();
+    applyFilter(f.dataset.filter);
+  });
+  document.addEventListener("pick", function (e) {
+    var c = e.target.closest("[data-chips]");
+    if (!c) return;
+    (FS[c.dataset.chips] = FS[c.dataset.chips] || { q: "", tag: "all" }).tag = e.detail.dataset.value;
+    applyFilter(c.dataset.chips);
+  });
+
+  /* ---------- Edição inline: [data-edit="mensagem ao salvar"] ---------- */
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && e.target.getAttribute && e.target.getAttribute("contenteditable") === "true") { e.preventDefault(); e.target.blur(); }
+  });
+  document.addEventListener("focusout", function (e) {
+    var n = e.target;
+    if (!n.hasAttribute || !n.hasAttribute("data-edit") || n.getAttribute("contenteditable") !== "true") return;
+    n.removeAttribute("contenteditable");
+    n.classList.remove("saved"); void n.offsetWidth; n.classList.add("saved");
+    toast(n.dataset.edit || T.saved);
+    n.dispatchEvent(new CustomEvent("edited", { bubbles: true }));
+  });
+
   /* ---------- Cliques globais ---------- */
   document.addEventListener("click", function (e) {
     var tab = e.target.closest(".demobar__tabs [data-go]");
     if (tab) { go(tab.dataset.go); return; }
+
+    var vl = e.target.closest("[data-view]");
+    if (vl) { view(vl); return; }
+    if (e.target.closest("[data-cmdk]")) { openCmdk(); return; }
+    var dt = e.target.closest("[data-drawer]");
+    if (dt) { var tpl = $(dt.dataset.drawer); dt.removeAttribute("data-n"); drawer(tpl.dataset.title, tpl.innerHTML); return; }
+    var adv = e.target.closest(".kadv");
+    if (adv) { var kc = adv.closest(".kcol"); kmove(adv.closest(".kcard"), kc.nextElementSibling); return; }
+    var todo = e.target.closest(".todo");
+    if (todo) {
+      var on = todo.classList.toggle("is-done");
+      todo.dispatchEvent(new CustomEvent("check", { bubbles: true, detail: on }));
+      if (on) toast(T.done + ": " + ($("b", todo) || todo).textContent, false, function () { todo.classList.remove("is-done"); });
+      return;
+    }
+    var ed = e.target.closest("[data-edit]");
+    if (ed && ed.getAttribute("contenteditable") !== "true") {
+      ed.setAttribute("contenteditable", "true"); ed.focus();
+      var r = document.createRange(); r.selectNodeContents(ed);
+      var s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      return;
+    }
 
     var opt = e.target.closest("[data-group] .opt");
     if (opt && !opt.disabled) {
@@ -175,10 +358,11 @@
     if (sw) sw.setAttribute("aria-pressed", sw.getAttribute("aria-pressed") === "true" ? "false" : "true");
 
     var a = e.target.closest('a[href^="#"]');
-    if (a && vp.contains(a)) {
+    if (a && (vp.contains(a) || layer.contains(a))) {
       e.preventDefault();
       var id = a.getAttribute("href").slice(1), tgt = id && document.getElementById(id);
       if (!tgt) return;
+      closeLayer();
       if (tgt.classList.contains("screen")) go(id);
       else tgt.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -201,9 +385,12 @@
   /* ---------- Init ---------- */
   $$(".marquee > div").forEach(function (m) { m.innerHTML += m.innerHTML; });
   $$("[data-bars]").forEach(bars);
+  $$(".kanban").forEach(kcount);
 
   window.Demo = {
     $: $, $$: $$, esc: esc, go: go, toast: toast, shake: shake, reveal: reveal, setP: setP, lang: LANG, shot: shot, vp: vp,
+    drawer: drawer, closeLayer: closeLayer, kcount: kcount, bars: bars, applyFilter: applyFilter,
+    cmd: function (label, run) { extra.push({ g: T.actions, label: label, run: run }); },
     brl: function (v) { return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
   };
   window.addEventListener("hashchange", function () { go(location.hash.slice(1)); });

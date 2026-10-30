@@ -56,15 +56,15 @@ window.I18N = {
     },
 
     solutions: {
-      lead: "Need a website or system for your business? These are live demos with mock data: click around them like the real thing. Each one is a starting point I tailor to you.",
+      lead: "Need a website or system for your business? These are live demos with mock data: click around them like the real thing, including the admin panel the owner uses day to day. Each one is a starting point I tailor to you.",
       open: "Open live demo",
       items: {
-        advocacia:     { name: "Law firm", desc: "Institutional site, online consultation booking and a client portal to follow cases in real time.", screens: ["Website", "Booking", "Client portal"] },
-        contabilidade: { name: "Accounting firm", desc: "Plans and pricing, a live tax simulator and the client's financial dashboard.", screens: ["Website", "Tax simulator", "Dashboard"] },
-        restaurante:   { name: "Restaurant", desc: "Menu with cart and coupons, table reservations, order tracking and a live kitchen display.", screens: ["Website", "Online ordering", "Order & kitchen"] },
-        clinica:       { name: "Dental clinic", desc: "Treatments, 24/7 online scheduling with calendar and the clinic's daily agenda.", screens: ["Website", "Scheduling", "Clinic panel"] },
-        barbearia:     { name: "Barbershop", desc: "Price list, booking by barber, loyalty stamp card, subscriptions and a live queue.", screens: ["Website", "Booking", "Club & panel"] },
-        academia:      { name: "Gym & fitness", desc: "Plans and class schedule, a student app with workouts and progress, and QR check-in.", screens: ["Website", "Student app", "Check-in"] },
+        advocacia:     { name: "Law firm", desc: "Institutional site, online consultation booking and a client portal to follow cases in real time.", screens: ["Website", "Booking", "Client portal", "Admin panel"] },
+        contabilidade: { name: "Accounting firm", desc: "Plans and pricing, a live tax simulator and the client's financial dashboard.", screens: ["Website", "Tax simulator", "Client dashboard", "Admin panel"] },
+        restaurante:   { name: "Restaurant", desc: "Menu with cart and coupons, table reservations, order tracking and a live kitchen display.", screens: ["Website", "Online ordering", "Order & kitchen", "Admin panel"] },
+        clinica:       { name: "Dental clinic", desc: "Treatments, 24/7 online scheduling with calendar and the clinic's daily agenda.", screens: ["Website", "Scheduling", "Admin panel"] },
+        barbearia:     { name: "Barbershop", desc: "Price list, booking by barber, loyalty stamp card, subscriptions and a live queue.", screens: ["Website", "Booking", "Loyalty club", "Admin panel"] },
+        academia:      { name: "Gym & fitness", desc: "Plans and class schedule, a student app with workouts and progress, and QR check-in.", screens: ["Website", "Student app", "Check-in", "Admin panel"] },
         game:          { name: "Nebula Siege · mini game", desc: "An arcade shooter built from scratch on canvas: waves, bosses, level-ups and particles. Interactive experiences are on the menu too.", screens: ["Canvas 2D", "Touch & keyboard", "No engine"] }
       }
     },

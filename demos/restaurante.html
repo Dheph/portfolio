@@ -110,6 +110,20 @@
       .col { min-height: 0; }
     }
     @container (max-width: 760px) { .o2 { right: 0; } .o1 { left: 0; } }
+
+    /* painel admin */
+    .floor { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; }
+    .mesa { position: relative; min-height: 118px; padding: 14px; border-radius: 18px; text-align: left; cursor: pointer; color: var(--fg);
+      border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 10%, var(--surface)); transition: transform .2s var(--ease), box-shadow .25s; }
+    .mesa:hover { transform: translateY(-3px); box-shadow: 0 16px 30px -18px var(--c); }
+    .mesa b { font: 700 26px/1 var(--font-d); } .mesa small { display: block; margin-top: 6px; color: var(--muted); font-size: 12px; }
+    .mesa .st { position: absolute; top: 12px; right: 12px; font-size: 11px; font-weight: 700; color: var(--c); text-transform: uppercase; letter-spacing: .06em; }
+    .mesa[data-s="livre"] { --c: #22c55e; } .mesa[data-s="ocupada"] { --c: var(--accent); } .mesa[data-s="conta"] { --c: #facc15; } .mesa[data-s="reservada"] { --c: #60a5fa; }
+    .legend-r { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--muted); }
+    .legend-r i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; background: var(--c); }
+    .mrow { display: grid; grid-template-columns: 48px 1fr auto auto; gap: 14px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+    .mrow.off { opacity: .55; }
+    .add[disabled] { background: var(--surface-2); color: var(--muted); cursor: not-allowed; transform: none; }
   </style>
 </head>
 <body data-sector="restaurante">
@@ -237,6 +251,69 @@
     </div>
   </section>
 
+  <!-- ===================== PAINEL ADMIN (gestão) ===================== -->
+  <section class="screen" id="admin" data-label="Painel admin" data-label-en="Admin panel" data-label-es="Panel admin">
+    <div class="app">
+      <aside class="app__side">
+        <a href="#site" class="logo"><b>🔥</b> Gestão</a>
+        <a data-view="r-home" class="is-on"><i>▦</i>Visão geral</a>
+        <a data-view="r-mesas"><i>◫</i>Salão &amp; mesas</a>
+        <a data-view="r-menu"><i>☰</i>Cardápio</a>
+        <a data-view="r-est"><i>▤</i>Estoque</a>
+        <span class="spacer"></span>
+        <a href="#pedido"><i>🔥</i>Abrir cozinha (KDS)</a>
+      </aside>
+      <div class="app__main">
+        <div class="app__top">
+          <div><p class="muted small">Brasa Viva · hoje, aberto até 23h30</p><h2 data-view-title>Visão geral</h2></div>
+          <div class="row"><button class="cmdk-btn" data-cmdk>⌕ <span class="t">Buscar prato, mesa, insumo…</span><span class="kbd">⌘K</span></button><button class="bell" data-n="2" data-drawer="#r-notif" aria-label="Notificações">🔔</button><span class="avatar">RV</span></div>
+        </div>
+
+        <div class="view" id="r-home">
+          <div class="kpis">
+            <div class="kpi"><small>Vendas hoje</small><strong id="vHoje">R$ 6.840</strong><em>▲ 9% vs. quinta passada</em></div>
+            <div class="kpi"><small>Pedidos</small><strong id="pHoje">86</strong><em>31 delivery · 55 salão</em></div>
+            <div class="kpi"><small>Ticket médio</small><strong>R$ 79,50</strong><em>▲ R$ 4,10</em></div>
+            <div class="kpi"><small>Avaliação</small><strong>4,8 ★</strong><em>12 novas hoje</em></div>
+          </div>
+          <div class="dash">
+            <div class="panel"><div class="panel__h"><h3>Vendas por hora</h3><span class="chip small">● ao vivo</span></div>
+              <div class="bars" data-bars="320,940,1280,610,180,240,520,1180,1640,1420,980,460" data-labels="11h,12h,13h,14h,15h,16h,17h,19h,20h,21h,22h,23h" data-pre="R$ "></div></div>
+            <div style="display:grid;gap:18px">
+              <div class="panel"><div class="panel__h"><h3>Canais</h3></div><div style="display:grid;gap:14px" id="canais"></div></div>
+              <div class="panel"><div class="panel__h"><h3>Mais vendidos hoje</h3></div><div class="list" id="top"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="view" id="r-mesas">
+          <div class="toolbar"><div class="legend-r"><span style="--c:#22c55e"><i></i>Livre</span><span style="--c:var(--accent)"><i></i>Ocupada</span><span style="--c:#facc15"><i></i>Pediu a conta</span><span style="--c:#60a5fa"><i></i>Reservada</span></div><span class="spacer"></span><span class="muted small" id="ocup"></span></div>
+          <div class="floor" id="floor"></div>
+        </div>
+
+        <div class="view" id="r-menu">
+          <div class="toolbar">
+            <input class="input" data-filter="#mList" placeholder="Buscar prato…" aria-label="Buscar prato">
+            <div class="chips" data-group="mcat" data-chips="#mList" id="mCats"></div>
+          </div>
+          <p class="muted small" style="margin:-4px 0 12px">Clique no preço para editar. Pausar um item marca "esgotado" no pedido online na hora.</p>
+          <div class="panel" id="mList"></div>
+        </div>
+
+        <div class="view" id="r-est">
+          <div class="toolbar"><span class="muted small">Baixa automática a cada pedido · alerta quando chega no mínimo</span><span class="spacer"></span><button class="btn btn--sm" id="compra">Gerar pedido de compra</button></div>
+          <div class="panel"><div class="list" id="est"></div></div>
+        </div>
+      </div>
+    </div>
+    <template id="r-notif" data-title="Notificações">
+      <div class="list">
+        <div><span class="icon">⚠</span><div><b>Ancho abaixo do mínimo</b><div class="muted small">Restam 6 kg · média de 9 kg por noite</div></div></div>
+        <div><span class="icon">★</span><div><b>Nova avaliação 5★ no Google</b><div class="muted small">"Melhor costela da cidade, atendimento impecável"</div></div></div>
+      </div>
+    </template>
+  </section>
+
 </main></div>
 <script src="kit.js"></script>
 <script>
@@ -271,9 +348,12 @@
   /* categorias + itens */
   var cats = $("#cats");
   cats.innerHTML = Object.keys(MENU).map(function (c, i) { return '<button class="opt' + (i ? "" : " is-on") + '" data-value="' + c + '">' + c + "</button>"; }).join("");
+  var curCat = "Entradas";
   function showCat(c) {
+    curCat = c;
     $("#items").innerHTML = MENU[c].map(function (x, i) {
-      return '<div class="card item" style="animation-delay:' + i * 60 + 'ms"><span class="item__ph">' + x[1] + '</span><div style="flex:1"><h3>' + esc(x[2]) + '</h3><p>' + esc(x[3]) + '</p><span class="price" style="display:block;margin-top:8px">' + D.brl(x[4]) + '</span></div><button class="add" data-add="' + x[0] + '" aria-label="Adicionar ' + esc(x[2]) + '">+</button></div>';
+      var off = x[5]; // esgotado (pausado no painel admin)
+      return '<div class="card item" style="animation-delay:' + i * 60 + 'ms' + (off ? ";opacity:.55" : "") + '"><span class="item__ph">' + x[1] + '</span><div style="flex:1"><h3>' + esc(x[2]) + (off ? ' <span class="badge badge--bad">Esgotado</span>' : "") + '</h3><p>' + esc(x[3]) + '</p><span class="price" style="display:block;margin-top:8px">' + D.brl(x[4]) + '</span></div><button class="add" data-add="' + x[0] + '" aria-label="Adicionar ' + esc(x[2]) + '"' + (off ? " disabled" : "") + '>+</button></div>';
     }).join("");
   }
   cats.addEventListener("pick", function (e) { showCat(e.detail.dataset.value); });
@@ -300,6 +380,7 @@
   }
   document.addEventListener("click", function (e) {
     var a = e.target.closest("[data-add]"), d = e.target.closest("[data-dec]");
+    if (a && BY[a.dataset.add][5]) { D.toast(BY[a.dataset.add][2] + " está esgotado hoje", true); return; }
     if (a) {
       cart[a.dataset.add] = (cart[a.dataset.add] || 0) + 1;
       a.classList.remove("pop"); void a.offsetWidth; a.classList.add("pop");
@@ -375,6 +456,96 @@
     if (kds[0].length < 3) kds[0].push(ticket(900 + Math.floor(Math.random() * 99), extras[Math.floor(Math.random() * extras.length)]));
     renderKds();
   }, 4500);
+
+  /* ===================== Painel admin ===================== */
+  var vendas = 6840, pedidos = 86;
+  setInterval(function () { // vendas "ao vivo"
+    vendas += 40 + Math.round(Math.random() * 180); pedidos++;
+    $("#vHoje").textContent = D.brl(vendas).replace(",00", ""); $("#pHoje").textContent = pedidos;
+  }, 4000);
+  $("#canais").innerHTML = [["Salão", 52, "var(--accent)"], ["Delivery próprio", 31, "var(--accent-2)"], ["iFood", 17, "#ef4444"]].map(function (c) {
+    return '<div><div class="row" style="justify-content:space-between;font-size:14px"><b>' + c[0] + '</b><span class="muted">' + c[1] + '%</span></div><div class="bar" style="margin-top:8px"><i style="--v:' + c[1] + "%;--c:" + c[2] + '"></i></div></div>';
+  }).join("");
+  $("#top").innerHTML = [["cost", 23], ["ancho", 19], ["burg", 17], ["prov", 14]].map(function (t, i) {
+    return '<div><b style="font:700 20px/1 var(--font-d);color:var(--muted);width:20px">' + (i + 1) + '</b><span style="font-size:24px">' + BY[t[0]][1] + '</span><b style="flex:1">' + esc(BY[t[0]][2]) + '</b><span class="muted small">' + t[1] + " vendidos</span></div>";
+  }).join("");
+
+  /* mesas */
+  var M = [["livre"], ["ocupada", 186, 52], ["ocupada", 94, 18], ["conta", 312, 95], ["reservada", "Família Lopes", "20:30"], ["livre"], ["ocupada", 241, 40], ["livre"],
+    ["reservada", "Aniversário Bia", "21:00"], ["ocupada", 128, 25], ["conta", 76, 70], ["livre"]];
+  function renderFloor() {
+    $("#floor").innerHTML = M.map(function (m, i) {
+      var lbl = { livre: "Livre", ocupada: "Ocupada", conta: "Conta", reservada: "Reservada" }[m[0]];
+      var info = m[0] === "livre" ? (i % 3 ? "4 lugares" : "2 lugares") : m[0] === "reservada" ? esc(m[1]) + " · " + m[2] : D.brl(m[1]).replace(",00", "") + " · " + m[2] + " min";
+      return '<button class="mesa" data-s="' + m[0] + '" data-i="' + i + '"><span class="st">' + lbl + "</span><b>" + String(i + 1).padStart(2, "0") + "</b><small>" + info + "</small></button>";
+    }).join("");
+    var occ = M.filter(function (m) { return m[0] === "ocupada" || m[0] === "conta"; }).length;
+    $("#ocup").textContent = occ + " de " + M.length + " mesas ocupadas";
+  }
+  renderFloor();
+  var mesaAtual = 0;
+  $("#floor").addEventListener("click", function (e) {
+    var b = e.target.closest(".mesa"); if (!b) return;
+    var i = mesaAtual = +b.dataset.i, m = M[i], html;
+    if (m[0] === "livre") html = '<p class="muted">Mesa livre · ' + (i % 3 ? 4 : 2) + ' lugares</p><button class="btn btn--block" data-m="abrir">Abrir mesa</button>';
+    else if (m[0] === "reservada") html = '<p class="muted">Reserva de <b style="color:var(--fg)">' + esc(m[1]) + "</b> às " + m[2] + '. Confirmada por WhatsApp.</p><button class="btn btn--block" data-m="abrir">Cliente chegou · abrir mesa</button>';
+    else if (!m[1]) html = '<p class="muted">Comanda aberta agora. Os itens lançados pelo garçom aparecem aqui em tempo real.</p><button class="btn btn--ghost btn--block" data-m="cancelar">Liberar mesa</button>';
+    else {
+      var items = [["ancho", 1], ["frit", 1], ["chope", 2], ["limo", 1]].filter(function (x, k) { return k < 2 + (m[1] > 150 ? 2 : 0); });
+      html = '<dl class="summary">' + items.map(function (x) { return "<div><dt>" + x[1] + "× " + esc(BY[x[0]][2]) + "</dt><dd>" + D.brl(BY[x[0]][4] * x[1]) + "</dd></div>"; }).join("") +
+        "<div><dt>Serviço (10%)</dt><dd>incluso</dd></div><div><dt><b>Total</b></dt><dd>" + D.brl(m[1]) + "</dd></div></dl>" +
+        '<p class="muted small">Aberta há ' + m[2] + " min · garçom: Paulo</p>" +
+        '<div class="row">' + (m[0] === "ocupada" ? '<button class="btn btn--ghost btn--sm" data-m="conta">Pedir a conta</button>' : "") +
+        '<button class="btn btn--sm" data-m="fechar">Fechar conta · Pix/cartão</button><button class="btn btn--ghost btn--sm" data-m="dividir">Dividir em 2</button></div>';
+    }
+    D.drawer("Mesa " + String(i + 1).padStart(2, "0"), html);
+  });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-m]"); if (!b) return;
+    var m = M[mesaAtual], act = b.dataset.m;
+    if (act === "abrir") { M[mesaAtual] = ["ocupada", 0, 0]; D.toast("Mesa aberta. Comanda disponível no tablet do garçom"); }
+    if (act === "conta") { m[0] = "conta"; D.toast("Conta impressa e QR de pagamento enviado à mesa"); }
+    if (act === "fechar") { M[mesaAtual] = ["livre"]; vendas += m[1]; D.toast("Pagamento de " + D.brl(m[1]) + " recebido. Mesa liberada"); }
+    if (act === "cancelar") { M[mesaAtual] = ["livre"]; D.toast("Mesa liberada"); }
+    if (act === "dividir") { D.toast("Conta dividida: " + D.brl(m[1] / 2) + " por pessoa"); return; }
+    D.closeLayer(); renderFloor();
+  });
+
+  /* cardápio (edição inline + pausar item) */
+  var keys = Object.keys(MENU), slug = function (c) { return c.toLowerCase().replace(/[^a-z]/g, ""); };
+  $("#mCats").innerHTML = '<button class="opt is-on" data-value="all">Todos</button>' + keys.map(function (c) { return '<button class="opt" data-value="' + slug(c) + '">' + c + "</button>"; }).join("");
+  $("#mList").innerHTML = keys.map(function (c) {
+    return MENU[c].map(function (x) {
+      return '<div class="mrow" data-tag="' + slug(c) + '" data-id="' + x[0] + '"><span style="font-size:30px;text-align:center">' + x[1] + '</span><div><b>' + esc(x[2]) + '</b><div class="muted small">' + c + " · " + esc(x[3]) + '</div></div><span class="price" data-edit="Preço atualizado no site, no pedido online e no iFood">' + D.brl(x[4]) + '</span><button class="switch" aria-pressed="true" aria-label="Disponível"></button></div>';
+    }).join("");
+  }).join("");
+  $("#mList").addEventListener("edited", function (e) {
+    var row = e.target.closest(".mrow"), x = BY[row.dataset.id];
+    var v = parseFloat(e.target.textContent.replace(/[^\d,]/g, "").replace(",", "."));
+    if (v > 0) x[4] = v;
+    e.target.textContent = D.brl(x[4]);
+    showCat(curCat); renderCart();
+  });
+  $("#mList").addEventListener("click", function (e) {
+    var sw = e.target.closest(".switch"); if (!sw) return;
+    var row = sw.closest(".mrow"), x = BY[row.dataset.id], off = sw.getAttribute("aria-pressed") === "true"; // o kit alterna depois
+    x[5] = off; row.classList.toggle("off", off);
+    if (off && cart[x[0]]) { delete cart[x[0]]; renderCart(); }
+    showCat(curCat);
+    D.toast(off ? x[2] + " pausado em todos os canais" : x[2] + " disponível novamente", off);
+  });
+
+  /* estoque */
+  var EST = [["Ancho (kg)", 6, 20], ["Costela (kg)", 14, 25], ["Pão brioche (un)", 38, 120], ["Provolone (kg)", 2.5, 8], ["Chope pilsen (L)", 120, 200], ["Batata (kg)", 9, 40], ["Limão (kg)", 11, 15]];
+  $("#est").innerHTML = EST.map(function (s) {
+    var p = Math.round(s[1] / s[2] * 100), low = p < 30;
+    return '<div><div style="flex:1"><div class="row" style="justify-content:space-between;font-size:14px"><b>' + s[0] + '</b><span class="muted">' + String(s[1]).replace(".", ",") + " / " + s[2] + '</span></div><div class="bar" style="margin-top:8px"><i style="--v:' + p + "%;--c:" + (low ? "var(--bad)" : p < 60 ? "var(--accent-2)" : "var(--ok)") + '"></i></div></div>' + (low ? '<span class="badge badge--bad">Repor</span>' : '<span class="badge badge--ok">OK</span>') + "</div>";
+  }).join("");
+  $("#compra").addEventListener("click", function () { D.toast("Pedido de compra enviado aos fornecedores: 4 itens · entrega amanhã 8h"); });
+
+  D.cmd("Ver mapa de mesas", function () { D.go("admin"); D.$('[data-view="r-mesas"]').click(); });
+  D.cmd("Editar preços do cardápio", function () { D.go("admin"); D.$('[data-view="r-menu"]').click(); });
+  D.cmd("Abrir cozinha (KDS)", function () { D.go("pedido"); });
 })();
 </script>
 </body>

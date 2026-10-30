@@ -67,6 +67,22 @@
     .pat { cursor: pointer; }
     .pat:hover b { color: var(--accent); }
 
+    /* prontuário */
+    .odo { display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px; }
+    .odo button { aspect-ratio: 3 / 4; padding: 0; border-radius: 6px 6px 11px 11px; border: 1.5px solid #cfe3ea; background: #fff; color: var(--muted); font-size: 9px; font-weight: 700; cursor: pointer; transition: transform .15s, background .2s; }
+    .odo button:hover { transform: translateY(-2px); }
+    .odo button[data-s="1"] { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+    .odo button[data-s="2"] { background: #dcfce7; border-color: #22c55e; color: #15803d; }
+    .odo button[data-s="3"] { background: #dbeafe; border-color: #3b82f6; color: #1d4ed8; }
+    .odo .gap { grid-column: 1 / -1; height: 6px; }
+    .odo-leg { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--muted); }
+    .odo-leg i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+    .wa { padding: 18px; border-radius: 18px; background: #e7ddd3 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='1.5' fill='%23d4c6b8'/%3E%3C/svg%3E"); }
+    .wa__msg { max-width: 92%; padding: 12px 14px; border-radius: 4px 14px 14px 14px; background: #fff; color: #111; font-size: 14px; line-height: 1.5; white-space: pre-line; box-shadow: 0 1px 1px rgba(0,0,0,.1); animation: screenIn .4s both; }
+    .wa__btns { display: flex; gap: 8px; margin-top: 8px; } .wa__btns span { flex: 1; padding: 9px; border-radius: 10px; background: #fff; color: #0284c7; text-align: center; font-size: 13px; font-weight: 600; }
+    .auto { cursor: pointer; border-radius: 12px; transition: background .2s; padding-inline: 8px !important; }
+    .auto.is-sel { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+
     @container (max-width: 760px) {
       .t1 { left: 0; } .t2 { right: 0; }
       .cal { gap: 5px; } .cal .opt { padding: 10px 0; }
@@ -197,17 +213,23 @@
   </section>
 
   <!-- ===================== PAINEL ===================== -->
-  <section class="screen" id="painel" data-label="Agenda da clínica" data-label-en="Clinic panel" data-label-es="Agenda de la clínica">
+  <section class="screen" id="painel" data-label="Painel admin" data-label-en="Admin panel" data-label-es="Panel admin">
     <div class="app">
       <aside class="app__side">
         <a href="#site" class="logo"><span>🦷</span>Sorriso Lab</a>
-        <a class="is-on" href="#painel">📅 Agenda</a><a href="#painel">👥 Pacientes</a><a href="#painel">📋 Prontuários</a><a href="#painel">💳 Financeiro</a><a href="#painel">💬 Lembretes</a>
+        <a data-view="cl-agenda" class="is-on"><i>📅</i>Agenda do dia</a>
+        <a data-view="cl-pac"><i>👥</i>Pacientes</a>
+        <a data-view="cl-fin"><i>💳</i>Financeiro</a>
+        <a data-view="cl-lemb"><i>💬</i>Lembretes automáticos</a>
+        <span class="spacer"></span>
+        <a href="#agendar"><i>＋</i>Novo agendamento</a>
       </aside>
       <div class="app__main">
         <div class="app__top">
-          <div><p class="muted small" id="hoje"></p><h2>Agenda do dia</h2></div>
-          <div class="row"><span class="small muted">Lembrete WhatsApp 24h antes</span><button class="switch" aria-pressed="true" aria-label="Lembretes automáticos" id="lemb"></button></div>
+          <div><p class="muted small" id="hoje"></p><h2 data-view-title>Agenda do dia</h2></div>
+          <div class="row"><button class="cmdk-btn" data-cmdk>⌕ <span class="t">Buscar paciente, procedimento…</span><span class="kbd">⌘K</span></button><button class="bell" data-n="3" data-drawer="#cl-notif" aria-label="Notificações">🔔</button><span class="avatar">AL</span></div>
         </div>
+        <div class="view" id="cl-agenda">
         <div class="kpis">
           <div class="kpi" data-reveal><small>Consultas hoje</small><strong data-count="14">0</strong><em>3 encaixes disponíveis</em></div>
           <div class="kpi" data-reveal><small>Confirmadas</small><strong data-count="11">0</strong><em>via WhatsApp</em></div>
@@ -225,8 +247,50 @@
             <div class="list mt" id="pats"></div>
           </div>
         </div>
+        </div>
+
+        <div class="view" id="cl-pac">
+          <div class="toolbar">
+            <input class="input" data-filter="#pacList" placeholder="Buscar paciente ou telefone…" aria-label="Buscar paciente">
+            <div class="chips" data-group="pf" data-chips="#pacList"><button class="opt is-on" data-value="all">Todos</button><button class="opt" data-value="ret">Retorno pendente</button><button class="opt" data-value="orto">Ortodontia</button><button class="opt" data-value="conv">Convênio</button></div>
+          </div>
+          <div class="panel"><div class="table-wrap"><table class="table"><thead><tr><th>Paciente</th><th>Tratamento</th><th>Convênio</th><th>Última visita</th><th>Status</th></tr></thead><tbody id="pacList"></tbody></table></div></div>
+        </div>
+
+        <div class="view" id="cl-fin">
+          <div class="kpis">
+            <div class="kpi"><small>Faturamento outubro</small><strong data-count="148600" data-pre="R$ ">0</strong><em>▲ 12%</em></div>
+            <div class="kpi"><small>Particular</small><strong data-count="61" data-suf="%">0</strong><em style="color:var(--muted)">39% convênios</em></div>
+            <div class="kpi"><small>Orçamentos aprovados</small><strong data-count="72" data-suf="%">0</strong><em>▲ com envio por WhatsApp</em></div>
+            <div class="kpi"><small>Glosas</small><strong data-count="2340" data-pre="R$ ">0</strong><em style="color:var(--warn)">3 para recorrer</em></div>
+          </div>
+          <div class="dash">
+            <div class="panel"><div class="panel__h"><h3>Recebimentos por convênio</h3></div><div style="display:grid;gap:14px" id="conv"></div></div>
+            <div class="panel"><div class="panel__h"><h3>Faturamento · 6 meses</h3></div><div class="bars" data-bars="112,118,121,129,133,149" data-labels="mai,jun,jul,ago,set,out" data-pre="R$ " data-suf=" mil"></div></div>
+          </div>
+        </div>
+
+        <div class="view" id="cl-lemb">
+          <div class="dash">
+            <div class="panel">
+              <div class="panel__h"><h3>Automações</h3><span class="badge badge--ok">▼ 61% de faltas</span></div>
+              <div class="list" id="autos"></div>
+            </div>
+            <div class="panel">
+              <div class="panel__h"><h3>Prévia no WhatsApp</h3><span class="muted small" id="prevName"></span></div>
+              <div class="wa"><div class="wa__msg" id="prevMsg"></div><div class="wa__btns"><span>✅ Confirmar</span><span>🔁 Remarcar</span></div></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+    <template id="cl-notif" data-title="Notificações">
+      <div class="list">
+        <div><span class="icon">✅</span><div><b>Carla Dias confirmou</b><div class="muted small">Clareamento · hoje 09:30</div></div></div>
+        <div><span class="icon">🔁</span><div><b>Tiago Melo pediu para remarcar</b><div class="muted small">Retorno · sugerimos amanhã 17h</div></div></div>
+        <div><span class="icon">💳</span><div><b>Orçamento aprovado</b><div class="muted small">Fernanda Rocha · implante · R$ 4.900</div></div></div>
+      </div>
+    </template>
   </section>
 
 </main></div>
@@ -265,7 +329,6 @@
   var now = today.getHours() + today.getMinutes() / 60;
   h += '<div class="now" style="top:' + (Math.min(18, Math.max(8, now)) - 8) * 56 + 'px"></div></div>';
   day.innerHTML = h;
-  day.addEventListener("click", function (e) { var a = e.target.closest(".ap"); if (a) D.toast("Lembrete reenviado para " + a.title + " via WhatsApp"); });
 
   /* pacientes com busca */
   var PAT = ["Marina Alves", "João Pedro Santos", "Carla Dias", "Roberto Lima", "Fernanda Rocha", "Lucas Prado", "Beatriz Nunes", "Tiago Melo", "Patrícia Ramos", "Diego Souza", "Lívia Martins", "Henrique Faria"];
@@ -279,10 +342,84 @@
   }
   $("#q").addEventListener("input", function () { renderPats(this.value); });
   renderPats("");
-  $("#lemb").addEventListener("click", function () {
-    var on = this.getAttribute("aria-pressed") !== "true"; // o kit alterna depois deste handler
-    D.toast(on ? "Lembretes automáticos ativados" : "Lembretes automáticos pausados", !on);
+
+  /* ===================== Painel admin ===================== */
+  var INFO = { // paciente → [idade, convênio, tratamento, tag, alerta]
+    "Marina Alves": [34, "Particular", "Limpeza semestral", "ret", ""], "João Pedro Santos": [41, "Amil Dental", "Avaliação", "conv", ""],
+    "Carla Dias": [29, "Particular", "Clareamento", "", "Sensibilidade dentária"], "Roberto Lima": [57, "OdontoPrev", "Prótese", "conv ret", "Hipertenso"],
+    "Fernanda Rocha": [46, "Particular", "Implante · etapa 2", "", "Alergia a penicilina"], "Lucas Prado": [23, "SulAmérica", "Avaliação", "conv", ""],
+    "Beatriz Nunes": [19, "Particular", "Alinhadores", "orto", ""], "Tiago Melo": [38, "Amil Dental", "Canal · retorno", "conv ret", ""],
+    "Patrícia Ramos": [52, "Particular", "Implante", "ret", "Diabética"], "Diego Souza": [27, "Particular", "Alinhadores", "orto", ""],
+    "Lívia Martins": [31, "OdontoPrev", "Limpeza", "conv", ""], "Henrique Faria": [45, "Particular", "Clareamento", "ret", ""]
+  };
+  function info(n) { return INFO[n] || INFO[Object.keys(INFO).filter(function (k) { return k.indexOf(n.split(" ")[0]) === 0; })[0]] || [30, "Particular", "Avaliação", "", ""]; }
+  var odoState = {};
+  var UP = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28], LO = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
+  function pront(n) {
+    var p = info(n), st = odoState[n] || (odoState[n] = { 16: 2, 26: 1, 36: 2, 46: 3, 24: 1 });
+    var tooth = function (t) { return '<button data-t="' + t + '" data-s="' + (st[t] || 0) + '" title="Dente ' + t + '">' + t + "</button>"; };
+    var ini = n.split(" ").map(function (x) { return x[0]; }).slice(0, 2).join("");
+    var el = D.drawer(n,
+      '<div class="row"><span class="avatar" style="width:52px;height:52px">' + ini + '</span><div><b>' + p[0] + " anos · " + p[1] + '</b><div class="muted small">' + p[2] + " · (00) 9" + (8000 + p[0] * 37) + "-" + (1000 + p[0] * 53) + "</div></div></div>" +
+      (p[4] ? '<span class="badge badge--bad">⚠ ' + p[4] + "</span>" : '<span class="badge badge--ok">Sem alertas na anamnese</span>') +
+      '<div class="panel" style="padding:14px"><div class="panel__h" style="margin-bottom:10px"><h3>Odontograma</h3><span class="muted small">toque no dente</span></div>' +
+      '<div class="odo" id="odo">' + UP.map(tooth).join("") + '<span class="gap"></span>' + LO.map(tooth).join("") + "</div>" +
+      '<div class="odo-leg" style="margin-top:10px"><span><i style="background:#ef4444"></i>Cárie</span><span><i style="background:#22c55e"></i>Tratado</span><span><i style="background:#3b82f6"></i>Implante</span></div></div>' +
+      '<div class="panel" style="padding:14px"><div class="panel__h" style="margin-bottom:6px"><h3>Plano de tratamento</h3><span class="muted small" id="planTot"></span></div><div class="list" id="plan"></div></div>' +
+      '<div class="row"><button class="btn btn--sm" data-act="Orçamento enviado no WhatsApp com link de aprovação">Enviar orçamento</button><a class="btn btn--ghost btn--sm" href="#agendar">Agendar retorno</a></div>');
+    renderPlan(n);
+    $("#odo", el).addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      var s = (+b.dataset.s + 1) % 4; b.dataset.s = s; st[b.dataset.t] = s;
+      renderPlan(n);
+    });
+  }
+  function renderPlan(n) {
+    var st = odoState[n], items = Object.keys(st).filter(function (t) { return st[t] === 1 || st[t] === 3; })
+      .map(function (t) { return st[t] === 1 ? ["Restauração · dente " + t, 280] : ["Implante · dente " + t, 2900]; });
+    $("#plan").innerHTML = items.map(function (x) { return '<div class="todo"><span class="box"></span><b style="flex:1;font-size:14px">' + x[0] + '</b><span class="muted small">' + D.brl(x[1]).replace(",00", "") + "</span></div>"; }).join("") || '<p class="muted small">Nenhum procedimento pendente.</p>';
+    $("#planTot").textContent = D.brl(items.reduce(function (s, x) { return s + x[1]; }, 0)).replace(",00", "");
+  }
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-act]"); if (b) D.toast(b.dataset.act); });
+  day.addEventListener("click", function (e) { var a = e.target.closest(".ap"); if (a) pront(a.title); });
+  $("#pats").addEventListener("click", function (e) { var r = e.target.closest(".pat"); if (r) pront(r.querySelector("b").textContent); });
+
+  $("#pacList").innerHTML = PAT.map(function (n, k) {
+    var p = info(n);
+    return '<tr data-n="' + esc(n) + '" data-tag="' + p[3] + '"><td><b>' + esc(n) + '</b><div class="muted small">' + p[0] + ' anos</div></td><td>' + p[2] + "</td><td>" + p[1] + "</td><td>" + (3 + k * 5) + " dias atrás</td><td>" +
+      (p[3].indexOf("ret") >= 0 ? '<span class="badge badge--warn">Retorno pendente</span>' : '<span class="badge badge--ok">Em dia</span>') + "</td></tr>";
+  }).join("");
+  $("#pacList").addEventListener("click", function (e) { var r = e.target.closest("tr"); if (r) pront(r.dataset.n); });
+
+  $("#conv").innerHTML = [["Particular", 90600, "var(--accent)"], ["Amil Dental", 21400, "#2dd4bf"], ["OdontoPrev", 18900, "#818cf8"], ["SulAmérica Odonto", 17700, "#f59e0b"]].map(function (c) {
+    return '<div><div class="row" style="justify-content:space-between;font-size:14px"><b>' + c[0] + '</b><span class="muted">' + D.brl(c[1]).replace(",00", "") + '</span></div><div class="bar" style="margin-top:8px"><i style="--v:' + Math.round(c[1] / 90600 * 100) + "%;--c:" + c[2] + '"></i></div></div>';
+  }).join("");
+
+  var AUTOS = [
+    ["Confirmação 24h antes", "Enviada a todos os agendamentos", true, "Oi, {nome}! 😊\nLembrando da sua consulta amanhã às 09:30 com a Dra. Ana Lins.\nPodemos confirmar?"],
+    ["Retorno de limpeza (6 meses)", "Pacientes sem visita há 180 dias", true, "Oi, {nome}! Já faz 6 meses da sua última limpeza 🪥\nQue tal agendar? Temos horários esta semana."],
+    ["Orçamento não respondido", "3 dias após o envio", true, "Oi, {nome}! Ficou alguma dúvida sobre o orçamento do seu tratamento? Posso ajudar a parcelar em até 12×."],
+    ["Aniversário com cupom", "No dia do aniversário", false, "Feliz aniversário, {nome}! 🎉\nPresente da Sorriso Lab: 20% off no clareamento este mês."]
+  ];
+  $("#autos").innerHTML = AUTOS.map(function (a, i) {
+    return '<div class="auto' + (i ? "" : " is-sel") + '" data-i="' + i + '"><div style="flex:1"><b>' + a[0] + '</b><div class="muted small">' + a[1] + '</div></div><button class="switch" aria-pressed="' + a[2] + '" aria-label="' + a[0] + '"></button></div>';
+  }).join("");
+  function preview(i) {
+    D.$$("#autos .auto").forEach(function (x, k) { x.classList.toggle("is-sel", k === i); });
+    $("#prevName").textContent = "para Marina Alves";
+    var m = $("#prevMsg"); m.textContent = AUTOS[i][3].replace("{nome}", "Marina");
+    m.style.animation = "none"; void m.offsetWidth; m.style.animation = "";
+  }
+  $("#autos").addEventListener("click", function (e) {
+    var r = e.target.closest(".auto"); if (!r) return;
+    var sw = e.target.closest(".switch");
+    if (sw) { var on = sw.getAttribute("aria-pressed") !== "true"; D.toast(on ? AUTOS[+r.dataset.i][0] + " ativada" : AUTOS[+r.dataset.i][0] + " pausada", !on); }
+    preview(+r.dataset.i);
   });
+  preview(0);
+
+  D.cmd("Abrir prontuário · Fernanda Rocha", function () { D.go("painel"); pront("Fernanda Rocha"); });
+  D.cmd("Pacientes com retorno pendente", function () { D.go("painel"); D.$('[data-view="cl-pac"]').click(); D.$('[data-chips="#pacList"] [data-value="ret"]').click(); });
 })();
 </script>
 </body>

@@ -54,15 +54,15 @@ window.I18N.pt = {
   },
 
   solutions: {
-    lead: "Precisa de um site ou sistema para o seu negócio? Estas são demos ao vivo com dados fictícios: navegue como se fosse o produto real. Cada uma é um ponto de partida que eu adapto para você.",
+    lead: "Precisa de um site ou sistema para o seu negócio? Estas são demos ao vivo com dados fictícios: navegue como se fosse o produto real, inclusive o painel admin que o dono usa no dia a dia. Cada uma é um ponto de partida que eu adapto para você.",
     open: "Abrir demo ao vivo",
     items: {
-      advocacia:     { name: "Advocacia", desc: "Site institucional, agendamento de consulta online e portal do cliente para acompanhar processos.", screens: ["Site", "Agendamento", "Portal do cliente"] },
-      contabilidade: { name: "Contabilidade", desc: "Planos e preços, simulador de impostos ao vivo e o painel financeiro do cliente.", screens: ["Site", "Simulador", "Painel"] },
-      restaurante:   { name: "Restaurante", desc: "Cardápio com sacola e cupom, reservas, acompanhamento do pedido e painel da cozinha ao vivo.", screens: ["Site", "Pedido online", "Pedido & cozinha"] },
-      clinica:       { name: "Clínica odontológica", desc: "Tratamentos, agendamento online 24h com calendário e a agenda do dia da clínica.", screens: ["Site", "Agendamento", "Agenda da clínica"] },
-      barbearia:     { name: "Barbearia", desc: "Tabela de preços, agendamento por barbeiro, cartão fidelidade, assinaturas e fila ao vivo.", screens: ["Site", "Agendamento", "Clube & painel"] },
-      academia:      { name: "Academia", desc: "Planos e grade de aulas, app do aluno com treino e evolução, e check-in por QR.", screens: ["Site", "App do aluno", "Check-in"] },
+      advocacia:     { name: "Advocacia", desc: "Site institucional, agendamento de consulta online e portal do cliente para acompanhar processos.", screens: ["Site", "Agendamento", "Portal do cliente", "Painel admin"] },
+      contabilidade: { name: "Contabilidade", desc: "Planos e preços, simulador de impostos ao vivo e o painel financeiro do cliente.", screens: ["Site", "Simulador", "Painel do cliente", "Painel admin"] },
+      restaurante:   { name: "Restaurante", desc: "Cardápio com sacola e cupom, reservas, acompanhamento do pedido e painel da cozinha ao vivo.", screens: ["Site", "Pedido online", "Pedido & cozinha", "Painel admin"] },
+      clinica:       { name: "Clínica odontológica", desc: "Tratamentos, agendamento online 24h com calendário e a agenda do dia da clínica.", screens: ["Site", "Agendamento", "Painel admin"] },
+      barbearia:     { name: "Barbearia", desc: "Tabela de preços, agendamento por barbeiro, cartão fidelidade, assinaturas e fila ao vivo.", screens: ["Site", "Agendamento", "Clube fidelidade", "Painel admin"] },
+      academia:      { name: "Academia", desc: "Planos e grade de aulas, app do aluno com treino e evolução, e check-in por QR.", screens: ["Site", "App do aluno", "Check-in", "Painel admin"] },
       game:          { name: "Nebula Siege · mini game", desc: "Um shooter arcade feito do zero em canvas: ondas, chefes, upgrades e partículas. Experiências interativas também estão no cardápio.", screens: ["Canvas 2D", "Toque & teclado", "Sem engine"] }
     }
   },
@@ -322,15 +322,15 @@ window.I18N.es = {
   },
 
   solutions: {
-    lead: "¿Necesitas un sitio o sistema para tu negocio? Estas son demos en vivo con datos ficticios: navégalas como si fueran el producto real. Cada una es un punto de partida que adapto a ti.",
+    lead: "¿Necesitas un sitio o sistema para tu negocio? Estas son demos en vivo con datos ficticios: navégalas como si fueran el producto real, incluido el panel admin que el dueño usa a diario. Cada una es un punto de partida que adapto a ti.",
     open: "Abrir demo en vivo",
     items: {
-      advocacia:     { name: "Despacho de abogados", desc: "Sitio institucional, agenda de consultas online y portal del cliente para seguir los casos.", screens: ["Sitio", "Agenda", "Portal del cliente"] },
-      contabilidade: { name: "Contabilidad", desc: "Planes y precios, simulador de impuestos en vivo y el panel financiero del cliente.", screens: ["Sitio", "Simulador", "Panel"] },
-      restaurante:   { name: "Restaurante", desc: "Menú con carrito y cupones, reservas, seguimiento del pedido y pantalla de cocina en vivo.", screens: ["Sitio", "Pedido online", "Pedido y cocina"] },
-      clinica:       { name: "Clínica dental", desc: "Tratamientos, agenda online 24h con calendario y la agenda diaria de la clínica.", screens: ["Sitio", "Agendar cita", "Agenda de la clínica"] },
-      barbearia:     { name: "Barbería", desc: "Lista de precios, reservas por barbero, tarjeta de fidelidad, suscripciones y fila en vivo.", screens: ["Sitio", "Reservas", "Club y panel"] },
-      academia:      { name: "Gimnasio", desc: "Planes y horario de clases, app del alumno con entrenamientos y progreso, y check-in con QR.", screens: ["Sitio", "App del alumno", "Check-in"] },
+      advocacia:     { name: "Despacho de abogados", desc: "Sitio institucional, agenda de consultas online y portal del cliente para seguir los casos.", screens: ["Sitio", "Agenda", "Portal del cliente", "Panel admin"] },
+      contabilidade: { name: "Contabilidad", desc: "Planes y precios, simulador de impuestos en vivo y el panel financiero del cliente.", screens: ["Sitio", "Simulador", "Panel del cliente", "Panel admin"] },
+      restaurante:   { name: "Restaurante", desc: "Menú con carrito y cupones, reservas, seguimiento del pedido y pantalla de cocina en vivo.", screens: ["Sitio", "Pedido online", "Pedido y cocina", "Panel admin"] },
+      clinica:       { name: "Clínica dental", desc: "Tratamientos, agenda online 24h con calendario y la agenda diaria de la clínica.", screens: ["Sitio", "Agendar cita", "Panel admin"] },
+      barbearia:     { name: "Barbería", desc: "Lista de precios, reservas por barbero, tarjeta de fidelidad, suscripciones y fila en vivo.", screens: ["Sitio", "Reservas", "Club de fidelidad", "Panel admin"] },
+      academia:      { name: "Gimnasio", desc: "Planes y horario de clases, app del alumno con entrenamientos y progreso, y check-in con QR.", screens: ["Sitio", "App del alumno", "Check-in", "Panel admin"] },
       game:          { name: "Nebula Siege · mini juego", desc: "Un shooter arcade hecho desde cero en canvas: oleadas, jefes, mejoras y partículas. Las experiencias interactivas también están en el menú.", screens: ["Canvas 2D", "Táctil y teclado", "Sin motor"] }
     }
   },
