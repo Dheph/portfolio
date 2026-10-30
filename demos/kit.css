@@ -242,6 +242,18 @@ textarea.input { resize: vertical; min-height: 100px; }
 .foot { padding: 40px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
 .foot .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
 
+/* WhatsApp flutuante (fora do viewport, igual em todas as demos) */
+.wa-float { position: fixed; z-index: 70; right: 18px; bottom: 18px; display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 18px 12px 14px; border-radius: 999px; background: #25d366; color: #05210f; font: 700 14px/1 "Inter", system-ui, sans-serif;
+  box-shadow: 0 14px 34px -10px rgba(37,211,102,.65); transition: transform .2s; animation: waIn .6s .8s var(--ease) both; }
+.wa-float::before { content: ""; position: absolute; inset: 0; border-radius: inherit; animation: waPulse 2.4s 2s infinite; }
+.wa-float:hover { transform: translateY(-3px) scale(1.03); }
+.wa-float svg { width: 24px; height: 24px; flex: none; }
+@keyframes waIn { from { opacity: 0; transform: translateY(20px) scale(.9); } }
+@keyframes waPulse { 0% { box-shadow: 0 0 0 0 rgba(37,211,102,.5); } 70%, 100% { box-shadow: 0 0 0 16px rgba(37,211,102,0); } }
+body.is-shot .wa-float { display: none; }
+@media (max-width: 820px) { .wa-float { padding: 14px; } .wa-float span { display: none; } }
+
 /* Toast */
 .toast { position: fixed; left: 50%; bottom: 28px; z-index: 90; display: flex; align-items: center; gap: 10px; max-width: calc(100% - 32px);
   padding: 14px 20px; border-radius: 14px; background: #111317; color: #fff; border: 1px solid rgba(255,255,255,.1);

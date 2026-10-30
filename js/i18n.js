@@ -263,7 +263,8 @@ window.I18N = {
 
     contact: {
       lead: "Open to full-time roles and freelance projects in mobile & fullstack. Tell me what you're building.",
-      emailLabel: "Email", linkedinLabel: "LinkedIn", githubLabel: "GitHub"
+      emailLabel: "Email", linkedinLabel: "LinkedIn", githubLabel: "GitHub", whatsappLabel: "WhatsApp",
+      waFloat: "Get in touch", waMsg: "Hi Jeffersom! I saw your portfolio and I'd like to talk about a project."
     },
 
     footer: { note: "" }

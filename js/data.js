@@ -4,7 +4,8 @@ window.DATA = {
   socials: {
     github: "https://github.com/Dheph",
     linkedin: "https://www.linkedin.com/in/jeffersom",
-    email: "jeffersom.ribeiro@outlook.com"
+    email: "jeffersom.ribeiro@outlook.com",
+    whatsapp: "5511940649315"
   },
 
   /* chaves de filtro -> rótulo via i18n.ui.filters[key] */

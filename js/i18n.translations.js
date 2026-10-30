@@ -261,7 +261,8 @@ window.I18N.pt = {
 
   contact: {
     lead: "Disponível para vagas full-time e projetos freelance em mobile & fullstack. Me conte o que você está construindo.",
-    emailLabel: "E-mail", linkedinLabel: "LinkedIn", githubLabel: "GitHub"
+    emailLabel: "E-mail", linkedinLabel: "LinkedIn", githubLabel: "GitHub", whatsappLabel: "WhatsApp",
+    waFloat: "Entre em contato", waMsg: "Olá, Jeffersom! Vi seu portfólio e quero conversar sobre um projeto."
   },
 
   footer: { note: "" }
@@ -529,7 +530,8 @@ window.I18N.es = {
 
   contact: {
     lead: "Disponible para roles de tiempo completo y proyectos freelance en mobile & fullstack. Cuéntame qué estás construyendo.",
-    emailLabel: "Correo", linkedinLabel: "LinkedIn", githubLabel: "GitHub"
+    emailLabel: "Correo", linkedinLabel: "LinkedIn", githubLabel: "GitHub", whatsappLabel: "WhatsApp",
+    waFloat: "Contáctame", waMsg: "¡Hola, Jeffersom! Vi tu portafolio y quiero hablar sobre un proyecto."
   },
 
   footer: { note: "" }

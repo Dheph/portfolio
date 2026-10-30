@@ -278,12 +278,15 @@
   function renderContact() {
     var s = D.socials || {};
     var email = s.email || "";
+    var wa = "https://wa.me/" + s.whatsapp + "?text=" + encodeURIComponent(t("contact.waMsg"));
     var link = $("#emailLink"); link.href = "mailto:" + email; link.textContent = email;
     var box = $("#contactLinks");
     box.innerHTML =
       '<a class="contact__card" href="mailto:' + esc(email) + '"><span class="k">' + esc(t("contact.emailLabel")) + '</span><span class="v">' + esc(email) + '</span></a>' +
       '<a class="contact__card" href="' + esc(s.linkedin) + '" target="_blank" rel="noopener"><span class="k">' + esc(t("contact.linkedinLabel")) + '</span><span class="v">in/jeffersom</span></a>' +
-      '<a class="contact__card" href="' + esc(s.github) + '" target="_blank" rel="noopener"><span class="k">' + esc(t("contact.githubLabel")) + '</span><span class="v">@Dheph</span></a>';
+      '<a class="contact__card" href="' + esc(s.github) + '" target="_blank" rel="noopener"><span class="k">' + esc(t("contact.githubLabel")) + '</span><span class="v">@Dheph</span></a>' +
+      '<a class="contact__card contact__card--wa" href="' + esc(wa) + '" target="_blank" rel="noopener"><span class="k">' + esc(t("contact.whatsappLabel")) + '</span><span class="v">+55 11 94064-9315</span></a>';
+    var wf = $("#waFloat"); if (wf) wf.href = wa; // HTML antigo em cache pode não ter o botão
   }
   $("#copyEmail").addEventListener("click", function () {
     var btn = this, email = (D.socials || {}).email || "";
