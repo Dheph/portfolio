@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contabilidade — demo · Jeffersom Ribeiro</title>
+  <meta name="description" content="Demo navegável de site + simulador de impostos + painel do cliente para escritório de contabilidade. Dados fictícios." />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="kit.css" />
+  <style>
+    :root {
+      --bg: #f7f9fc; --surface: #ffffff; --surface-2: #eef2f7; --line: rgba(15,23,42,.08);
+      --fg: #0f172a; --muted: #5b6578; --accent: #0f9f6e; --accent-2: #3b82f6; --accent-ink: #ffffff;
+      --ok: #0f9f6e; --radius: 20px; --btn-r: 12px;
+      --font-d: "Manrope", system-ui, sans-serif; --font-b: "Manrope", system-ui, sans-serif;
+    }
+    .h1, .h2 { font-weight: 800; letter-spacing: -.035em; }
+    .h1 em, .h2 em { font-style: normal; background: linear-gradient(100deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .card { box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 12px 30px -18px rgba(15,23,42,.15); }
+    .logo i { display: inline-block; width: 26px; height: 26px; border-radius: 50%; background: conic-gradient(var(--accent) 0 50%, var(--accent-2) 0); animation: spin 8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .pill { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px 7px 7px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: 13.5px; font-weight: 600; box-shadow: 0 6px 18px -10px rgba(15,23,42,.25); }
+    .pill b { padding: 4px 9px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 11.5px; }
+
+    /* hero */
+    .hero { position: relative; overflow: hidden; padding: 70px 0 100px; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; animation: drift 14s ease-in-out infinite alternate; pointer-events: none; }
+    .blob--a { width: 520px; height: 520px; background: #a7f3d0; top: -180px; right: -80px; }
+    .blob--b { width: 420px; height: 420px; background: #bfdbfe; bottom: -200px; left: 30%; animation-delay: -6s; }
+    @keyframes drift { to { transform: translate(-60px, 50px) scale(1.15); } }
+    .hero .wrap { position: relative; }
+    .trust { display: flex; align-items: center; gap: 14px; margin-top: 34px; font-size: 14px; color: var(--muted); }
+    .faces { display: flex; } .faces span { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--bg); margin-left: -10px; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: #fff; }
+    .faces span:first-child { margin-left: 0; }
+    .mock { position: relative; height: 440px; }
+    .mock .card { position: absolute; padding: 20px; }
+    .m1 { inset: 30px 30px auto 0; }
+    .m1 .bars { height: 150px; }
+    .m2 { right: 0; top: 0; display: flex; gap: 12px; align-items: center; animation-delay: -2s; }
+    .m3 { left: -20px; bottom: 30px; animation-delay: -4s; }
+    .m4 { right: 10px; bottom: 0; width: 210px; animation-delay: -3s; }
+    .m3 strong, .m4 strong { display: block; font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
+    .ok-dot { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: #d1fae5; color: var(--accent); font-weight: 800; }
+
+    .logos { padding: 30px 0; border-block: 1px solid var(--line); color: #94a3b8; font: 800 20px/1 var(--font-d); letter-spacing: -.02em; }
+
+    /* como funciona */
+    .how { counter-reset: s; }
+    .how .card { position: relative; }
+    .how .card::before { counter-increment: s; content: "0" counter(s); font: 800 44px/1 var(--font-d); color: transparent; -webkit-text-stroke: 1.5px var(--accent); }
+
+    /* planos */
+    .toggle { display: inline-flex; align-items: center; gap: 12px; margin-top: 24px; font-weight: 600; font-size: 14px; }
+    .toggle .save { color: var(--accent); background: #d1fae5; padding: 4px 9px; border-radius: 999px; font-size: 12px; }
+    .plan { display: flex; flex-direction: column; gap: 14px; }
+    .plan .price { font: 800 44px/1 var(--font-d); letter-spacing: -.03em; transition: opacity .2s; }
+    .plan .price small { font-size: 15px; color: var(--muted); font-weight: 600; }
+    .plan ul { list-style: none; padding: 0; margin: 6px 0 10px; display: grid; gap: 10px; font-size: 14.5px; color: var(--muted); }
+    .plan li::before { content: "✓"; color: var(--accent); font-weight: 800; margin-right: 9px; }
+    .plan--pop { background: linear-gradient(160deg, #0f172a, #12263f); color: #fff; border-color: transparent; transform: translateY(-10px); }
+    .plan--pop p, .plan--pop ul, .plan--pop .price small { color: #a5b4c8; }
+    .plan__tag { align-self: flex-start; padding: 5px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; background: linear-gradient(100deg, var(--accent), var(--accent-2)); color: #fff; }
+
+    .faq details { border-bottom: 1px solid var(--line); padding: 20px 0; }
+    .faq summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 16px; font-weight: 700; font-size: 17px; }
+    .faq summary::after { content: "+"; font-size: 22px; color: var(--accent); transition: transform .3s; }
+    .faq details[open] summary::after { transform: rotate(45deg); }
+    .faq p { color: var(--muted); margin-top: 12px; line-height: 1.6; }
+    .cta-band { border-radius: 28px; padding: 56px; color: #fff; background: radial-gradient(120% 140% at 0% 0%, #10b981, transparent 50%), radial-gradient(120% 140% at 100% 100%, #3b82f6, transparent 50%), #0f172a; }
+    .cta-band .lead { color: #cbd5e1; }
+    .cta-band .btn { background: #fff; color: #0f172a; border-color: #fff; }
+
+    /* simulador */
+    .sim { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+    .big { font: 800 clamp(34px, 5cqi, 52px)/1 var(--font-d); letter-spacing: -.03em; }
+    input[type=range] { width: 100%; accent-color: var(--accent); height: 28px; }
+    .res { background: linear-gradient(160deg, #0f172a, #13293f); color: #fff; border: 0; }
+    .res .muted { color: #94a3b8; }
+    .res .ring { --s: 170px; --w: 16px; --c: #34d399; }
+    .res .ring::before { background: conic-gradient(#f87171 calc(var(--p) * 1%), #34d399 0); }
+    .res .ring b { font: 800 30px/1 var(--font-d); }
+    .legend { display: grid; gap: 10px; font-size: 14px; }
+    .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 8px; }
+    .mei { display: none; margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: #fef3c7; color: #92400e; font-size: 13.5px; font-weight: 600; }
+    .mei.is-on { display: block; animation: screenIn .4s both; }
+
+    /* painel */
+    .guia { justify-content: space-between; }
+    .guia b { display: block; } .guia small { color: var(--muted); }
+    .drop { display: grid; place-items: center; gap: 8px; padding: 30px; border: 2px dashed color-mix(in srgb, var(--accent) 40%, var(--line)); border-radius: 16px; text-align: center; cursor: pointer; transition: background .2s, border-color .2s; }
+    .drop:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); border-color: var(--accent); }
+    .prog { height: 6px; border-radius: 6px; background: var(--surface-2); overflow: hidden; margin-top: 8px; }
+    .prog i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .25s; }
+
+    @container (max-width: 760px) {
+      .mock { height: 380px; transform: scale(.9); transform-origin: top center; }
+      .m3 { left: 0; }
+      .sim { grid-template-columns: 1fr; }
+      .plan--pop { transform: none; }
+      .cta-band { padding: 34px 24px; }
+    }
+  </style>
+</head>
+<body data-sector="contabilidade">
+<div class="stage"><main class="viewport">
+
+  <!-- ===================== SITE ===================== -->
+  <section class="screen" id="site" data-label="Site" data-label-en="Website" data-label-es="Sitio">
+    <header class="sitenav"><div class="wrap">
+      <a href="#site" class="logo"><i></i>contaclara</a>
+      <nav><a href="#servicos">Serviços</a><a href="#como">Como funciona</a><a href="#planos">Planos</a><a href="#faq">Dúvidas</a></nav>
+      <a class="btn btn--sm" href="#simulador">Simular impostos</a>
+    </div></header>
+
+    <div class="hero">
+      <span class="blob blob--a"></span><span class="blob blob--b"></span>
+      <div class="wrap split">
+        <div>
+          <span class="pill" data-reveal><b>Novo</b> Abertura de empresa em até 7 dias</span>
+          <h1 class="h1" data-reveal>Sua contabilidade no <em>piloto automático</em>.</h1>
+          <p class="lead" data-reveal>Impostos calculados, guias no seu e-mail, folha em dia e um contador de verdade no WhatsApp. Tudo num painel simples, sem papelada.</p>
+          <div class="row mt" data-reveal>
+            <a class="btn" href="#simulador">Simular meus impostos →</a>
+            <a class="btn btn--ghost" href="#planos">Ver planos</a>
+          </div>
+          <div class="trust" data-reveal>
+            <div class="faces"><span style="background:#10b981">AN</span><span style="background:#3b82f6">RP</span><span style="background:#f59e0b">JL</span><span style="background:#8b5cf6">+</span></div>
+            <span><b style="color:var(--fg)">4,9 ★</b> no Google · +2.300 empresas atendidas</span>
+          </div>
+        </div>
+        <div class="mock" data-reveal>
+          <div class="card m1"><div class="row" style="justify-content:space-between"><b>Faturamento 2025</b><span class="badge badge--ok">+18%</span></div>
+            <div class="bars mt" data-bars="32,41,38,47,52,49,58,63,61,72" data-pre="R$ " data-suf=" mil"></div></div>
+          <div class="card m2 float"><span class="ok-dot">✓</span><div><b>DAS de outubro pago</b><div class="muted small">R$ 5.480,00 · agora</div></div></div>
+          <div class="card m3 float"><span class="muted small">Economia com planejamento</span><strong data-count="1240" data-pre="R$ " data-suf="/mês">0</strong></div>
+          <div class="card m4 float"><span class="muted small">Notas emitidas em out</span><strong data-count="46">0</strong><div class="prog"><i style="width:76%"></i></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logos marquee" style="--speed:40s"><div><span>Nórdica Café</span><span>Atlas Engenharia</span><span>Bloom Studio</span><span>Vértice Tech</span><span>Casa Ipê</span><span>Lume Odonto</span><span>Rota 9 Logística</span></div></div>
+
+    <section class="sec" id="servicos"><div class="wrap">
+      <div class="head center"><span class="eyebrow" data-reveal>Serviços</span><h2 class="h2" data-reveal>Tudo que sua empresa precisa, <em>num só lugar</em></h2></div>
+      <div class="grid">
+        <article class="card card--hover" data-reveal data-glow><span class="icon">⚡</span><h3>Abertura de empresa</h3><p>CNPJ, alvará e inscrições em até 7 dias. Grátis nos planos anuais.</p></article>
+        <article class="card card--hover" data-reveal data-glow><span class="icon">▦</span><h3>Contabilidade mensal</h3><p>Apuração de impostos, balancetes e obrigações acessórias em dia.</p></article>
+        <article class="card card--hover" data-reveal data-glow><span class="icon">☺</span><h3>Folha &amp; eSocial</h3><p>Pró-labore, funcionários, férias e 13º sem planilha.</p></article>
+        <article class="card card--hover" data-reveal data-glow><span class="icon">◎</span><h3>Planejamento tributário</h3><p>Escolhemos o regime que faz você pagar menos, dentro da lei.</p></article>
+        <article class="card card--hover" data-reveal data-glow><span class="icon">⇄</span><h3>BPO financeiro</h3><p>Contas a pagar e receber, conciliação bancária e relatórios.</p></article>
+        <article class="card card--hover" data-reveal data-glow><span class="icon">✦</span><h3>Imposto de Renda</h3><p>Declaração de sócios e pessoas físicas com revisão dupla.</p></article>
+      </div>
+    </div></section>
+
+    <section class="sec how" id="como" style="background:var(--surface)"><div class="wrap">
+      <div class="head"><span class="eyebrow" data-reveal>Como funciona</span><h2 class="h2" data-reveal>Três passos e <em>pronto</em></h2></div>
+      <div class="grid">
+        <article class="card" data-reveal><h3>Conte sobre sua empresa</h3><p>Um formulário de 3 minutos. Sem reunião, sem burocracia.</p></article>
+        <article class="card" data-reveal><h3>A gente organiza tudo</h3><p>Migramos seus dados do contador antigo e montamos o seu painel.</p></article>
+        <article class="card" data-reveal><h3>Você acompanha online</h3><p>Guias, notas e relatórios num só lugar, com alertas no WhatsApp.</p></article>
+      </div>
+    </div></section>
+
+    <section class="sec" id="planos"><div class="wrap">
+      <div class="head center"><span class="eyebrow" data-reveal>Planos</span><h2 class="h2" data-reveal>Preço justo, <em>sem surpresa</em></h2>
+        <div class="toggle" data-reveal>Mensal <button class="switch" id="anual" aria-pressed="false" aria-label="Cobrança anual"></button> Anual <span class="save">-15%</span></div></div>
+      <div class="grid" style="align-items:center">
+        <article class="card plan" data-reveal><h3 style="margin:0">MEI</h3><p class="muted">Para quem está começando.</p><div class="price" data-price="89">R$ 89<small>/mês</small></div>
+          <ul><li>DAS mensal automático</li><li>Declaração anual (DASN)</li><li>Suporte por chat</li></ul><a class="btn btn--ghost btn--block" href="#simulador">Começar</a></article>
+        <article class="card plan plan--pop" data-reveal><span class="plan__tag">Mais escolhido</span><h3 style="margin:0">Simples Nacional</h3><p>Serviços e comércio até R$ 4,8 mi/ano.</p><div class="price" data-price="249">R$ 249<small>/mês</small></div>
+          <ul><li>Impostos e obrigações</li><li>Folha até 3 funcionários</li><li>Contador dedicado no WhatsApp</li><li>Painel financeiro</li></ul><a class="btn btn--block" href="#simulador">Assinar agora</a></article>
+        <article class="card plan" data-reveal><h3 style="margin:0">Lucro Presumido</h3><p class="muted">Para empresas em crescimento.</p><div class="price" data-price="590">R$ 590<small>/mês</small></div>
+          <ul><li>Tudo do Simples</li><li>Planejamento trimestral</li><li>Relatórios gerenciais</li></ul><a class="btn btn--ghost btn--block" href="#simulador">Falar com especialista</a></article>
+      </div>
+    </div></section>
+
+    <section class="sec faq" id="faq" style="padding-top:20px"><div class="wrap wrap--narrow">
+      <div class="head center"><h2 class="h2" data-reveal>Dúvidas <em>frequentes</em></h2></div>
+      <details open><summary>Posso trocar de contador a qualquer momento?</summary><p>Sim. Nós pedimos a documentação ao seu contador atual e fazemos toda a transição sem custo.</p></details>
+      <details><summary>Em quanto tempo abro minha empresa?</summary><p>Em média 7 dias úteis, dependendo da prefeitura e da atividade.</p></details>
+      <details><summary>Atendem empresas de todo o Brasil?</summary><p>Sim, somos 100% digitais e atendemos todos os estados.</p></details>
+      <details><summary>Tem fidelidade?</summary><p>Não. Nos planos mensais você cancela quando quiser.</p></details>
+    </div></section>
+
+    <section class="sec" style="padding-top:0"><div class="wrap">
+      <div class="cta-band split" data-reveal><div><h2 class="h2" style="margin:0">Quanto você pagaria de imposto <em style="background:none;color:#6ee7b7">este mês</em>?</h2><p class="lead mt">Faça a simulação em 30 segundos.</p></div><div style="justify-self:end"><a class="btn" href="#simulador">Abrir simulador →</a></div></div>
+    </div></section>
+    <footer class="foot"><div class="wrap"><span>© contaclara · demo fictícia</span><span>CRC · LGPD · atendimento digital</span></div></footer>
+  </section>
+
+  <!-- ===================== SIMULADOR ===================== -->
+  <section class="screen" id="simulador" data-label="Simulador" data-label-en="Tax simulator" data-label-es="Simulador">
+    <div class="sec"><div class="wrap">
+      <div class="head"><span class="eyebrow">Simulador · Simples Nacional</span><h2 class="h2">Quanto de imposto <em>você paga?</em></h2></div>
+      <div class="sim">
+        <div class="card">
+          <label class="field" for="fat">Faturamento médio mensal</label>
+          <div class="big" id="fatOut" style="margin:10px 0 6px">R$ 30.000</div>
+          <input type="range" id="fat" min="2000" max="400000" step="1000" value="30000">
+          <div class="row muted small" style="justify-content:space-between"><span>R$ 2 mil</span><span>R$ 400 mil</span></div>
+          <p class="field mt">Atividade principal</p>
+          <div class="opts" data-group="anexo" style="margin-top:10px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr))">
+            <button class="opt" data-value="comercio"><span><b>Comércio</b><small>Anexo I</small></span></button>
+            <button class="opt" data-value="industria"><span><b>Indústria</b><small>Anexo II</small></span></button>
+            <button class="opt is-on" data-value="servicos"><span><b>Serviços</b><small>Anexo III</small></span></button>
+          </div>
+          <div class="mei" id="mei">💡 Com esse faturamento você pode se enquadrar como MEI, com imposto fixo mensal.</div>
+          <p class="muted small mt">Estimativa ilustrativa baseada nas tabelas do Simples Nacional (LC 123/2006). Não substitui a análise de um contador.</p>
+        </div>
+        <div class="card res">
+          <div class="row" style="justify-content:space-between"><span class="muted">Imposto estimado (DAS)</span><span class="badge" id="faixa" style="--c:#6ee7b7">Faixa 1</span></div>
+          <div class="big" id="das" style="margin:12px 0 24px">R$ 0</div>
+          <div class="row" style="gap:28px">
+            <div class="ring" id="ring" data-p="0"><div><b id="aliq">0%</b><div class="muted small">alíquota efetiva</div></div></div>
+            <div class="legend">
+              <div><i style="background:#f87171"></i>Imposto <b id="lgImp">R$ 0</b></div>
+              <div><i style="background:#34d399"></i>Fica com você <b id="lgLiq">R$ 0</b></div>
+              <div class="muted">No ano: <b style="color:#fff" id="ano">R$ 0</b></div>
+            </div>
+          </div>
+          <button class="btn btn--block mt" id="falar">Quero pagar menos imposto →</button>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ===================== PAINEL ===================== -->
+  <section class="screen" id="painel" data-label="Painel do cliente" data-label-en="Client dashboard" data-label-es="Panel del cliente">
+    <div class="app">
+      <aside class="app__side">
+        <a href="#site" class="logo"><i></i>contaclara</a>
+        <a class="is-on" href="#painel">▦ Visão geral</a><a href="#painel">▤ Notas fiscais</a><a href="#painel">◎ Impostos</a><a href="#painel">☺ Folha</a><a href="#painel">⇪ Documentos</a><a href="#painel">↗ Relatórios</a>
+        <span class="spacer"></span>
+        <div class="card" style="padding:16px;font-size:13px"><b>Seu contador</b><div class="row" style="margin-top:10px;gap:10px"><span class="avatar" style="width:34px;height:34px;font-size:12px">LP</span><div>Lucas Prado<div class="muted small">online agora</div></div></div></div>
+      </aside>
+      <div class="app__main">
+        <div class="app__top">
+          <div><p class="muted small">Bloom Studio LTDA · Simples Nacional</p><h2>Visão geral · outubro</h2></div>
+          <a class="btn btn--sm" href="#simulador">Simular cenário</a>
+        </div>
+        <div class="kpis">
+          <div class="kpi" data-reveal><small>Faturamento</small><strong data-count="84320" data-pre="R$ ">0</strong><em>▲ 12% vs. setembro</em></div>
+          <div class="kpi" data-reveal><small>Impostos do mês</small><strong data-count="5480" data-pre="R$ ">0</strong><em style="color:var(--muted)">alíquota 6,5%</em></div>
+          <div class="kpi" data-reveal><small>Lucro estimado</small><strong data-count="31900" data-pre="R$ ">0</strong><em>▲ 8%</em></div>
+          <div class="kpi" data-reveal><small>Notas emitidas</small><strong data-count="46">0</strong><em>3 canceladas</em></div>
+        </div>
+        <div class="dash">
+          <div class="panel">
+            <div class="panel__h"><h3>Faturamento · últimos 12 meses</h3><span class="badge badge--ok">+18% no ano</span></div>
+            <div class="bars" data-bars="52,58,49,61,66,63,70,68,74,71,75,84" data-labels="nov,dez,jan,fev,mar,abr,mai,jun,jul,ago,set,out" data-pre="R$ " data-suf=" mil"></div>
+            <div class="panel__h mt"><h3>Últimas notas</h3></div>
+            <div class="table-wrap"><table class="table"><thead><tr><th>Nº</th><th>Cliente</th><th>Valor</th><th>Status</th></tr></thead><tbody>
+              <tr><td>2046</td><td>Vértice Tech</td><td>R$ 12.400,00</td><td><span class="badge badge--ok">Autorizada</span></td></tr>
+              <tr><td>2045</td><td>Casa Ipê</td><td>R$ 3.800,00</td><td><span class="badge badge--ok">Autorizada</span></td></tr>
+              <tr><td>2044</td><td>Nórdica Café</td><td>R$ 1.250,00</td><td><span class="badge badge--warn">Processando</span></td></tr>
+              <tr><td>2043</td><td>Atlas Engenharia</td><td>R$ 9.900,00</td><td><span class="badge badge--bad">Cancelada</span></td></tr>
+            </tbody></table></div>
+          </div>
+          <div style="display:grid;gap:18px">
+            <div class="panel">
+              <div class="panel__h"><h3>Guias a vencer</h3><span class="muted small">novembro</span></div>
+              <div class="list" id="guias">
+                <div class="guia"><div><b>DAS · Simples</b><small>vence 20/11 · R$ 5.480,00</small></div><button class="btn btn--sm">Pagar</button></div>
+                <div class="guia"><div><b>FGTS</b><small>vence 07/11 · R$ 1.136,00</small></div><button class="btn btn--sm">Pagar</button></div>
+                <div class="guia"><div><b>INSS · pró-labore</b><small>vence 20/11 · R$ 584,00</small></div><button class="btn btn--sm">Pagar</button></div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel__h"><h3>Enviar documentos</h3></div>
+              <div class="drop" id="drop" role="button" tabindex="0"><span class="icon">⇪</span><b>Arraste extratos e notas aqui</b><span class="muted small">ou clique para simular um envio</span></div>
+              <div class="prog" id="prog" hidden><i></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main></div>
+<script src="kit.js"></script>
+<script>
+(function () {
+  var D = window.Demo, $ = D.$;
+
+  /* Simples Nacional: [teto RBT12, alíquota nominal, parcela a deduzir] por anexo */
+  var ANEXOS = {
+    comercio:  [[180e3, .04, 0], [360e3, .073, 5940], [720e3, .095, 13860], [1.8e6, .107, 22500], [3.6e6, .143, 87300], [4.8e6, .19, 378000]],
+    industria: [[180e3, .045, 0], [360e3, .078, 5940], [720e3, .10, 13860], [1.8e6, .112, 22500], [3.6e6, .147, 85500], [4.8e6, .30, 720000]],
+    servicos:  [[180e3, .06, 0], [360e3, .112, 9360], [720e3, .135, 17640], [1.8e6, .16, 35640], [3.6e6, .21, 125640], [4.8e6, .33, 648000]]
+  };
+  function simples(mensal, anexo) {
+    var rbt = mensal * 12, t = ANEXOS[anexo], i = 0;
+    while (i < t.length - 1 && rbt > t[i][0]) i++;
+    var ef = (rbt * t[i][1] - t[i][2]) / rbt;
+    return { faixa: i + 1, ef: ef, das: mensal * ef };
+  }
+  console.assert(Math.round(simples(10000, "servicos").das) === 600, "simples: faixa 1 serviços");
+  console.assert(simples(50000, "comercio").faixa === 3 && Math.abs(simples(50000, "comercio").ef - (600000 * .095 - 13860) / 600000) < 1e-12, "simples: faixa 3 comércio");
+
+  var fat = $("#fat"), anexo = "servicos";
+  function calc() {
+    var v = +fat.value, r = simples(v, anexo);
+    $("#fatOut").textContent = D.brl(v).replace(",00", "");
+    $("#das").textContent = D.brl(r.das);
+    $("#aliq").textContent = (r.ef * 100).toFixed(2).replace(".", ",") + "%";
+    $("#faixa").textContent = "Faixa " + r.faixa;
+    $("#lgImp").textContent = D.brl(r.das);
+    $("#lgLiq").textContent = D.brl(v - r.das);
+    $("#ano").textContent = D.brl(r.das * 12);
+    $("#mei").classList.toggle("is-on", v <= 6750 && anexo !== "industria");
+    D.setP($("#ring"), Math.max(2, r.ef * 100 * 3)); // ×3 só para o anel ficar legível
+  }
+  fat.addEventListener("input", calc);
+  $('[data-group="anexo"]').addEventListener("pick", function (e) { anexo = e.detail.dataset.value; calc(); });
+  calc();
+  $("#falar").addEventListener("click", function () { D.toast("Pronto! Um contador vai te chamar no WhatsApp em instantes."); });
+
+  /* planos mensal/anual */
+  $("#anual").addEventListener("click", function () {
+    var anual = this.getAttribute("aria-pressed") !== "true"; // o kit alterna depois deste handler
+    D.$$("[data-price]").forEach(function (p) {
+      var v = Math.round(p.dataset.price * (anual ? .85 : 1));
+      p.style.opacity = 0;
+      setTimeout(function () { p.innerHTML = "R$ " + v + "<small>/mês" + (anual ? " · anual" : "") + "</small>"; p.style.opacity = 1; }, 180);
+    });
+  });
+
+  /* guias */
+  $("#guias").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    b.outerHTML = '<span class="badge badge--ok">Pago</span>';
+    D.toast("Pagamento agendado via Pix. Comprovante salvo no painel.");
+  });
+
+  /* upload simulado */
+  var busy = false;
+  function upload() {
+    if (busy) return; busy = true;
+    var p = $("#prog"), bar = p.firstChild, k = 0; p.hidden = false;
+    var t = setInterval(function () {
+      k = Math.min(100, k + 7 + Math.random() * 12); bar.style.width = k + "%";
+      if (k >= 100) { clearInterval(t); D.toast("3 arquivos enviados. Seu contador já foi avisado."); setTimeout(function () { p.hidden = true; bar.style.width = 0; busy = false; }, 700); }
+    }, 120);
+  }
+  $("#drop").addEventListener("click", upload);
+  $("#drop").addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); upload(); } });
+})();
+</script>
+</body>
+</html>

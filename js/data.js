@@ -15,6 +15,17 @@ window.DATA = {
 
   services: ["mobile", "native", "fullstack", "rebuild", "offline"],
 
+  /* demos navegáveis por setor (demos/<id>.html, miniatura em assets/demo-<id>.jpg) */
+  solutions: [
+    { id: "advocacia", accent: "#c8a35a", icon: "§" },
+    { id: "contabilidade", accent: "#10b981", icon: "◐" },
+    { id: "restaurante", accent: "#ff6b2c", icon: "🔥" },
+    { id: "clinica", accent: "#0ea5e9", icon: "🦷" },
+    { id: "barbearia", accent: "#e0a526", icon: "✂" },
+    { id: "academia", accent: "#c6ff3d", icon: "⚡" },
+    { id: "game", accent: "#b26bff", icon: "◆", wide: true }
+  ],
+
   projects: [
     {
       id: "aiffice",

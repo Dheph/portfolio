@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Barbearia — demo · Jeffersom Ribeiro</title>
+  <meta name="description" content="Demo navegável de site + agendamento por barbeiro + clube de fidelidade para barbearia. Dados fictícios." />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="kit.css" />
+  <style>
+    :root {
+      --bg: #0c0c0c; --surface: #151413; --surface-2: #1e1c1a; --line: rgba(242,234,211,.1);
+      --fg: #f2ead3; --muted: #a39d8c; --accent: #e0a526; --accent-2: #c2372a; --accent-ink: #0c0c0c;
+      --radius: 4px; --btn-r: 2px;
+      --font-d: "Bebas Neue", Impact, sans-serif; --font-b: "Inter", system-ui, sans-serif;
+    }
+    .grain { position: relative; }
+    .grain::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E"); }
+    .h1, .h2, .card h3, .step__title, .app__top h2, .panel__h h3, .stat strong, .kpi strong { font-weight: 400; letter-spacing: .01em; }
+    .h1 { font-size: clamp(64px, 11cqi, 150px); line-height: .88; }
+    .h2 { font-size: clamp(44px, 6cqi, 72px); line-height: .95; }
+    .outline { color: transparent; -webkit-text-stroke: 2px var(--accent); }
+    .btn { text-transform: uppercase; letter-spacing: .1em; font-size: 13px; font-weight: 800; }
+    .eyebrow { color: var(--accent-2); font-weight: 800; }
+    .logo { font-size: 28px; letter-spacing: .06em; font-weight: 400; } .logo b { color: var(--accent); font-weight: 400; }
+
+    .hero { padding: 60px 0 80px; overflow: hidden; }
+    .pole-box { position: relative; justify-self: center; display: flex; flex-direction: column; align-items: center; }
+    .pole-cap { width: 110px; height: 34px; border-radius: 50% 50% 8px 8px / 100% 100% 8px 8px; background: linear-gradient(90deg, #6b5a35, #e0c47a, #6b5a35); }
+    .pole { width: 84px; height: 340px; border-radius: 10px; overflow: hidden; position: relative; box-shadow: inset -18px 0 30px rgba(0,0,0,.45), inset 14px 0 20px rgba(255,255,255,.25), 0 30px 80px -10px rgba(194,55,42,.5); }
+    .pole::before { content: ""; position: absolute; inset: -200px 0 0; background: repeating-linear-gradient(-45deg, #c2372a 0 22px, #f2ead3 22px 44px, #1f4fa8 44px 66px, #f2ead3 66px 88px); animation: pole 2.5s linear infinite; }
+    @keyframes pole { to { transform: translateY(124.45px); } }
+    .stamp { position: absolute; right: -90px; top: 40px; width: 130px; height: 130px; border-radius: 50%; border: 2px dashed var(--accent); display: grid; place-items: center; text-align: center; transform: rotate(14deg);
+      font: 400 22px/1 var(--font-d); color: var(--accent); background: rgba(12,12,12,.8); }
+    .stamp b { display: block; font-size: 44px; font-weight: 400; }
+
+    .tape { background: var(--accent); color: var(--accent-ink); font: 400 34px/1 var(--font-d); padding: 14px 0; transform: rotate(-2deg); margin: 20px -20px; letter-spacing: .04em; }
+    .tape span::after { content: "✂"; margin-left: 48px; }
+
+    .menu { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; }
+    .mi { display: flex; align-items: baseline; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .mi b { font: 400 30px/1 var(--font-d); letter-spacing: .02em; }
+    .mi small { display: block; color: var(--muted); font-size: 13px; margin-top: 6px; }
+    .mi i { flex: 1; border-bottom: 2px dotted var(--line); transform: translateY(-6px); }
+    .mi span { font: 400 30px/1 var(--font-d); color: var(--accent); }
+
+    .barber { padding: 0; overflow: hidden; }
+    .barber__ph { aspect-ratio: 1; display: grid; place-items: center; font: 400 110px/1 var(--font-d); color: rgba(242,234,211,.9);
+      background: linear-gradient(transparent 50%, rgba(0,0,0,.7)), repeating-linear-gradient(135deg, var(--t1) 0 14px, var(--t2) 14px 28px); filter: grayscale(.4) contrast(1.1); transition: filter .5s; }
+    .barber:hover .barber__ph { filter: none; }
+    .barber__b { padding: 18px 20px; }
+    .barber__b h3 { margin: 0; font-size: 34px; }
+
+    .gal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .gal div { aspect-ratio: 1; display: grid; place-items: center; font-size: 48px; background: var(--surface-2); border: 1px solid var(--line); transition: transform .4s var(--ease), background .3s; }
+    .gal div:nth-child(odd) { background: radial-gradient(circle, #2a241a, var(--surface)); }
+    .gal div:hover { transform: rotate(-3deg) scale(1.05); background: var(--accent); }
+
+    /* clube */
+    .club-card { position: relative; overflow: hidden; padding: 30px; border-radius: 16px; color: #0c0c0c;
+      background: linear-gradient(135deg, #f0c45a, #c8901c 60%, #8a5a0c); box-shadow: 0 40px 80px -30px rgba(224,165,38,.6); }
+    .club-card::after { content: "NAVALHA"; position: absolute; right: -10px; bottom: -24px; font: 400 120px/1 var(--font-d); opacity: .12; }
+    .stamps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 22px 0; }
+    .stamps i { aspect-ratio: 1; border-radius: 50%; border: 2px dashed rgba(12,12,12,.45); display: grid; place-items: center; font-style: normal; font-size: 22px; }
+    .stamps i.on { border: 0; background: #0c0c0c; color: var(--accent); animation: stampIn .5s var(--ease) both; }
+    .stamps i.gift { border-style: solid; }
+    @keyframes stampIn { from { transform: scale(2) rotate(-30deg); opacity: 0; } }
+    .q-row .avatar { border-radius: 4px; }
+    .timer { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--accent); }
+
+    @container (max-width: 760px) {
+      .menu { grid-template-columns: 1fr; }
+      .gal { grid-template-columns: repeat(2, 1fr); }
+      .stamp { right: -40px; width: 110px; height: 110px; }
+      .pole { height: 260px; }
+    }
+  </style>
+</head>
+<body data-sector="barbearia">
+<div class="stage"><main class="viewport">
+
+  <!-- ===================== SITE ===================== -->
+  <section class="screen" id="site" data-label="Site" data-label-en="Website" data-label-es="Sitio">
+    <header class="sitenav"><div class="wrap">
+      <a href="#site" class="logo">NAVALHA <b>✂</b> CLUB</a>
+      <nav><a href="#servicos">Serviços</a><a href="#barbeiros">Barbeiros</a><a href="#galeria">Galeria</a></nav>
+      <a class="btn btn--sm" href="#agendar">Agendar</a>
+    </div></header>
+
+    <div class="hero grain">
+      <div class="wrap split">
+        <div>
+          <span class="eyebrow" data-reveal>Barbearia clássica · desde 2016</span>
+          <h1 class="h1" data-reveal>Corte.<br>Barba.<br><span class="outline">Respeito.</span></h1>
+          <p class="lead mt" data-reveal>Navalha quente, toalha fria, café passado na hora e o seu barbeiro de confiança. Agende em 20 segundos, sem ligar pra ninguém.</p>
+          <div class="row mt" data-reveal><a class="btn" href="#agendar">Agendar horário</a><a class="btn btn--ghost" href="#clube">Clube Navalha</a></div>
+        </div>
+        <div class="pole-box" data-reveal>
+          <div class="pole-cap"></div><div class="pole"></div><div class="pole-cap" style="transform:scaleY(-1)"></div>
+          <div class="stamp float"><div><b>4,9</b>★ GOOGLE</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tape marquee" style="--speed:22s"><div><span>Corte na tesoura</span><span>Barba na navalha</span><span>Pigmentação</span><span>Platinado</span><span>Sobrancelha</span></div></div>
+
+    <section class="sec" id="servicos"><div class="wrap">
+      <div class="head"><span class="eyebrow" data-reveal>Tabela</span><h2 class="h2" data-reveal>Serviços &amp; <span class="outline">preços</span></h2></div>
+      <div class="menu" data-reveal>
+        <div class="mi"><div><b>Corte</b><small>Tesoura ou máquina · 40 min</small></div><i></i><span>R$ 55</span></div>
+        <div class="mi"><div><b>Barba</b><small>Navalha + toalha quente · 30 min</small></div><i></i><span>R$ 40</span></div>
+        <div class="mi"><div><b>Corte + barba</b><small>O combo da casa · 70 min</small></div><i></i><span>R$ 85</span></div>
+        <div class="mi"><div><b>Pigmentação</b><small>Barba ou cabelo · 20 min</small></div><i></i><span>R$ 35</span></div>
+        <div class="mi"><div><b>Sobrancelha</b><small>Navalha · 10 min</small></div><i></i><span>R$ 20</span></div>
+        <div class="mi"><div><b>Platinado</b><small>Descoloração global · 120 min</small></div><i></i><span>R$ 180</span></div>
+      </div>
+    </div></section>
+
+    <section class="sec" id="barbeiros" style="background:var(--surface)"><div class="wrap">
+      <div class="head"><span class="eyebrow" data-reveal>O time</span><h2 class="h2" data-reveal>Escolha seu <span class="outline">barbeiro</span></h2></div>
+      <div class="grid">
+        <article class="card barber" data-reveal><div class="barber__ph" style="--t1:#2a1d12;--t2:#33241a">TH</div><div class="barber__b"><h3>Thiago "Navalha"</h3><p>★ 5,0 · degradê e navalhado</p></div></article>
+        <article class="card barber" data-reveal><div class="barber__ph" style="--t1:#1a1f2a;--t2:#212838">RB</div><div class="barber__b"><h3>Rafa Barba</h3><p>★ 4,9 · barba e pigmentação</p></div></article>
+        <article class="card barber" data-reveal><div class="barber__ph" style="--t1:#2a1414;--t2:#361a1a">LU</div><div class="barber__b"><h3>Lu Martins</h3><p>★ 4,9 · tesoura e platinado</p></div></article>
+      </div>
+    </div></section>
+
+    <section class="sec" id="galeria"><div class="wrap">
+      <div class="head row" style="justify-content:space-between;align-items:flex-end"><h2 class="h2" data-reveal>@navalha<span class="outline">club</span></h2><span class="muted" data-reveal>Seg fechado · Ter a sáb 9h–21h · Dom 9h–14h</span></div>
+      <div class="gal" data-reveal><div>💈</div><div>✂️</div><div>🪒</div><div>🧔</div><div>☕</div><div>🔥</div><div>👑</div><div>🎧</div></div>
+    </div></section>
+    <footer class="foot"><div class="wrap"><span>© Navalha Club · demo fictícia</span><span>Av. dos Barbeiros, 77</span></div></footer>
+  </section>
+
+  <!-- ===================== AGENDAR ===================== -->
+  <section class="screen grain" id="agendar" data-label="Agendar" data-label-en="Booking" data-label-es="Reservar">
+    <div class="sec"><div class="wrap wrap--narrow">
+      <div class="head center"><span class="eyebrow">Sem ligação, sem espera</span><h2 class="h2">Agende seu <span class="outline">horário</span></h2></div>
+      <div class="card" data-wizard>
+        <div class="steps"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="step">
+          <h3 class="step__title">Serviços</h3>
+          <div class="opts" data-group="serv" data-multi data-required id="serv">
+            <button class="opt" data-value="Corte" data-price="55"><span><b>Corte</b><small>R$ 55 · 40 min</small></span></button>
+            <button class="opt" data-value="Barba" data-price="40"><span><b>Barba</b><small>R$ 40 · 30 min</small></span></button>
+            <button class="opt" data-value="Pigmentação" data-price="35"><span><b>Pigmentação</b><small>R$ 35 · 20 min</small></span></button>
+            <button class="opt" data-value="Sobrancelha" data-price="20"><span><b>Sobrancelha</b><small>R$ 20 · 10 min</small></span></button>
+          </div>
+          <div class="step__nav"><span class="muted" style="align-self:center">Total: <b style="color:var(--accent);font-size:20px" id="servTot">R$ 0</b></span><button class="btn" data-next>Continuar →</button></div>
+        </div>
+        <div class="step">
+          <h3 class="step__title">Barbeiro</h3>
+          <div class="opts" data-group="barb" data-required>
+            <button class="opt" data-value="Thiago"><span class="avatar">TH</span><span><b>Thiago "Navalha"</b><small>★ 5,0 · próximo: hoje 18h</small></span></button>
+            <button class="opt" data-value="Rafa"><span class="avatar">RB</span><span><b>Rafa Barba</b><small>★ 4,9 · próximo: amanhã 10h</small></span></button>
+            <button class="opt" data-value="Lu"><span class="avatar">LU</span><span><b>Lu Martins</b><small>★ 4,9 · próximo: hoje 19h30</small></span></button>
+            <button class="opt" data-value="Qualquer um"><span class="avatar">⚡</span><span><b>Tanto faz</b><small>Primeiro horário livre</small></span></button>
+          </div>
+          <div class="step__nav"><button class="btn btn--ghost" data-prev>← Voltar</button><button class="btn" data-next>Continuar →</button></div>
+        </div>
+        <div class="step">
+          <h3 class="step__title">Quando?</h3>
+          <div class="slots" data-group="dia" data-required id="dias"></div>
+          <div class="slots mt" data-group="hora" data-required>
+            <button class="opt">09:00</button><button class="opt" disabled>10:00</button><button class="opt">11:30</button><button class="opt">14:00</button><button class="opt" disabled>15:30</button><button class="opt">17:00</button><button class="opt">18:00</button><button class="opt">19:30</button>
+          </div>
+          <div class="step__nav"><button class="btn btn--ghost" data-prev>← Voltar</button><button class="btn" data-next>Continuar →</button></div>
+        </div>
+        <div class="step">
+          <h3 class="step__title">Quase lá</h3>
+          <div class="form"><label class="field">Nome<input class="input" name="nome" required placeholder="Como te chamamos?"></label><label class="field">WhatsApp<input class="input" name="fone" required placeholder="(00) 90000-0000"></label></div>
+          <dl class="summary mt"><div><dt>Serviços</dt><dd data-show="serv"></dd></div><div><dt>Barbeiro</dt><dd data-show="barb"></dd></div><div><dt>Quando</dt><dd><span data-show="dia"></span> · <span data-show="hora"></span></dd></div></dl>
+          <div class="step__nav"><button class="btn btn--ghost" data-prev>← Voltar</button><button class="btn" data-next>Confirmar</button></div>
+        </div>
+        <div class="step done">
+          <svg class="check" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><path d="M30 52l13 13 27-29"/></svg>
+          <h3 class="step__title" style="font-size:44px">Fechado, <span data-show="nome"></span>!</h3>
+          <p class="muted"><span data-show="serv"></span> com <span data-show="barb"></span> · <span data-show="dia"></span> às <span data-show="hora"></span></p>
+          <p class="muted small mt">+1 selo no seu cartão fidelidade 💈</p>
+          <div class="row mt" style="justify-content:center"><a class="btn" href="#clube">Ver meu cartão →</a><button class="btn btn--ghost" data-restart>Novo horário</button></div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ===================== CLUBE + PAINEL ===================== -->
+  <section class="screen" id="clube" data-label="Clube & painel" data-label-en="Club & panel" data-label-es="Club y panel">
+    <div class="wrap" style="padding-top:34px;padding-bottom:50px">
+      <div class="dash">
+        <div style="display:grid;gap:18px">
+          <div class="club-card" data-reveal>
+            <div class="row" style="justify-content:space-between"><b style="font:400 30px/1 var(--font-d);letter-spacing:.04em">Cartão fidelidade</b><b>Marcelo A.</b></div>
+            <div class="stamps" id="stamps"></div>
+            <div class="row" style="justify-content:space-between"><span id="stampTxt" style="font-weight:700"></span><button class="btn btn--sm" id="stampBtn" style="background:#0c0c0c;color:var(--accent);border-color:#0c0c0c">+ Registrar corte</button></div>
+          </div>
+          <div class="grid">
+            <div class="card" data-reveal><span class="eyebrow">Assinatura</span><h3>Clube Corte</h3><p>Cortes ilimitados no mês, agendamento prioritário.</p><div class="h2" style="color:var(--accent);margin-top:10px">R$ 99<small style="font-size:16px;color:var(--muted)">/mês</small></div><button class="btn btn--block mt" data-sub>Assinar</button></div>
+            <div class="card" data-reveal style="border-color:var(--accent)"><span class="eyebrow">Mais vendido</span><h3>Clube Completo</h3><p>Corte + barba ilimitados, 1 cerveja por visita.</p><div class="h2" style="color:var(--accent);margin-top:10px">R$ 159<small style="font-size:16px;color:var(--muted)">/mês</small></div><button class="btn btn--block mt" data-sub>Assinar</button></div>
+          </div>
+        </div>
+        <div style="display:grid;gap:18px">
+          <div class="kpis" style="margin:0">
+            <div class="kpi" data-reveal><small>Faturamento hoje</small><strong id="fat">R$ 1.840</strong><em>▲ 14% vs. sábado passado</em></div>
+            <div class="kpi" data-reveal><small>Atendimentos</small><strong data-count="27">0</strong><em>8 assinantes</em></div>
+          </div>
+          <div class="panel" data-reveal>
+            <div class="panel__h"><h3 style="font-size:28px">Na cadeira agora</h3><span class="badge badge--ok">3 barbeiros</span></div>
+            <div class="list" id="chairs"></div>
+          </div>
+          <div class="panel" data-reveal>
+            <div class="panel__h"><h3 style="font-size:28px">Fila de espera</h3><span class="muted small" id="filaN"></span></div>
+            <div class="list" id="fila"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main></div>
+<script src="kit.js"></script>
+<script>
+(function () {
+  var D = window.Demo, $ = D.$, esc = D.esc;
+
+  /* total dos serviços no agendamento */
+  $("#serv").addEventListener("pick", function () {
+    var t = D.$$("#serv .opt.is-on").reduce(function (s, o) { return s + +o.dataset.price; }, 0);
+    $("#servTot").textContent = "R$ " + t;
+  });
+  /* próximos 6 dias (segunda fechado) */
+  var d = new Date(), n = 0, f = new Intl.DateTimeFormat("pt-BR", { weekday: "short", day: "2-digit" });
+  while (n < 6) { if (d.getDay() !== 1) { $("#dias").insertAdjacentHTML("beforeend", '<button class="opt">' + (n ? f.format(d).replace(".", "").replace(",", "") : "Hoje") + "</button>"); n++; } d.setDate(d.getDate() + 1); }
+
+  /* cartão fidelidade */
+  var stamps = 7;
+  function renderStamps(anim) {
+    $("#stamps").innerHTML = Array.from({ length: 10 }, function (_, i) {
+      return '<i class="' + (i < stamps ? "on" : "") + (i === 9 ? " gift" : "") + '" style="' + (anim && i === stamps - 1 ? "" : "animation:none") + '">' + (i < stamps ? "✂" : i === 9 ? "🎁" : "") + "</i>";
+    }).join("");
+    $("#stampTxt").textContent = stamps >= 10 ? "Corte grátis liberado! 🎉" : (10 - stamps) + " cortes para o próximo grátis";
+  }
+  $("#stampBtn").addEventListener("click", function () {
+    stamps = stamps >= 10 ? 1 : stamps + 1;
+    renderStamps(true);
+    if (stamps === 10) D.toast("Cartão completo: o próximo corte é por conta da casa! 🎁");
+  });
+  renderStamps(false);
+  document.addEventListener("click", function (e) { if (e.target.closest("[data-sub]")) D.toast("Assinatura ativada! Cobrança mensal no cartão. 💈"); });
+
+  /* painel ao vivo */
+  var chairs = [["TH", "Thiago", "Pedro H.", "Corte + barba", 70, 38], ["RB", "Rafa", "Caio M.", "Barba", 30, 12], ["LU", "Lu", "André S.", "Platinado", 120, 95]];
+  var fila = [["Gustavo", "Corte", 4], ["Leo", "Corte + barba", 11], ["Murilo", "Sobrancelha", 18]];
+  var fat = 1840;
+  function render() {
+    $("#chairs").innerHTML = chairs.map(function (c) {
+      var pct = Math.min(100, c[5] / c[4] * 100);
+      return '<div class="q-row"><span class="avatar">' + c[0] + '</span><div style="flex:1"><b>' + esc(c[2]) + '</b> <span class="muted small">com ' + c[1] + " · " + esc(c[3]) + '</span><div class="prog" style="height:5px;border-radius:5px;background:var(--surface-2);margin-top:8px;overflow:hidden"><i style="display:block;height:100%;width:' + pct + '%;background:var(--accent);transition:width 1s"></i></div></div><span class="timer">' + Math.max(0, c[4] - c[5]) + " min</span></div>";
+    }).join("");
+    $("#filaN").textContent = fila.length + " aguardando";
+    $("#fila").innerHTML = fila.map(function (p, i) {
+      return '<div><span class="badge" style="--c:var(--accent)">' + (i + 1) + 'º</span><b style="flex:1">' + esc(p[0]) + ' <span class="muted small" style="font-weight:400">' + esc(p[1]) + '</span></b><span class="timer">espera ~' + p[2] + " min</span></div>";
+    }).join("") || '<p class="muted small">Fila vazia.</p>';
+    $("#fat").textContent = "R$ " + fat.toLocaleString("pt-BR");
+  }
+  setInterval(function () { // demo acelerada: 1 tick = 1 "minuto" a cada 1,5s
+    chairs.forEach(function (c) {
+      c[5]++;
+      if (c[5] >= c[4]) {
+        fat += c[3].indexOf("+") >= 0 ? 85 : c[3] === "Platinado" ? 180 : 45;
+        var next = fila.shift() || ["Walk-in", "Corte", 0];
+        c[2] = next[0] + " " + "ABCDLMRS"[Math.floor(Math.random() * 8)] + "."; c[3] = next[1]; c[4] = next[1] === "Corte" ? 40 : next[1] === "Sobrancelha" ? 10 : 70; c[5] = 0;
+        fila.push([["Bruno", "Vitor", "Igor", "Nando", "Davi"][Math.floor(Math.random() * 5)], ["Corte", "Corte + barba", "Barba"][Math.floor(Math.random() * 3)], 20]);
+      }
+    });
+    fila.forEach(function (p) { p[2] = Math.max(1, p[2] - 1); });
+    render();
+  }, 1500);
+  render();
+})();
+</script>
+</body>
+</html>

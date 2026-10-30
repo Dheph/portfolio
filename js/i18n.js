@@ -3,7 +3,7 @@
 window.I18N = {
   en: {
     ui: {
-      nav: { work: "Work", about: "About", services: "Services", experience: "Experience", contact: "Contact" },
+      nav: { work: "Work", about: "About", services: "Services", solutions: "Solutions", experience: "Experience", contact: "Contact" },
       hireMe: "Hire me", viewWork: "View work", viewCase: "Open case study",
       close: "Close", prev: "Previous", next: "Next",
       copy: "Copy", copied: "Copied!",
@@ -15,10 +15,11 @@ window.I18N = {
       sections: {
         about:      { num: "01", title: "About", em: "me" },
         services:   { num: "02", title: "How I bring ideas to", em: "life" },
-        work:       { num: "03", title: "Selected", em: "work" },
-        experience: { num: "04", title: "Where I've", em: "worked" },
-        writing:    { num: "05", title: "From the", em: "blog" },
-        contact:    { num: "06", title: "Got an idea? Let's", em: "talk" }
+        solutions:  { num: "03", title: "Built for", em: "your business" },
+        work:       { num: "04", title: "Selected", em: "work" },
+        experience: { num: "05", title: "Where I've", em: "worked" },
+        writing:    { num: "06", title: "From the", em: "blog" },
+        contact:    { num: "07", title: "Got an idea? Let's", em: "talk" }
       }
     },
 
@@ -52,6 +53,20 @@ window.I18N = {
       fullstack:{ title: "Fullstack / Backend", desc: "Node.js APIs with PostgreSQL, Docker and CI/CD behind your app.", tags: ["Node.js", "PostgreSQL", "CI/CD"] },
       rebuild:  { title: "App Rebuilds & Tech Leadership", desc: "Rescue legacy apps, redefine the architecture, and lead teams with Scrum and mentoring.", tags: ["Legacy rescue", "Architecture", "Mentoring"] },
       offline:  { title: "Offline-first Architecture", desc: "Apps that keep working without a connection and sync safely: SQLite, SmartStore, Redux Persist, Firebase.", tags: ["SQLite", "Sync engines", "Conflict handling"] }
+    },
+
+    solutions: {
+      lead: "Need a website or system for your business? These are live demos with mock data: click around them like the real thing. Each one is a starting point I tailor to you.",
+      open: "Open live demo",
+      items: {
+        advocacia:     { name: "Law firm", desc: "Institutional site, online consultation booking and a client portal to follow cases in real time.", screens: ["Website", "Booking", "Client portal"] },
+        contabilidade: { name: "Accounting firm", desc: "Plans and pricing, a live tax simulator and the client's financial dashboard.", screens: ["Website", "Tax simulator", "Dashboard"] },
+        restaurante:   { name: "Restaurant", desc: "Menu with cart and coupons, table reservations, order tracking and a live kitchen display.", screens: ["Website", "Online ordering", "Order & kitchen"] },
+        clinica:       { name: "Dental clinic", desc: "Treatments, 24/7 online scheduling with calendar and the clinic's daily agenda.", screens: ["Website", "Scheduling", "Clinic panel"] },
+        barbearia:     { name: "Barbershop", desc: "Price list, booking by barber, loyalty stamp card, subscriptions and a live queue.", screens: ["Website", "Booking", "Club & panel"] },
+        academia:      { name: "Gym & fitness", desc: "Plans and class schedule, a student app with workouts and progress, and QR check-in.", screens: ["Website", "Student app", "Check-in"] },
+        game:          { name: "Nebula Siege · mini game", desc: "An arcade shooter built from scratch on canvas: waves, bosses, level-ups and particles. Interactive experiences are on the menu too.", screens: ["Canvas 2D", "Touch & keyboard", "No engine"] }
+      }
     },
 
     shots: {

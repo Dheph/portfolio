@@ -190,6 +190,26 @@
     });
   }
 
+  /* ---------------- Solutions (demos por setor) ---------------- */
+  function renderSolutions() {
+    var box = $("#sols"); if (!box) return;
+    box.innerHTML = "";
+    (D.solutions || []).forEach(function (s) {
+      var c = t("solutions.items." + s.id) || {};
+      var a = el("a", "sol" + (s.wide ? " sol--wide" : ""));
+      a.href = "demos/" + s.id + ".html";
+      a.style.setProperty("--accent", s.accent);
+      a.setAttribute("data-reveal", "");
+      a.innerHTML =
+        '<div class="sol__shot"><img src="assets/demo-' + s.id + '.jpg" alt="" loading="lazy" /></div>' +
+        '<div class="sol__body"><span class="sol__icon" aria-hidden="true">' + s.icon + '</span>' +
+        '<h3 class="sol__title">' + esc(c.name) + '</h3><p class="sol__desc">' + esc(c.desc) + '</p>' +
+        '<div class="sol__screens">' + (c.screens || []).map(function (x) { return "<span>" + esc(x) + "</span>"; }).join("") + "</div>" +
+        '<span class="sol__more">' + esc(t("solutions.open")) + ' <span aria-hidden="true">→</span></span></div>';
+      box.appendChild(a);
+    });
+  }
+
   /* ---------------- Work (filters + grid) ---------------- */
   var activeFilter = "all";
   function renderFilters() {
@@ -418,7 +438,7 @@
   /* ---------------- Render all ---------------- */
   function renderAll() {
     applyI18n();
-    renderHero(); renderAbout(); renderServices();
+    renderHero(); renderAbout(); renderServices(); renderSolutions();
     renderFilters(); renderWork(); renderExperience(); renderWriting(); renderContact();
     reveal(document);
   }

@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Academia — demo · Jeffersom Ribeiro</title>
+  <meta name="description" content="Demo navegável de site + app do aluno + check-in por QR para academia. Dados fictícios." />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,700;0,900;1,800;1,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="kit.css" />
+  <style>
+    :root {
+      --bg: #08090b; --surface: #111317; --surface-2: #181b20; --line: rgba(255,255,255,.08);
+      --fg: #f4f6f0; --muted: #8e959e; --accent: #c6ff3d; --accent-2: #8b5cf6; --accent-ink: #0a0b07;
+      --radius: 20px; --btn-r: 12px;
+      --font-d: "Archivo", system-ui, sans-serif; --font-b: "Inter", system-ui, sans-serif;
+    }
+    .h1, .h2 { font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: -.02em; }
+    .h1 { font-size: clamp(64px, 11.5cqi, 160px); line-height: .84; }
+    .stroke { color: transparent; -webkit-text-stroke: 2px var(--accent); }
+    .btn { font-weight: 800; text-transform: uppercase; letter-spacing: .04em; font-size: 14px; }
+    .logo { font-style: italic; font-weight: 900; letter-spacing: -.02em; } .logo b { color: var(--accent); }
+
+    .hero { position: relative; overflow: hidden; padding: 56px 0 90px; }
+    .hero::before { content: ""; position: absolute; inset: -20%; pointer-events: none; opacity: .5;
+      background: repeating-linear-gradient(120deg, transparent 0 80px, rgba(198,255,61,.05) 80px 82px); animation: slide 18s linear infinite; }
+    @keyframes slide { to { transform: translateX(160px); } }
+    .ecg { position: absolute; left: 0; right: 0; bottom: 40px; height: 120px; width: 100%; opacity: .5; pointer-events: none; }
+    .ecg path { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-dasharray: 1600; stroke-dashoffset: 1600; animation: ecg 3.2s linear infinite; filter: drop-shadow(0 0 6px var(--accent)); }
+    @keyframes ecg { to { stroke-dashoffset: 0; } }
+    .live { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(198,255,61,.1); color: var(--accent); font-weight: 700; font-size: 13px; }
+    .live i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 1.2s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(198,255,61,.7); } 100% { box-shadow: 0 0 0 12px rgba(198,255,61,0); } }
+    .rings { position: relative; justify-self: center; width: min(100%, 380px); aspect-ratio: 1; display: grid; place-items: center; }
+    .rings .ring { position: absolute; }
+    .rings .r1 { --s: 100%; --w: 26px; } .rings .r2 { --s: 74%; --w: 26px; --c: var(--accent-2); } .rings .r3 { --s: 48%; --w: 26px; --c: #22d3ee; }
+    .rings b { font: 900 italic 44px/1 var(--font-d); }
+    .rings::after { content: ""; position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 0 120px -20px rgba(198,255,61,.35); }
+
+    .big-marq { padding: 20px 0; font: 900 italic 64px/1 var(--font-d); text-transform: uppercase; border-block: 1px solid var(--line); }
+    .big-marq span:nth-child(odd) { color: transparent; -webkit-text-stroke: 1.5px var(--fg); }
+    .big-marq span::after { content: " /"; color: var(--accent); -webkit-text-stroke: 0; }
+
+    .mod { position: relative; overflow: hidden; min-height: 210px; display: flex; flex-direction: column; justify-content: flex-end; }
+    .mod .em { position: absolute; top: 18px; right: 18px; font-size: 54px; transition: transform .5s var(--ease); }
+    .mod:hover .em { transform: scale(1.25) rotate(-10deg); }
+    .mod h3 { font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 26px; margin: 0 0 6px; }
+    .mod:hover { background: var(--accent); color: var(--accent-ink); } .mod:hover p { color: rgba(10,11,7,.7); }
+
+    .class-row { display: grid; grid-template-columns: 90px 1fr auto auto; gap: 18px; align-items: center; padding: 18px 4px; border-bottom: 1px solid var(--line); animation: screenIn .45s var(--ease) both; }
+    .class-row time { font: 900 italic 26px/1 var(--font-d); color: var(--accent); }
+    .class-row b { font-size: 17px; }
+    .plan { display: flex; flex-direction: column; gap: 12px; }
+    .plan .price { font: 900 italic 52px/1 var(--font-d); }
+    .plan ul { list-style: none; padding: 0; margin: 0 0 8px; display: grid; gap: 9px; color: var(--muted); font-size: 14.5px; }
+    .plan li::before { content: "→ "; color: var(--accent); font-weight: 800; }
+    .plan--hot { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+    .plan--hot p, .plan--hot ul { color: rgba(10,11,7,.75); } .plan--hot li::before { color: var(--accent-ink); }
+    .plan--hot .btn { background: var(--accent-ink); color: var(--accent); border-color: var(--accent-ink); }
+
+    /* app do aluno */
+    .app-wrap { display: grid; grid-template-columns: 400px 1fr; gap: 26px; align-items: start; }
+    .phone { border-radius: 40px; padding: 22px 18px; background: #0e1013; border: 1px solid var(--line); box-shadow: 0 0 0 8px #16181c, 0 40px 90px -30px rgba(198,255,61,.25); }
+    .mini-rings { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 18px 0; }
+    .mini-rings > div { background: var(--surface); border-radius: 18px; padding: 14px 8px; display: grid; justify-items: center; gap: 8px; font-size: 12px; color: var(--muted); text-align: center; }
+    .mini-rings .ring { --s: 64px; --w: 7px; }
+    .mini-rings b { color: var(--fg); font-size: 14px; }
+    .ex { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px; margin-bottom: 8px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); cursor: pointer; text-align: left; transition: background .25s, border-color .25s, transform .15s; }
+    .ex:active { transform: scale(.98); }
+    .ex .ck { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; font-weight: 900; color: transparent; transition: .25s; }
+    .ex.done { border-color: rgba(198,255,61,.4); }
+    .ex.done .ck { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+    .ex.done b { text-decoration: line-through; opacity: .6; }
+    .ex small { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+    .lb .avatar { width: 36px; height: 36px; font-size: 12px; }
+    .lb .pos { width: 28px; font: 900 italic 20px/1 var(--font-d); color: var(--muted); }
+    .lb > div:first-child .pos { color: var(--accent); }
+    .confetti { position: fixed; top: -10px; width: 8px; height: 14px; z-index: 95; pointer-events: none; animation: fall var(--t) cubic-bezier(.2,.6,.4,1) forwards; }
+    @keyframes fall { to { transform: translate(var(--x), 105vh) rotate(var(--r)); } }
+
+    /* check-in */
+    .qr-box { position: relative; width: min(100%, 300px); aspect-ratio: 1; margin: 0 auto; padding: 18px; border-radius: 24px; background: #fff; overflow: hidden; }
+    .qr-box svg { width: 100%; height: 100%; display: block; }
+    .qr-box::after { content: ""; position: absolute; left: 0; right: 0; height: 3px; top: 0; background: var(--accent); box-shadow: 0 0 20px 4px var(--accent); animation: scan 2.2s ease-in-out infinite alternate; }
+    @keyframes scan { to { top: calc(100% - 3px); } }
+    .qr-box.ok::before { content: "✓"; position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; background: rgba(198,255,61,.95); color: var(--accent-ink); font: 900 120px/1 var(--font-d); animation: screenIn .4s both; }
+    .meter { height: 14px; border-radius: 999px; background: var(--surface-2); overflow: hidden; margin: 14px 0 8px; }
+    .meter i { display: block; height: 100%; width: var(--v, 40%); border-radius: inherit; background: linear-gradient(90deg, var(--accent), #facc15 70%, #ef4444); background-size: 300% 100%; transition: width 1.2s var(--ease); }
+    .spots { font: 900 italic 22px/1 var(--font-d); }
+
+    @container (max-width: 900px) { .app-wrap { grid-template-columns: 1fr; } .phone { max-width: 420px; margin: 0 auto; width: 100%; } }
+    @container (max-width: 760px) {
+      .class-row { grid-template-columns: 70px 1fr; } .class-row .chip, .class-row .btn { grid-column: 2; justify-self: start; }
+      .big-marq { font-size: 42px; }
+      .phone { box-shadow: none; border: 0; padding: 0; background: none; }
+    }
+  </style>
+</head>
+<body data-sector="academia">
+<div class="stage"><main class="viewport">
+
+  <!-- ===================== SITE ===================== -->
+  <section class="screen" id="site" data-label="Site" data-label-en="Website" data-label-es="Sitio">
+    <header class="sitenav"><div class="wrap">
+      <a href="#site" class="logo">PULSE<b>/</b>FIT</a>
+      <nav><a href="#modalidades">Modalidades</a><a href="#aulas">Aulas</a><a href="#planos">Planos</a></nav>
+      <a class="btn btn--sm" href="#planos">Matricule-se</a>
+    </div></header>
+
+    <div class="hero">
+      <svg class="ecg" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 70 H300 L320 70 L335 20 L350 110 L365 50 L378 70 H620 L640 70 L655 15 L670 115 L685 45 L698 70 H1200"/></svg>
+      <div class="wrap split" style="position:relative">
+        <div>
+          <span class="live" data-reveal><i></i><span id="lot">42</span>% de lotação agora</span>
+          <h1 class="h1" data-reveal style="margin-top:22px">Move<br><span class="stroke">more.</span></h1>
+          <p class="lead mt" data-reveal>Aberta 24h, 40+ aulas por semana, app com treino personalizado e check-in por QR. Sem taxa de matrícula este mês.</p>
+          <div class="row mt" data-reveal><a class="btn" href="#planos">Começar agora →</a><a class="btn btn--ghost" href="#app">Ver o app</a></div>
+          <div class="stats">
+            <div class="stat"><strong data-count="24" data-suf="h">0</strong><span>todos os dias</span></div>
+            <div class="stat"><strong data-count="40" data-pre="+">0</strong><span>aulas por semana</span></div>
+            <div class="stat"><strong data-count="3200">0</strong><span>alunos ativos</span></div>
+          </div>
+        </div>
+        <div class="rings" data-reveal>
+          <div class="ring r1" data-p="82"></div><div class="ring r2" data-p="64"></div><div class="ring r3" data-p="91"></div>
+          <div><b data-count="1840">0</b><div class="muted small">kcal hoje</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="big-marq marquee" style="--speed:26s"><div><span>Musculação</span><span>Spinning</span><span>Funcional</span><span>Muay thai</span><span>Yoga</span><span>HIIT</span></div></div>
+
+    <section class="sec" id="modalidades"><div class="wrap">
+      <div class="head"><span class="eyebrow" data-reveal>Modalidades</span><h2 class="h2" data-reveal>Escolha seu <span class="stroke">ritmo</span></h2></div>
+      <div class="grid">
+        <article class="card card--hover mod" data-reveal><span class="em">🏋️</span><h3>Musculação</h3><p>200+ equipamentos, área de peso livre e treino no app.</p></article>
+        <article class="card card--hover mod" data-reveal><span class="em">🚴</span><h3>Spinning</h3><p>Sala com luz e som de balada. 45 min que voam.</p></article>
+        <article class="card card--hover mod" data-reveal><span class="em">🥊</span><h3>Lutas</h3><p>Muay thai e boxe para todos os níveis.</p></article>
+        <article class="card card--hover mod" data-reveal><span class="em">🧘</span><h3>Yoga</h3><p>Mobilidade, respiração e foco.</p></article>
+        <article class="card card--hover mod" data-reveal><span class="em">⚡</span><h3>HIIT</h3><p>30 min de alta intensidade com monitor cardíaco.</p></article>
+        <article class="card card--hover mod" data-reveal><span class="em">🤸</span><h3>Funcional</h3><p>Circuitos em grupo, ao ar livre ou no box.</p></article>
+      </div>
+    </div></section>
+
+    <section class="sec" id="aulas" style="background:var(--surface)"><div class="wrap">
+      <div class="head row" style="justify-content:space-between;align-items:flex-end"><div><span class="eyebrow" data-reveal>Grade</span><h2 class="h2" data-reveal>Aulas da <span class="stroke">semana</span></h2></div>
+        <div class="row" data-group="dia" id="dias" style="gap:6px" data-reveal></div></div>
+      <div id="grade"></div>
+    </div></section>
+
+    <section class="sec" id="planos"><div class="wrap">
+      <div class="head center"><span class="eyebrow" data-reveal>Planos</span><h2 class="h2" data-reveal>Sem matrícula. <span class="stroke">Sem desculpa.</span></h2></div>
+      <div class="grid" style="align-items:center">
+        <article class="card plan" data-reveal><h3 style="margin:0">Smart</h3><div class="price">R$ 99<small style="font-size:15px;color:var(--muted)">/mês</small></div><ul><li>Musculação 24h</li><li>App com treino</li><li>1 unidade</li></ul><button class="btn btn--ghost btn--block" data-plan="Smart">Escolher</button></article>
+        <article class="card plan plan--hot" data-reveal><h3 style="margin:0">Black · mais escolhido</h3><div class="price">R$ 149<small style="font-size:15px">/mês</small></div><ul><li>Todas as aulas coletivas</li><li>Todas as unidades</li><li>Leve 1 amigo 5×/mês</li><li>Avaliação física trimestral</li></ul><button class="btn btn--block" data-plan="Black">Escolher</button></article>
+        <article class="card plan" data-reveal><h3 style="margin:0">Duo</h3><div class="price">R$ 249<small style="font-size:15px;color:var(--muted)">/mês</small></div><ul><li>Plano Black para 2 pessoas</li><li>Mesmo endereço</li><li>Desafios em dupla no app</li></ul><button class="btn btn--ghost btn--block" data-plan="Duo">Escolher</button></article>
+      </div>
+    </div></section>
+    <footer class="foot"><div class="wrap"><span>© Pulse/Fit · demo fictícia</span><span>Aberto 24h · 7 dias por semana</span></div></footer>
+  </section>
+
+  <!-- ===================== APP DO ALUNO ===================== -->
+  <section class="screen" id="app" data-label="App do aluno" data-label-en="Student app" data-label-es="App del alumno">
+    <div class="wrap" style="padding-top:34px;padding-bottom:50px">
+      <div class="app-wrap">
+        <div class="phone">
+          <div class="row" style="justify-content:space-between"><div><span class="muted small">Quinta · semana 12</span><h3 style="font:900 italic 26px/1.1 var(--font-d);text-transform:uppercase;margin-top:4px">Bora, Lucas 💪</h3></div><span class="avatar">LC</span></div>
+          <div class="mini-rings">
+            <div><div class="ring" data-p="60"><b>3/5</b></div>treinos</div>
+            <div><div class="ring" data-p="77" style="--c:var(--accent-2)"><b>77%</b></div>calorias</div>
+            <div><div class="ring" data-p="58" style="--c:#22d3ee"><b>1,5L</b></div>água</div>
+          </div>
+          <div class="row" style="justify-content:space-between;margin-bottom:12px"><b style="font:900 italic 18px/1 var(--font-d);text-transform:uppercase">Treino A · Peito &amp; tríceps</b><span class="badge" id="exPct">0%</span></div>
+          <div id="exs"></div>
+          <button class="btn btn--block" id="finish" style="margin-top:6px">Finalizar treino</button>
+        </div>
+        <div style="display:grid;gap:18px">
+          <div class="panel">
+            <div class="panel__h"><h3 style="font-style:italic;text-transform:uppercase">Volume semanal (kg)</h3><span class="badge badge--ok">+22% no mês</span></div>
+            <div class="bars" data-bars="8200,9100,8700,10400,11200,10900,12600,13900" data-labels="S5,S6,S7,S8,S9,S10,S11,S12" data-suf=" kg"></div>
+          </div>
+          <div class="panel">
+            <div class="panel__h"><h3 style="font-style:italic;text-transform:uppercase">Desafio de outubro · 20 treinos</h3><span class="chip">🏆 12 dias restantes</span></div>
+            <div class="list lb">
+              <div><span class="pos">1</span><span class="avatar">MR</span><b style="flex:1">Mari R.</b><span>18 treinos</span></div>
+              <div><span class="pos">2</span><span class="avatar">JP</span><b style="flex:1">João P.</b><span>16 treinos</span></div>
+              <div style="background:rgba(198,255,61,.06);border-radius:12px;padding-inline:8px"><span class="pos">3</span><span class="avatar">LC</span><b style="flex:1">Você</b><span id="myTr">15 treinos</span></div>
+              <div><span class="pos">4</span><span class="avatar">AN</span><b style="flex:1">Ana N.</b><span>14 treinos</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CHECK-IN ===================== -->
+  <section class="screen" id="checkin" data-label="Check-in" data-label-en="Check-in" data-label-es="Check-in">
+    <div class="wrap" style="padding-top:34px;padding-bottom:50px">
+      <div class="dash">
+        <div class="card" style="text-align:center">
+          <span class="eyebrow">Carteirinha digital</span>
+          <h2 class="h2" style="font-size:40px;margin:10px 0 22px">Aproxime do leitor</h2>
+          <div class="qr-box" id="qr"><svg id="qrSvg" viewBox="0 0 25 25" shape-rendering="crispEdges" aria-label="QR code fictício"></svg></div>
+          <p class="muted small mt">Lucas Carvalho · Plano Black · matrícula 004812</p>
+          <button class="btn mt" id="scan">Simular check-in</button>
+        </div>
+        <div style="display:grid;gap:18px">
+          <div class="panel">
+            <div class="panel__h"><h3 style="font-style:italic;text-transform:uppercase">Lotação ao vivo</h3><span class="live"><i></i>agora</span></div>
+            <div class="row" style="justify-content:space-between;align-items:flex-end"><b style="font:900 italic 56px/1 var(--font-d)" id="lot2">42%</b><span class="muted small" id="lotTxt">Tranquilo · ótimo horário</span></div>
+            <div class="meter"><i id="meter"></i></div>
+            <div class="row muted small" style="justify-content:space-between"><span>vazio</span><span>cheio</span></div>
+          </div>
+          <div class="panel">
+            <div class="panel__h"><h3 style="font-style:italic;text-transform:uppercase">Aulas de hoje</h3></div>
+            <div class="list" id="hoje"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main></div>
+<script src="kit.js"></script>
+<script>
+(function () {
+  var D = window.Demo, $ = D.$, esc = D.esc;
+
+  /* grade semanal */
+  var G = {
+    Seg: [["06:30", "HIIT", "Rafa", 6], ["12:00", "Funcional", "Duda", 2], ["18:30", "Spinning", "Caio", 0], ["20:00", "Muay thai", "Kenji", 9]],
+    Ter: [["07:00", "Yoga", "Lia", 8], ["18:00", "HIIT", "Rafa", 3], ["19:30", "Spinning", "Caio", 5]],
+    Qua: [["06:30", "Funcional", "Duda", 4], ["12:15", "Spinning", "Caio", 7], ["19:00", "Boxe", "Kenji", 1], ["20:30", "Yoga", "Lia", 10]],
+    Qui: [["07:00", "HIIT", "Rafa", 5], ["18:30", "Spinning", "Caio", 2], ["20:00", "Muay thai", "Kenji", 6]],
+    Sex: [["06:30", "Spinning", "Caio", 3], ["18:00", "Funcional", "Duda", 8], ["19:30", "HIIT", "Rafa", 0]],
+    "Sáb": [["09:00", "Aulão de spinning", "Caio", 12], ["10:30", "Yoga ao ar livre", "Lia", 15]]
+  };
+  var dias = $("#dias");
+  dias.innerHTML = Object.keys(G).map(function (d, i) { return '<button class="opt' + (i ? "" : " is-on") + '" style="padding:10px 14px;border-radius:12px;font-weight:700" data-value="' + d + '">' + d + "</button>"; }).join("");
+  function grade(d) {
+    $("#grade").innerHTML = G[d].map(function (c, i) {
+      return '<div class="class-row" style="animation-delay:' + i * 60 + 'ms"><time>' + c[0] + "</time><div><b>" + esc(c[1]) + '</b><div class="muted small">com ' + c[2] + ' · 45 min</div></div><span class="chip">' + (c[3] ? c[3] + " vagas" : "lotada") + '</span><button class="btn btn--sm ' + (c[3] ? "" : "btn--ghost") + '" data-book="' + esc(c[1]) + '"' + (c[3] ? "" : " disabled") + ">" + (c[3] ? "Reservar" : "Lista de espera") + "</button></div>";
+    }).join("");
+  }
+  dias.addEventListener("pick", function (e) { grade(e.detail.dataset.value); });
+  grade("Seg");
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-book]");
+    if (b && !b.disabled) { b.textContent = "Reservado ✓"; b.disabled = true; b.classList.add("btn--ghost"); D.toast("Vaga garantida em " + b.dataset.book + "! Lembrete 1h antes."); }
+    var p = e.target.closest("[data-plan]");
+    if (p) D.toast("Plano " + p.dataset.plan + " selecionado. Pagamento por Pix ou cartão no próximo passo.");
+  });
+
+  /* treino do dia */
+  var EX = [["Supino reto", "4 × 10 · 60 kg"], ["Supino inclinado halteres", "3 × 12 · 22 kg"], ["Crucifixo no cabo", "3 × 15"], ["Paralelas", "3 × até a falha"], ["Tríceps corda", "4 × 12 · 25 kg"], ["Tríceps francês", "3 × 10 · 14 kg"]];
+  $("#exs").innerHTML = EX.map(function (x, i) { return '<button class="ex" data-i="' + i + '"><span class="ck">✓</span><span><b>' + esc(x[0]) + "</b><small>" + esc(x[1]) + "</small></span></button>"; }).join("");
+  var celebrated = false;
+  function progress() {
+    var done = D.$$("#exs .ex.done").length, pct = Math.round(done / EX.length * 100);
+    $("#exPct").textContent = pct + "%";
+    if (pct === 100 && !celebrated) { celebrated = true; confetti(); D.toast("Treino concluído! +1 no desafio do mês 🔥"); $("#myTr").textContent = "16 treinos"; }
+  }
+  $("#exs").addEventListener("click", function (e) { var b = e.target.closest(".ex"); if (b) { b.classList.toggle("done"); progress(); } });
+  $("#finish").addEventListener("click", function () { D.$$("#exs .ex").forEach(function (b, i) { setTimeout(function () { b.classList.add("done"); progress(); }, i * 120); }); });
+  function confetti() {
+    var colors = ["#c6ff3d", "#8b5cf6", "#22d3ee", "#f4f6f0", "#facc15"];
+    for (var i = 0; i < 70; i++) {
+      var c = document.createElement("i");
+      c.className = "confetti";
+      c.style.cssText = "left:" + Math.random() * 100 + "vw;background:" + colors[i % colors.length] + ";--x:" + (Math.random() * 200 - 100) + "px;--r:" + (Math.random() * 900) + "deg;--t:" + (1.6 + Math.random() * 1.6) + "s;animation-delay:" + Math.random() * .3 + "s";
+      document.body.appendChild(c);
+      setTimeout(c.remove.bind(c), 3600);
+    }
+  }
+
+  /* QR fictício: padrões de localização + módulos pseudoaleatórios */
+  var q = "", seed = 4812;
+  function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+  function finder(x, y) { return '<path d="M' + x + " " + y + "h7v7h-7z M" + (x + 1) + " " + (y + 1) + "v5h5v-5z M" + (x + 2) + " " + (y + 2) + 'h3v3h-3z" fill-rule="evenodd"/>'; }
+  for (var y = 0; y < 25; y++) for (var x = 0; x < 25; x++) {
+    var inF = (x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16);
+    if (!inF && rnd() > .52) q += '<rect x="' + x + '" y="' + y + '" width="1" height="1"/>';
+  }
+  $("#qrSvg").innerHTML = '<g fill="#0a0b07">' + finder(0, 0) + finder(18, 0) + finder(0, 18) + q + "</g>";
+  $("#scan").addEventListener("click", function () {
+    var box = $("#qr"); box.classList.add("ok");
+    D.toast("Check-in liberado! Bom treino, Lucas ⚡");
+    setTimeout(function () { box.classList.remove("ok"); }, 2600);
+  });
+
+  /* lotação ao vivo + aulas de hoje */
+  var lot = 42;
+  function setLot() {
+    lot = Math.max(18, Math.min(88, lot + Math.round(Math.random() * 10 - 5)));
+    $("#lot").textContent = lot; $("#lot2").textContent = lot + "%";
+    $("#meter").style.setProperty("--v", lot + "%");
+    $("#meter").style.backgroundPosition = (100 - lot) + "% 0";
+    $("#lotTxt").textContent = lot < 45 ? "Tranquilo · ótimo horário" : lot < 70 ? "Movimentado" : "Pico · espere ~15 min";
+  }
+  setLot(); setInterval(setLot, 2500);
+  $("#hoje").innerHTML = G.Qui.map(function (c) {
+    return '<div><b style="font:900 italic 20px/1 var(--font-d);color:var(--accent);width:64px">' + c[0] + '</b><div style="flex:1"><b>' + esc(c[1]) + '</b><div class="muted small">com ' + c[2] + '</div></div><span class="spots">' + c[3] + '</span><span class="muted small">vagas</span><button class="btn btn--sm" data-book="' + esc(c[1]) + '">Reservar</button></div>';
+  }).join("");
+})();
+</script>
+</body>
+</html>

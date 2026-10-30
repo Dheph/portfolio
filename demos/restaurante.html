@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Restaurante — demo · Jeffersom Ribeiro</title>
+  <meta name="description" content="Demo navegável de site + cardápio com pedido online + acompanhamento e painel da cozinha para restaurante. Dados fictícios." />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,700&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="kit.css" />
+  <style>
+    :root {
+      --bg: #120d0a; --surface: #1c1410; --surface-2: #271c16; --line: rgba(255,210,170,.1);
+      --fg: #f6ebdd; --muted: #b9a594; --accent: #ff6b2c; --accent-2: #ffb547; --accent-ink: #1a0f08;
+      --radius: 22px; --font-d: "Fraunces", Georgia, serif; --font-b: "DM Sans", system-ui, sans-serif;
+    }
+    .h1 { font-weight: 800; letter-spacing: -.03em; }
+    .h1 em, .h2 em { color: var(--accent-2); }
+    .logo { font-style: italic; } .logo b { color: var(--accent); font-style: normal; }
+
+    /* hero com brasas */
+    .hero { position: relative; overflow: hidden; padding: 60px 0 100px;
+      background: radial-gradient(70% 60% at 75% 60%, rgba(255,107,44,.22), transparent 70%); }
+    .hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .35; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E"); }
+    .embers { position: absolute; inset: 0; pointer-events: none; }
+    .embers i { position: absolute; bottom: -10px; width: var(--s); height: var(--s); border-radius: 50%; background: var(--accent-2);
+      box-shadow: 0 0 10px 2px var(--accent); animation: rise var(--t) linear infinite; animation-delay: var(--d); opacity: 0; }
+    @keyframes rise { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: 1; } 100% { transform: translate(var(--x), -110cqh); opacity: 0; } }
+    .hero .wrap { position: relative; z-index: 1; }
+    .plate-box { position: relative; justify-self: center; width: min(100%, 440px); aspect-ratio: 1; }
+    .plate { position: absolute; inset: 8%; border-radius: 50%; display: grid; place-items: center;
+      background: radial-gradient(circle at 50% 45%, #3a2a20 0 52%, #2a1e17 53% 62%, #1d1510 63%);
+      box-shadow: inset 0 -20px 50px rgba(0,0,0,.5), 0 40px 90px -20px rgba(255,107,44,.45); }
+    .plate span { font-size: clamp(110px, 18cqi, 170px); filter: drop-shadow(0 20px 30px rgba(0,0,0,.6)); animation: turn 30s linear infinite; }
+    @keyframes turn { to { transform: rotate(360deg); } }
+    .orbit { position: absolute; padding: 10px 14px; border-radius: 999px; background: rgba(28,20,16,.85); backdrop-filter: blur(10px); border: 1px solid var(--line); font-size: 14px; font-weight: 600; white-space: nowrap; box-shadow: 0 16px 40px -16px #000; }
+    .o1 { top: 4%; left: -4%; } .o2 { top: 44%; right: -8%; animation-delay: -2s; } .o3 { bottom: 4%; left: 6%; animation-delay: -4s; }
+
+    /* pratos */
+    .dish { padding: 0; overflow: hidden; }
+    .dish__ph { position: relative; aspect-ratio: 4 / 3; display: grid; place-items: center; font-size: 84px;
+      background: radial-gradient(circle at 50% 55%, #3b2a20 0 34%, transparent 35%), radial-gradient(120% 90% at 50% 0%, var(--tone, #5a2a14), #1c1410); }
+    .dish__ph span { transition: transform .6s var(--ease); filter: drop-shadow(0 14px 18px rgba(0,0,0,.5)); }
+    .dish:hover .dish__ph span { transform: scale(1.12) rotate(-6deg); }
+    .dish__b { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 6px; }
+    .dish__b h3 { margin: 0; font-size: 20px; }
+    .price { font: 700 19px/1 var(--font-d); color: var(--accent-2); }
+    .add { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--accent); color: var(--accent-ink); font-size: 22px; font-weight: 700; cursor: pointer; transition: transform .2s; }
+    .add:hover { transform: rotate(90deg) scale(1.1); }
+    .add.pop { animation: pop .4s var(--ease); }
+    @keyframes pop { 50% { transform: scale(1.35); } }
+
+    .exp { position: relative; border-radius: var(--radius); overflow: hidden; min-height: 380px; display: grid; place-items: end start; padding: 34px;
+      background: linear-gradient(transparent 30%, rgba(18,13,10,.95)), radial-gradient(60% 70% at 70% 30%, #ff6b2c55, transparent 70%), repeating-linear-gradient(100deg, #2b1d15 0 18px, #241811 18px 36px); }
+    .exp .fire { position: absolute; right: 12%; top: 16%; font-size: 120px; animation: flick 1.6s ease-in-out infinite alternate; }
+    @keyframes flick { to { transform: scale(1.08) rotate(3deg); filter: brightness(1.2); } }
+
+    /* cardápio */
+    .menu-layout { display: grid; grid-template-columns: 1fr 360px; gap: 26px; align-items: start; }
+    .cats { position: sticky; top: 0; z-index: 5; display: flex; gap: 8px; overflow-x: auto; padding: 14px 0; background: var(--bg); scrollbar-width: none; }
+    .cats .opt { padding: 10px 16px; border-radius: 999px; white-space: nowrap; font-weight: 600; font-size: 14px; }
+    .items { display: grid; gap: 14px; }
+    .item { display: flex; align-items: center; gap: 16px; padding: 14px; animation: screenIn .5s var(--ease) both; }
+    .item__ph { flex: none; width: 76px; height: 76px; border-radius: 18px; display: grid; place-items: center; font-size: 40px; background: radial-gradient(circle at 50% 60%, #3b2a20, #1c1410); }
+    .item h3 { margin: 0 0 4px; font-size: 18px; }
+    .item p { font-size: 13.5px; }
+    .cart { position: sticky; top: 16px; }
+    .cart__list { display: grid; gap: 12px; max-height: 300px; overflow-y: auto; margin: 16px 0; }
+    .ci { display: flex; align-items: center; gap: 10px; font-size: 14px; animation: screenIn .35s var(--ease) both; }
+    .ci .q { display: flex; align-items: center; gap: 6px; }
+    .ci .q button { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface-2); cursor: pointer; }
+    .tot { display: grid; gap: 8px; padding-top: 14px; border-top: 1px dashed var(--line); font-size: 14px; }
+    .tot div { display: flex; justify-content: space-between; }
+    .tot .grand { font: 700 22px/1 var(--font-d); margin-top: 6px; }
+    .empty { text-align: center; color: var(--muted); padding: 24px 0; font-size: 14px; }
+    .bag { display: none; position: sticky; bottom: 14px; margin: 0 auto; width: calc(100% - 40px); z-index: 6; }
+
+    /* pedido + cozinha */
+    .track { display: grid; gap: 0; margin-top: 18px; }
+    .ts { display: flex; gap: 14px; align-items: flex-start; padding-bottom: 22px; position: relative; opacity: .4; transition: opacity .4s; }
+    .ts::before { content: ""; position: absolute; left: 20px; top: 42px; bottom: 2px; width: 2px; background: var(--line); }
+    .ts:last-child::before { display: none; }
+    .ts .icon { width: 42px; height: 42px; border-radius: 50%; flex: none; }
+    .ts.is-done, .ts.is-now { opacity: 1; }
+    .ts.is-done .icon { background: var(--accent); color: var(--accent-ink); }
+    .ts.is-now .icon { animation: pulse 1.4s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,107,44,.6); } 100% { box-shadow: 0 0 0 16px rgba(255,107,44,0); } }
+    .road { position: relative; height: 46px; margin-top: 8px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+    .road i { position: absolute; left: 0; top: 0; bottom: 0; width: var(--k, 0%); background: linear-gradient(90deg, transparent, rgba(255,107,44,.35)); transition: width 1s var(--ease); }
+    .road span { position: absolute; top: 50%; left: var(--k, 0%); transform: translate(-50%, -50%) scaleX(-1); font-size: 26px; transition: left 1s var(--ease); }
+    .eta { font: 800 54px/1 var(--font-d); color: var(--accent-2); }
+    .kds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .col { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px; min-height: 280px; }
+    .col h4 { display: flex; justify-content: space-between; font: 700 13px/1 var(--font-b); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 4px 4px 12px; }
+    .tk { background: var(--surface-2); border-radius: 12px; padding: 12px; margin-bottom: 10px; font-size: 13px; border-left: 3px solid var(--c, var(--accent)); animation: tkIn .5s var(--ease) both; }
+    .tk b { font-family: "JetBrains Mono", monospace; font-size: 12px; }
+    .tk ul { margin: 6px 0 0; padding-left: 16px; color: var(--muted); }
+    .tk.mine { box-shadow: 0 0 0 2px var(--accent-2); }
+    @keyframes tkIn { from { opacity: 0; transform: translateY(-12px) scale(.96); } }
+
+    .dash--kds { grid-template-columns: .8fr 1.3fr; }
+    @container (max-width: 900px) {
+      .dash--kds, .menu-layout { grid-template-columns: 1fr; }
+      .cart { position: static; }
+      .bag { display: flex; }
+      .kds { grid-template-columns: 1fr; }
+      .col { min-height: 0; }
+    }
+    @container (max-width: 760px) { .o2 { right: 0; } .o1 { left: 0; } }
+  </style>
+</head>
+<body data-sector="restaurante">
+<div class="stage"><main class="viewport">
+
+  <!-- ===================== SITE ===================== -->
+  <section class="screen" id="site" data-label="Site" data-label-en="Website" data-label-es="Sitio">
+    <header class="sitenav"><div class="wrap">
+      <a href="#site" class="logo"><b>🔥</b> Brasa Viva</a>
+      <nav><a href="#cardapio">Cardápio</a><a href="#experiencia">Experiência</a><a href="#reservas">Reservas</a></nav>
+      <a class="btn btn--sm" href="#cardapio">Pedir online</a>
+    </div></header>
+
+    <div class="hero">
+      <div class="embers" id="embers"></div>
+      <div class="wrap split">
+        <div>
+          <span class="eyebrow" data-reveal>Parrilla &amp; cozinha de fogo · desde 2012</span>
+          <h1 class="h1" data-reveal>Fogo, tempo <em>e sabor</em>.</h1>
+          <p class="lead" data-reveal>Carnes maturadas na casa, lenha de eucalipto e laranjeira, 14 horas de defumação. Peça para entregar ou reserve sua mesa.</p>
+          <div class="row mt" data-reveal><a class="btn" href="#cardapio">Pedir agora →</a><a class="btn btn--ghost" href="#reservas">Reservar mesa</a></div>
+          <div class="stats">
+            <div class="stat"><strong data-count="4.8" data-suf=" ★">0</strong><span>2.140 avaliações</span></div>
+            <div class="stat"><strong data-count="35" data-suf=" min">0</strong><span>entrega média</span></div>
+            <div class="stat"><strong data-count="14" data-suf="h">0</strong><span>de defumação</span></div>
+          </div>
+        </div>
+        <div class="plate-box" data-reveal>
+          <div class="plate"><span>🥩</span></div>
+          <span class="orbit o1 float">🌶 Chimichurri da casa</span>
+          <span class="orbit o2 float">⏱ Maturada 21 dias</span>
+          <span class="orbit o3 float">🪵 Lenha de laranjeira</span>
+        </div>
+      </div>
+    </div>
+
+    <section class="sec" style="padding-top:40px"><div class="wrap">
+      <div class="head row" style="justify-content:space-between;align-items:flex-end"><div><span class="eyebrow" data-reveal>Os mais pedidos</span><h2 class="h2" data-reveal>Direto da <em>brasa</em></h2></div><a class="btn btn--ghost btn--sm" href="#cardapio" data-reveal>Ver cardápio completo →</a></div>
+      <div class="grid" id="destaques"></div>
+    </div></section>
+
+    <section class="sec" id="experiencia" style="padding-top:0"><div class="wrap split">
+      <div class="exp" data-reveal><span class="fire">🔥</span><div><span class="eyebrow">A experiência</span><h2 class="h2" style="max-width:420px">Uma parrilla aberta no meio do salão.</h2></div></div>
+      <div>
+        <p class="lead" data-reveal>Você vê a carne indo para a grelha, sente o cheiro da lenha e escolhe o ponto com o nosso assador. Carta de vinhos com 80 rótulos e drinks autorais.</p>
+        <div class="stats">
+          <div class="stat"><strong data-count="120">0</strong><span>lugares</span></div>
+          <div class="stat"><strong data-count="80">0</strong><span>rótulos de vinho</span></div>
+          <div class="stat"><strong data-count="3">0</strong><span>tipos de lenha</span></div>
+        </div>
+      </div>
+    </div></section>
+
+    <section class="sec" id="reservas" style="background:var(--surface)"><div class="wrap split">
+      <div>
+        <span class="eyebrow" data-reveal>Reservas</span>
+        <h2 class="h2" data-reveal>Garanta sua <em>mesa</em></h2>
+        <p class="lead mt" data-reveal>Ter a sáb · 18h às 23h30 · Dom · 12h às 17h<br>Confirmação imediata por WhatsApp.</p>
+      </div>
+      <form class="card form" data-mock="Mesa reservada! Enviamos a confirmação no seu WhatsApp. 🔥" data-reveal>
+        <div class="row" style="flex-wrap:nowrap">
+          <label class="field" style="flex:1">Data<input class="input" type="date" required id="resDate"></label>
+          <label class="field" style="flex:1">Horário<select class="input" required><option>19:00</option><option>19:30</option><option>20:00</option><option>20:30</option><option>21:00</option></select></label>
+        </div>
+        <p class="field">Pessoas</p>
+        <div class="slots" data-group="pessoas" style="grid-template-columns:repeat(auto-fill,minmax(50px,1fr))"><button type="button" class="opt">1</button><button type="button" class="opt is-on">2</button><button type="button" class="opt">3</button><button type="button" class="opt">4</button><button type="button" class="opt">6</button><button type="button" class="opt">8+</button></div>
+        <label class="field">Nome<input class="input" required placeholder="Seu nome"></label>
+        <button class="btn btn--block">Reservar mesa</button>
+      </form>
+    </div></section>
+    <footer class="foot"><div class="wrap"><span>© Brasa Viva · demo fictícia</span><span>Rua do Fogo, 123 · aberto hoje até 23h30</span></div></footer>
+  </section>
+
+  <!-- ===================== CARDÁPIO ===================== -->
+  <section class="screen" id="cardapio" data-label="Cardápio & pedido" data-label-en="Online ordering" data-label-es="Pedido online">
+    <div class="wrap" style="padding-top:34px;padding-bottom:40px">
+      <div class="row" style="justify-content:space-between"><div><span class="eyebrow">Delivery · retirada</span><h2 class="h2">Cardápio</h2></div><span class="chip">🟢 Aberto · entrega em 30–40 min</span></div>
+      <div class="menu-layout mt">
+        <div>
+          <div class="cats" data-group="cat" id="cats"></div>
+          <div class="items" id="items"></div>
+        </div>
+        <aside class="card cart" id="cart">
+          <h3 style="margin:0">Sua sacola</h3>
+          <div class="cart__list" id="cartList"></div>
+          <div class="tot">
+            <div><span class="muted">Subtotal</span><span id="sub">R$ 0,00</span></div>
+            <div><span class="muted">Entrega</span><span id="fee">R$ 7,90</span></div>
+            <div id="discRow" hidden><span class="muted">Cupom BRASA10</span><span id="disc" style="color:var(--ok)"></span></div>
+            <div class="grand"><span>Total</span><span id="total">R$ 0,00</span></div>
+          </div>
+          <form class="row mt" id="coupon" style="flex-wrap:nowrap"><input class="input" placeholder="Cupom (tente BRASA10)" aria-label="Cupom"><button class="btn btn--ghost btn--sm">Aplicar</button></form>
+          <button class="btn btn--block mt" id="checkout">Finalizar pedido</button>
+          <p class="muted small" style="margin-top:10px;text-align:center">Entrega grátis acima de R$ 150</p>
+        </aside>
+      </div>
+    </div>
+    <a class="btn bag" href="#cart" id="bag">Ver sacola · <span id="bagN">0 itens</span></a>
+  </section>
+
+  <!-- ===================== PEDIDO + COZINHA ===================== -->
+  <section class="screen" id="pedido" data-label="Pedido & cozinha" data-label-en="Order & kitchen" data-label-es="Pedido y cocina">
+    <div class="wrap" style="padding-top:34px;padding-bottom:40px">
+      <div class="dash dash--kds">
+        <div class="card">
+          <div class="row" style="justify-content:space-between"><span class="eyebrow">Acompanhe seu pedido</span><b class="badge" id="ordNo">#1048</b></div>
+          <div class="row mt" style="justify-content:space-between;align-items:flex-end"><div><span class="muted small">Chega em</span><div class="eta" id="eta">35 min</div></div><span class="muted small" id="ordItems"></span></div>
+          <div class="road" id="road"><i></i><span>🛵</span></div>
+          <div class="track" id="track">
+            <div class="ts"><span class="icon">✓</span><div><b>Pedido recebido</b><div class="muted small">O restaurante confirmou seu pedido</div></div></div>
+            <div class="ts"><span class="icon">🔥</span><div><b>Na brasa</b><div class="muted small">Seu pedido está sendo preparado</div></div></div>
+            <div class="ts"><span class="icon">🛵</span><div><b>Saiu para entrega</b><div class="muted small">Entregador a caminho</div></div></div>
+            <div class="ts"><span class="icon">🏠</span><div><b>Entregue</b><div class="muted small">Bom apetite!</div></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="row" style="justify-content:space-between;margin-bottom:14px"><div><span class="eyebrow">Visão da cozinha</span><h3 style="font-family:var(--font-d);font-size:24px;margin-top:6px">Painel de pedidos (KDS)</h3></div><span class="chip">● ao vivo</span></div>
+          <div class="kds">
+            <div class="col"><h4>Novos <span id="c0">0</span></h4><div id="k0"></div></div>
+            <div class="col"><h4>Na brasa <span id="c1">0</span></h4><div id="k1"></div></div>
+            <div class="col"><h4>Prontos <span id="c2">0</span></h4><div id="k2"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main></div>
+<script src="kit.js"></script>
+<script>
+(function () {
+  var D = window.Demo, $ = D.$, esc = D.esc;
+
+  /* brasas do hero */
+  var em = "";
+  for (var i = 0; i < 26; i++) em += '<i style="left:' + (Math.random() * 100) + '%;--s:' + (2 + Math.random() * 4) + 'px;--t:' + (5 + Math.random() * 6) + 's;--d:-' + (Math.random() * 8) + 's;--x:' + (Math.random() * 120 - 60) + 'px"></i>';
+  $("#embers").innerHTML = em;
+  var dt = new Date(); dt.setDate(dt.getDate() + 2); $("#resDate").value = dt.toISOString().slice(0, 10);
+
+  var MENU = {
+    "Entradas": [["prov", "🧀", "Provoleta na brasa", "Orégano fresco e mel de pimenta", 34], ["emp", "🥟", "Empanadas (3 un.)", "Carne cortada na faca", 29], ["ling", "🌭", "Linguiça artesanal", "Pernil e toque de páprica", 32]],
+    "Na brasa": [["ancho", "🥩", "Ancho 400g", "Maturado 21 dias, farofa de alho", 89], ["cost", "🍖", "Costela 14h", "Desfiando, com mandioca", 76], ["gal", "🍗", "Galeto desossado", "Limão-siciliano e ervas", 54], ["salm", "🐟", "Salmão na brasa", "Manteiga de missô", 72]],
+    "Burgers": [["burg", "🍔", "Burger Brasa", "Blend 180g, cheddar, cebola na brasa", 42], ["smash", "🍔", "Smash duplo", "Dois smash, picles da casa", 38], ["veg", "🥬", "Burger veggie", "Grão-de-bico e cogumelos", 36]],
+    "Acompanhamentos": [["frit", "🍟", "Fritas rústicas", "Alecrim e flor de sal", 22], ["sal", "🥗", "Salada da horta", "Folhas e vinagrete de mostarda", 24], ["arroz", "🍚", "Arroz biro-biro", "Ovo, bacon e batata palha", 18]],
+    "Bebidas": [["limo", "🍋", "Limonada da casa", "Hortelã e gengibre", 12], ["chope", "🍺", "Chope artesanal", "Pilsen 400 ml", 16], ["refri", "🥤", "Refrigerante", "Lata 350 ml", 8]],
+    "Sobremesas": [["petit", "🍫", "Petit gâteau", "Sorvete de baunilha", 28], ["pud", "🍮", "Pudim de doce de leite", "Calda de caramelo", 22], ["abac", "🍍", "Abacaxi na brasa", "Canela e sorvete de coco", 24]]
+  };
+  var BY = {};
+  Object.keys(MENU).forEach(function (c) { MENU[c].forEach(function (x) { BY[x[0]] = x; }); });
+  var cart = {}, coupon = false;
+
+  /* destaques no site */
+  var tones = ["#5a2a14", "#5a3a14", "#4a1f1a", "#3f2a18"];
+  $("#destaques").innerHTML = ["ancho", "cost", "burg", "prov"].map(function (id, i) {
+    var x = BY[id];
+    return '<article class="card card--hover dish" data-reveal><div class="dish__ph" style="--tone:' + tones[i] + '"><span>' + x[1] + '</span></div><div class="dish__b"><h3>' + esc(x[2]) + '</h3><p>' + esc(x[3]) + '</p><div class="row" style="justify-content:space-between;margin-top:8px"><span class="price">' + D.brl(x[4]) + '</span><button class="add" data-add="' + id + '" aria-label="Adicionar">+</button></div></div></article>';
+  }).join("");
+
+  /* categorias + itens */
+  var cats = $("#cats");
+  cats.innerHTML = Object.keys(MENU).map(function (c, i) { return '<button class="opt' + (i ? "" : " is-on") + '" data-value="' + c + '">' + c + "</button>"; }).join("");
+  function showCat(c) {
+    $("#items").innerHTML = MENU[c].map(function (x, i) {
+      return '<div class="card item" style="animation-delay:' + i * 60 + 'ms"><span class="item__ph">' + x[1] + '</span><div style="flex:1"><h3>' + esc(x[2]) + '</h3><p>' + esc(x[3]) + '</p><span class="price" style="display:block;margin-top:8px">' + D.brl(x[4]) + '</span></div><button class="add" data-add="' + x[0] + '" aria-label="Adicionar ' + esc(x[2]) + '">+</button></div>';
+    }).join("");
+  }
+  cats.addEventListener("pick", function (e) { showCat(e.detail.dataset.value); });
+  showCat("Entradas");
+
+  /* sacola */
+  function totals() {
+    var sub = 0, n = 0;
+    Object.keys(cart).forEach(function (id) { sub += BY[id][4] * cart[id]; n += cart[id]; });
+    var fee = sub >= 150 || !n ? 0 : 7.9, disc = coupon ? sub * .1 : 0;
+    return { sub: sub, n: n, fee: fee, disc: disc, total: sub + fee - disc };
+  }
+  function renderCart() {
+    var ids = Object.keys(cart), t = totals();
+    $("#cartList").innerHTML = ids.length ? ids.map(function (id) {
+      var x = BY[id];
+      return '<div class="ci"><span style="font-size:24px">' + x[1] + '</span><span style="flex:1">' + esc(x[2]) + '<br><span class="muted">' + D.brl(x[4] * cart[id]) + '</span></span><span class="q"><button data-dec="' + id + '" aria-label="Remover um">−</button>' + cart[id] + '<button data-add="' + id + '" aria-label="Adicionar um">+</button></span></div>';
+    }).join("") : '<div class="empty">Sua sacola está vazia.<br>Que tal uma provoleta? 🧀</div>';
+    $("#sub").textContent = D.brl(t.sub);
+    $("#fee").textContent = t.fee ? D.brl(t.fee) : "Grátis";
+    $("#discRow").hidden = !coupon; $("#disc").textContent = "− " + D.brl(t.disc);
+    $("#total").textContent = D.brl(t.total);
+    $("#bagN").textContent = t.n + (t.n === 1 ? " item · " : " itens · ") + D.brl(t.total);
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest("[data-add]"), d = e.target.closest("[data-dec]");
+    if (a) {
+      cart[a.dataset.add] = (cart[a.dataset.add] || 0) + 1;
+      a.classList.remove("pop"); void a.offsetWidth; a.classList.add("pop");
+      if (!a.closest(".ci")) D.toast(BY[a.dataset.add][2] + " na sacola");
+      renderCart();
+    }
+    if (d) { if (--cart[d.dataset.dec] <= 0) delete cart[d.dataset.dec]; renderCart(); }
+  });
+  $("#coupon").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var v = this.querySelector("input").value.trim().toUpperCase();
+    if (v === "BRASA10") { coupon = true; D.toast("Cupom aplicado: 10% off 🎉"); renderCart(); }
+    else { D.toast("Cupom inválido. Tente BRASA10", true); D.shake(this); }
+  });
+  renderCart();
+
+  /* pedido + KDS */
+  var orderNo = 1047, step = -1, stepTimer, mine = null;
+  var kds = [[], [], []];
+  function ticket(no, items, isMine) { return { no: no, items: items, mine: isMine, t0: Date.now() }; }
+  function renderKds() {
+    kds.forEach(function (col, i) {
+      $("#c" + i).textContent = col.length;
+      $("#k" + i).innerHTML = col.map(function (k) {
+        var m = Math.floor((Date.now() - k.t0) / 60000) + (k.mine ? 0 : 4 + (k.no % 7));
+        return '<div class="tk' + (k.mine ? " mine" : "") + '" style="--c:' + ["#ffb547", "#ff6b2c", "#22c55e"][i] + '"><div class="row" style="justify-content:space-between"><b>#' + k.no + (k.mine ? " · você" : "") + '</b><span class="muted">' + m + ' min</span></div><ul>' + k.items.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>";
+      }).join("");
+    });
+  }
+  function move(k, from) { kds[from].splice(kds[from].indexOf(k), 1); if (from < 2) kds[from + 1].unshift(k); }
+  kds[0].push(ticket(1045, ["2× Burger Brasa", "1× Fritas rústicas"]));
+  kds[1].push(ticket(1044, ["1× Ancho 400g", "1× Arroz biro-biro"]), ticket(1043, ["2× Chope artesanal", "1× Provoleta"]));
+  kds[2].push(ticket(1042, ["1× Costela 14h"]));
+
+  function setStep(s) {
+    step = s;
+    D.$$("#track .ts").forEach(function (n, i) { n.className = "ts" + (i < s ? " is-done" : i === s ? " is-now is-done" : ""); });
+    $("#road").style.setProperty("--k", [6, 30, 70, 96][s] + "%");
+    $("#eta").textContent = ["35 min", "28 min", "9 min", "Chegou!"][s];
+  }
+  function placeOrder(items) {
+    orderNo++;
+    $("#ordNo").textContent = "#" + orderNo;
+    $("#ordItems").textContent = items.length + (items.length === 1 ? " item" : " itens");
+    if (mine) { [0, 1, 2].forEach(function (c) { var i = kds[c].indexOf(mine); if (i >= 0) kds[c].splice(i, 1); }); }
+    mine = ticket(orderNo, items, true);
+    kds[0].unshift(mine);
+    renderKds();
+    setStep(0);
+    clearInterval(stepTimer);
+    stepTimer = setInterval(function () { // demo acelerada: cada etapa leva ~7s
+      if (step >= 3) return clearInterval(stepTimer);
+      var col = kds.findIndex(function (c) { return c.indexOf(mine) >= 0; });
+      if (col >= 0) move(mine, col);
+      setStep(step + 1); renderKds();
+    }, 7000);
+  }
+  $("#checkout").addEventListener("click", function () {
+    var t = totals();
+    if (!t.n) { D.toast("Adicione algum item à sacola primeiro", true); return; }
+    placeOrder(Object.keys(cart).map(function (id) { return cart[id] + "× " + BY[id][2]; }));
+    cart = {}; coupon = false; renderCart();
+    D.go("pedido");
+    D.toast("Pedido #" + orderNo + " enviado para a cozinha!");
+  });
+  placeOrder(["1× Ancho 400g", "1× Fritas rústicas", "2× Limonada da casa"]);
+
+  // cozinha "ao vivo": pedidos dos outros andam e chegam novos
+  var extras = [["1× Smash duplo", "1× Refrigerante"], ["2× Galeto desossado"], ["1× Salmão na brasa", "1× Salada da horta"], ["3× Empanadas (3 un.)"], ["1× Petit gâteau"]];
+  setInterval(function () {
+    var others = [2, 1, 0].map(function (c) { return [c, kds[c].filter(function (k) { return !k.mine; })]; }).filter(function (x) { return x[1].length; });
+    if (others.length) { var o = others[Math.floor(Math.random() * others.length)]; move(o[1][o[1].length - 1], o[0]); }
+    if (kds[0].length < 3) kds[0].push(ticket(900 + Math.floor(Math.random() * 99), extras[Math.floor(Math.random() * extras.length)]));
+    renderKds();
+  }, 4500);
+})();
+</script>
+</body>
+</html>

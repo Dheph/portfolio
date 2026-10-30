@@ -1,7 +1,7 @@
 /* Traduções PT-BR e ES (geradas; espelham a estrutura de en em js/i18n.js). */
 window.I18N.pt = {
   ui: {
-    nav: { work: "Trabalhos", about: "Sobre", services: "Serviços", experience: "Experiência", contact: "Contato" },
+    nav: { work: "Trabalhos", about: "Sobre", services: "Serviços", solutions: "Soluções", experience: "Experiência", contact: "Contato" },
     hireMe: "Me contrate", viewWork: "Ver trabalhos", viewCase: "Abrir estudo de caso",
     close: "Fechar", prev: "Anterior", next: "Próximo",
     copy: "Copiar", copied: "Copiado!",
@@ -13,10 +13,11 @@ window.I18N.pt = {
     sections: {
       about:      { num: "01", title: "Sobre", em: "mim" },
       services:   { num: "02", title: "Como transformo ideias em", em: "realidade" },
-      work:       { num: "03", title: "Trabalhos", em: "selecionados" },
-      experience: { num: "04", title: "Por onde", em: "passei" },
-      writing:    { num: "05", title: "Do", em: "blog" },
-      contact:    { num: "06", title: "Tem uma ideia? Vamos", em: "conversar" }
+      solutions:  { num: "03", title: "Pronto para o", em: "seu negócio" },
+      work:       { num: "04", title: "Trabalhos", em: "selecionados" },
+      experience: { num: "05", title: "Por onde", em: "passei" },
+      writing:    { num: "06", title: "Do", em: "blog" },
+      contact:    { num: "07", title: "Tem uma ideia? Vamos", em: "conversar" }
     }
   },
 
@@ -50,6 +51,20 @@ window.I18N.pt = {
     fullstack:{ title: "Fullstack / Backend", desc: "APIs em Node.js com PostgreSQL, Docker e CI/CD por trás do seu app.", tags: ["Node.js", "PostgreSQL", "CI/CD"] },
     rebuild:  { title: "Reconstrução de Apps & Liderança Técnica", desc: "Resgato apps legados, redefino a arquitetura e lidero times com Scrum e mentoria.", tags: ["Resgate de legado", "Arquitetura", "Mentoria"] },
     offline:  { title: "Arquitetura Offline-first", desc: "Apps que continuam funcionando sem conexão e sincronizam com segurança: SQLite, SmartStore, Redux Persist, Firebase.", tags: ["SQLite", "Motores de sincronização", "Resolução de conflitos"] }
+  },
+
+  solutions: {
+    lead: "Precisa de um site ou sistema para o seu negócio? Estas são demos ao vivo com dados fictícios: navegue como se fosse o produto real. Cada uma é um ponto de partida que eu adapto para você.",
+    open: "Abrir demo ao vivo",
+    items: {
+      advocacia:     { name: "Advocacia", desc: "Site institucional, agendamento de consulta online e portal do cliente para acompanhar processos.", screens: ["Site", "Agendamento", "Portal do cliente"] },
+      contabilidade: { name: "Contabilidade", desc: "Planos e preços, simulador de impostos ao vivo e o painel financeiro do cliente.", screens: ["Site", "Simulador", "Painel"] },
+      restaurante:   { name: "Restaurante", desc: "Cardápio com sacola e cupom, reservas, acompanhamento do pedido e painel da cozinha ao vivo.", screens: ["Site", "Pedido online", "Pedido & cozinha"] },
+      clinica:       { name: "Clínica odontológica", desc: "Tratamentos, agendamento online 24h com calendário e a agenda do dia da clínica.", screens: ["Site", "Agendamento", "Agenda da clínica"] },
+      barbearia:     { name: "Barbearia", desc: "Tabela de preços, agendamento por barbeiro, cartão fidelidade, assinaturas e fila ao vivo.", screens: ["Site", "Agendamento", "Clube & painel"] },
+      academia:      { name: "Academia", desc: "Planos e grade de aulas, app do aluno com treino e evolução, e check-in por QR.", screens: ["Site", "App do aluno", "Check-in"] },
+      game:          { name: "Nebula Siege · mini game", desc: "Um shooter arcade feito do zero em canvas: ondas, chefes, upgrades e partículas. Experiências interativas também estão no cardápio.", screens: ["Canvas 2D", "Toque & teclado", "Sem engine"] }
+    }
   },
 
   shots: {
@@ -254,7 +269,7 @@ window.I18N.pt = {
 
 window.I18N.es = {
   ui: {
-    nav: { work: "Trabajos", about: "Sobre mí", services: "Servicios", experience: "Experiencia", contact: "Contacto" },
+    nav: { work: "Trabajos", about: "Sobre mí", services: "Servicios", solutions: "Soluciones", experience: "Experiencia", contact: "Contacto" },
     hireMe: "Contrátame", viewWork: "Ver trabajos", viewCase: "Abrir caso de estudio",
     close: "Cerrar", prev: "Anterior", next: "Siguiente",
     copy: "Copiar", copied: "¡Copiado!",
@@ -266,10 +281,11 @@ window.I18N.es = {
     sections: {
       about:      { num: "01", title: "Sobre", em: "mí" },
       services:   { num: "02", title: "Cómo convierto ideas en", em: "realidad" },
-      work:       { num: "03", title: "Trabajos", em: "seleccionados" },
-      experience: { num: "04", title: "Dónde", em: "trabajé" },
-      writing:    { num: "05", title: "Del", em: "blog" },
-      contact:    { num: "06", title: "¿Tienes una idea? Vamos a", em: "conversar" }
+      solutions:  { num: "03", title: "Listo para tu", em: "negocio" },
+      work:       { num: "04", title: "Trabajos", em: "seleccionados" },
+      experience: { num: "05", title: "Dónde", em: "trabajé" },
+      writing:    { num: "06", title: "Del", em: "blog" },
+      contact:    { num: "07", title: "¿Tienes una idea? Vamos a", em: "conversar" }
     }
   },
 
@@ -303,6 +319,20 @@ window.I18N.es = {
     fullstack:{ title: "Fullstack / Backend", desc: "APIs en Node.js con PostgreSQL, Docker y CI/CD detrás de tu app.", tags: ["Node.js", "PostgreSQL", "CI/CD"] },
     rebuild:  { title: "Reconstrucción de Apps & Liderazgo Técnico", desc: "Rescato apps heredadas, redefino la arquitectura y lidero equipos con Scrum y mentoría.", tags: ["Rescate de legado", "Arquitectura", "Mentoría"] },
     offline:  { title: "Arquitectura Offline-first", desc: "Apps que siguen funcionando sin conexión y sincronizan de forma segura: SQLite, SmartStore, Redux Persist, Firebase.", tags: ["SQLite", "Motores de sincronización", "Manejo de conflictos"] }
+  },
+
+  solutions: {
+    lead: "¿Necesitas un sitio o sistema para tu negocio? Estas son demos en vivo con datos ficticios: navégalas como si fueran el producto real. Cada una es un punto de partida que adapto a ti.",
+    open: "Abrir demo en vivo",
+    items: {
+      advocacia:     { name: "Despacho de abogados", desc: "Sitio institucional, agenda de consultas online y portal del cliente para seguir los casos.", screens: ["Sitio", "Agenda", "Portal del cliente"] },
+      contabilidade: { name: "Contabilidad", desc: "Planes y precios, simulador de impuestos en vivo y el panel financiero del cliente.", screens: ["Sitio", "Simulador", "Panel"] },
+      restaurante:   { name: "Restaurante", desc: "Menú con carrito y cupones, reservas, seguimiento del pedido y pantalla de cocina en vivo.", screens: ["Sitio", "Pedido online", "Pedido y cocina"] },
+      clinica:       { name: "Clínica dental", desc: "Tratamientos, agenda online 24h con calendario y la agenda diaria de la clínica.", screens: ["Sitio", "Agendar cita", "Agenda de la clínica"] },
+      barbearia:     { name: "Barbería", desc: "Lista de precios, reservas por barbero, tarjeta de fidelidad, suscripciones y fila en vivo.", screens: ["Sitio", "Reservas", "Club y panel"] },
+      academia:      { name: "Gimnasio", desc: "Planes y horario de clases, app del alumno con entrenamientos y progreso, y check-in con QR.", screens: ["Sitio", "App del alumno", "Check-in"] },
+      game:          { name: "Nebula Siege · mini juego", desc: "Un shooter arcade hecho desde cero en canvas: oleadas, jefes, mejoras y partículas. Las experiencias interactivas también están en el menú.", screens: ["Canvas 2D", "Táctil y teclado", "Sin motor"] }
+    }
   },
 
   shots: {

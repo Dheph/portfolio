@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Advocacia — demo · Jeffersom Ribeiro</title>
+  <meta name="description" content="Demo navegável de site + agendamento + portal do cliente para escritório de advocacia. Dados fictícios." />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="kit.css" />
+  <style>
+    :root {
+      --bg: #0a1020; --surface: #0f182c; --surface-2: #142039; --line: rgba(200,163,90,.16);
+      --fg: #efe8da; --muted: #a9a698; --accent: #c8a35a; --accent-2: #ead3a0; --accent-ink: #0a1020;
+      --radius: 6px; --btn-r: 2px;
+      --font-d: "Cormorant Garamond", Georgia, serif; --font-b: "Inter", system-ui, sans-serif;
+    }
+    .h1 { font-weight: 600; letter-spacing: -.01em; }
+    .h1 em, .h2 em { color: var(--accent-2); }
+    .eyebrow::before { content: ""; width: 34px; height: 1px; background: var(--accent); }
+    .btn { letter-spacing: .04em; text-transform: uppercase; font-size: 13px; padding: 17px 26px; }
+    .mono-logo { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--accent); color: var(--accent); font: 600 italic 19px/1 var(--font-d); }
+    .logo small { display: block; font: 500 10px/1 var(--font-b); letter-spacing: .3em; color: var(--muted); margin-top: 4px; }
+
+    /* hero */
+    .hero { position: relative; overflow: hidden; padding: 70px 0 90px; }
+    .hero::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(90deg, transparent 0 119px, rgba(200,163,90,.06) 119px 120px);
+      -webkit-mask: linear-gradient(transparent, #000 30%, #000 70%, transparent); mask: linear-gradient(transparent, #000 30%, #000 70%, transparent); }
+    .hero::after { content: ""; position: absolute; width: 700px; height: 700px; right: -200px; top: -260px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,163,90,.16), transparent 65%); pointer-events: none; }
+    .arch-box { position: relative; justify-self: center; width: min(100%, 380px); }
+    .arch { position: relative; aspect-ratio: 3 / 4; border-radius: 999px 999px 4px 4px; border: 1px solid var(--accent); overflow: hidden;
+      background: radial-gradient(120% 80% at 50% 0%, rgba(200,163,90,.22), transparent 60%), linear-gradient(180deg, #13203b, #0b1222);
+      display: grid; place-items: center; }
+    .arch::before { content: ""; position: absolute; inset: 14px; border-radius: inherit; border: 1px solid rgba(200,163,90,.3); }
+    .arch::after { content: ""; position: absolute; inset: -40%; background: linear-gradient(115deg, transparent 40%, rgba(234,211,160,.18) 50%, transparent 60%); animation: sweep 6s ease-in-out infinite; }
+    @keyframes sweep { 0%, 30% { transform: translateX(-60%); } 70%, 100% { transform: translateX(60%); } }
+    .arch__glyph { font: 500 140px/1 var(--font-d); color: var(--accent); text-shadow: 0 0 60px rgba(200,163,90,.45); animation: bob 7s ease-in-out infinite; }
+    .seal { position: absolute; left: -46px; bottom: 40px; width: 132px; height: 132px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line); display: grid; place-items: center; }
+    .seal svg { position: absolute; inset: 0; animation: spin 22s linear infinite; }
+    .seal svg text { font: 600 11.5px var(--font-b); letter-spacing: 3.2px; fill: var(--accent); text-transform: uppercase; }
+    .seal b { font: 600 italic 30px/1 var(--font-d); color: var(--accent-2); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .stat strong { color: var(--accent-2); font-weight: 600; }
+
+    .band { border-block: 1px solid var(--line); padding: 22px 0; font: 500 italic 26px/1 var(--font-d); color: var(--muted); }
+    .band span::after { content: "✦"; color: var(--accent); font-style: normal; font-size: 14px; margin-left: 48px; vertical-align: middle; }
+
+    /* áreas */
+    .area { position: relative; }
+    .area__n { font: 600 italic 22px/1 var(--font-d); color: var(--accent); }
+    .area h3 { font-size: 26px; }
+    .area::after { content: ""; position: absolute; left: 26px; right: 26px; bottom: 0; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease); }
+    .area:hover::after { transform: scaleX(1); }
+    .area .more { display: inline-block; margin-top: 16px; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+
+    /* equipe */
+    .person__ph { position: relative; aspect-ratio: 4 / 5; border-radius: 4px; overflow: hidden; display: grid; place-items: center;
+      background: radial-gradient(90% 70% at 50% 20%, var(--tone, #2a3b62), #0c1426); border: 1px solid var(--line); }
+    .person__ph b { font: 600 italic 88px/1 var(--font-d); color: rgba(234,211,160,.85); transition: transform .6s var(--ease); }
+    .person:hover .person__ph b { transform: scale(1.08); }
+    .person__ph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 55%, rgba(10,16,32,.9)); }
+    .person h3 { font: 600 24px/1.1 var(--font-d); margin-top: 16px; }
+    .person p { color: var(--accent); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; margin-top: 6px; }
+
+    .quote { font: 500 italic clamp(28px, 4cqi, 44px)/1.25 var(--font-d); max-width: 900px; margin: 0 auto; text-align: center; }
+    .quote::before { content: "“"; display: block; font-size: 110px; line-height: .6; color: var(--accent); }
+    .quote cite { display: block; margin-top: 22px; font: 500 13px/1 var(--font-b); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-style: normal; }
+
+    /* consulta */
+    .opt .ic { font: 600 italic 22px/1 var(--font-d); color: var(--accent); width: 34px; flex: none; }
+
+    /* portal */
+    .proc-row td:first-child { font-family: "JetBrains Mono", monospace; font-size: 12.5px; color: var(--accent-2); }
+    .tl { position: relative; display: grid; gap: 18px; padding-left: 22px; }
+    .tl::before { content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 1px; background: var(--line); }
+    .tl > div { position: relative; animation: screenIn .5s var(--ease) both; }
+    .tl > div::before { content: ""; position: absolute; left: -22px; top: 5px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--accent); background: var(--bg); }
+    .tl > div:first-child::before { background: var(--accent); box-shadow: 0 0 0 5px rgba(200,163,90,.18); }
+    .tl small { color: var(--muted); font-size: 12px; } .tl p { font-size: 14px; margin-top: 3px; }
+    .count { display: flex; gap: 10px; margin-top: 10px; }
+    .count div { flex: 1; text-align: center; padding: 12px 6px; border: 1px solid var(--line); border-radius: 4px; }
+    .count b { display: block; font: 600 28px/1 var(--font-d); color: var(--accent-2); }
+    .count small { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .chat { display: grid; gap: 10px; max-height: 260px; overflow-y: auto; padding-right: 4px; }
+    .msg { max-width: 82%; padding: 11px 14px; border-radius: 12px; font-size: 14px; line-height: 1.45; background: var(--surface-2); animation: screenIn .4s var(--ease) both; }
+    .msg--me { justify-self: end; background: var(--accent); color: var(--accent-ink); }
+    .chat-form { display: flex; gap: 8px; margin-top: 14px; }
+
+    @container (max-width: 760px) {
+      .seal { left: -10px; width: 104px; height: 104px; } .seal b { font-size: 24px; }
+      .arch__glyph { font-size: 100px; }
+      .hero { padding-top: 40px; }
+    }
+  </style>
+</head>
+<body data-sector="advocacia">
+<div class="stage"><main class="viewport">
+
+  <!-- ===================== SITE ===================== -->
+  <section class="screen" id="site" data-label="Site" data-label-en="Website" data-label-es="Sitio">
+    <header class="sitenav"><div class="wrap">
+      <a href="#site" class="logo"><span class="mono-logo">F&amp;A</span><span>Ferraz &amp; Almeida<small>ADVOCACIA</small></span></a>
+      <nav><a href="#escritorio">Escritório</a><a href="#areas">Áreas</a><a href="#equipe">Equipe</a><a href="#contato">Contato</a></nav>
+      <a class="btn btn--sm" href="#consulta">Agendar consulta</a>
+    </div></header>
+
+    <div class="hero" id="escritorio">
+      <div class="wrap split">
+        <div>
+          <span class="eyebrow" data-reveal>Advocacia estratégica desde 1998</span>
+          <h1 class="h1" data-reveal>Defendemos o que é <em>seu</em> com estratégia e discrição.</h1>
+          <p class="lead" data-reveal>Atuação consultiva e contenciosa para pessoas e empresas. Atendimento direto com os sócios, comunicação clara e acompanhamento do seu processo em tempo real.</p>
+          <div class="row mt" data-reveal>
+            <a class="btn" href="#consulta">Agendar consulta</a>
+            <a class="btn btn--ghost" href="#areas">Áreas de atuação</a>
+          </div>
+          <div class="stats">
+            <div class="stat"><strong data-count="1200" data-pre="+">0</strong><span>casos conduzidos</span></div>
+            <div class="stat"><strong data-count="27">0</strong><span>anos de atuação</span></div>
+            <div class="stat"><strong data-count="94" data-suf="%">0</strong><span>clientes que nos indicam</span></div>
+          </div>
+        </div>
+        <div class="arch-box" data-reveal>
+          <div class="arch"><span class="arch__glyph">§</span></div>
+          <div class="seal">
+            <svg viewBox="0 0 132 132" aria-hidden="true"><defs><path id="c" d="M66,66 m-50,0 a50,50 0 1,1 100,0 a50,50 0 1,1 -100,0"/></defs>
+              <text><textPath href="#c">Ética · Estratégia · Resultado · </textPath></text></svg>
+            <b>1998</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band marquee"><div><span>Trabalhista</span><span>Família &amp; Sucessões</span><span>Empresarial</span><span>Tributário</span><span>Imobiliário</span><span>Consumidor</span></div></div>
+
+    <section class="sec" id="areas"><div class="wrap">
+      <div class="head"><span class="eyebrow" data-reveal>Áreas de atuação</span><h2 class="h2" data-reveal>Especialistas no que <em>importa</em> para você</h2></div>
+      <div class="grid">
+        <article class="card card--hover area" data-reveal data-glow><span class="area__n">I.</span><h3>Trabalhista</h3><p>Defesa de empresas e trabalhadores, acordos, rescisões e compliance trabalhista.</p><a class="more" href="#consulta">Agendar →</a></article>
+        <article class="card card--hover area" data-reveal data-glow><span class="area__n">II.</span><h3>Família &amp; Sucessões</h3><p>Divórcios, guarda, pensão, inventários e planejamento sucessório com sensibilidade.</p><a class="more" href="#consulta">Agendar →</a></article>
+        <article class="card card--hover area" data-reveal data-glow><span class="area__n">III.</span><h3>Empresarial</h3><p>Contratos, societário, fusões e assessoria jurídica contínua para o seu negócio.</p><a class="more" href="#consulta">Agendar →</a></article>
+        <article class="card card--hover area" data-reveal data-glow><span class="area__n">IV.</span><h3>Tributário</h3><p>Planejamento, recuperação de créditos e defesa em autuações fiscais.</p><a class="more" href="#consulta">Agendar →</a></article>
+        <article class="card card--hover area" data-reveal data-glow><span class="area__n">V.</span><h3>Imobiliário</h3><p>Compra e venda, locação, usucapião e regularização de imóveis.</p><a class="more" href="#consulta">Agendar →</a></article>
+        <article class="card card--hover area" data-reveal data-glow><span class="area__n">VI.</span><h3>Consumidor</h3><p>Cobranças indevidas, negativação, voos, bancos e planos de saúde.</p><a class="more" href="#consulta">Agendar →</a></article>
+      </div>
+    </div></section>
+
+    <section class="sec" id="equipe" style="background:var(--surface)"><div class="wrap">
+      <div class="head"><span class="eyebrow" data-reveal>Sócios</span><h2 class="h2" data-reveal>Quem vai cuidar do <em>seu caso</em></h2></div>
+      <div class="grid">
+        <article class="person" data-reveal><div class="person__ph" style="--tone:#2c3f68"><b>HF</b></div><h3>Dra. Helena Ferraz</h3><p>Sócia fundadora · Empresarial</p></article>
+        <article class="person" data-reveal><div class="person__ph" style="--tone:#3b3424"><b>RA</b></div><h3>Dr. Rafael Almeida</h3><p>Sócio · Tributário</p></article>
+        <article class="person" data-reveal><div class="person__ph" style="--tone:#2e2a4a"><b>CN</b></div><h3>Dra. Camila Nunes</h3><p>Família &amp; Sucessões</p></article>
+      </div>
+    </div></section>
+
+    <section class="sec"><div class="wrap">
+      <blockquote class="quote" data-reveal>Resolveram em poucos meses o que eu arrastava há anos. Atendimento direto, sem juridiquês.<cite>Marcos T. · empresário</cite></blockquote>
+    </div></section>
+
+    <section class="sec" id="contato" style="background:var(--surface)"><div class="wrap split">
+      <div>
+        <span class="eyebrow" data-reveal>Contato</span>
+        <h2 class="h2" data-reveal>Vamos conversar sobre o <em>seu caso</em>?</h2>
+        <p class="lead mt" data-reveal>Retornamos em até 24 horas úteis. Todas as informações são tratadas com sigilo profissional.</p>
+        <div class="list mt" data-reveal>
+          <div><span class="icon">✆</span><div><b>(00) 0000-0000</b><div class="muted small">Seg a sex · 9h às 18h</div></div></div>
+          <div><span class="icon">✉</span><div><b>contato@ferrazalmeida.demo</b><div class="muted small">Resposta em até 24h</div></div></div>
+          <div><span class="icon">⌂</span><div><b>Rua das Palmeiras, 410 · 12º andar</b><div class="muted small">Centro</div></div></div>
+        </div>
+      </div>
+      <form class="card form" data-mock="Mensagem enviada! Retornaremos em até 24h." data-reveal>
+        <label class="field">Nome<input class="input" required placeholder="Seu nome completo"></label>
+        <label class="field">E-mail<input class="input" type="email" required placeholder="voce@email.com"></label>
+        <label class="field">Como podemos ajudar?<textarea class="input" placeholder="Conte brevemente o seu caso"></textarea></label>
+        <button class="btn btn--block">Enviar mensagem</button>
+      </form>
+    </div></section>
+    <footer class="foot"><div class="wrap"><span>© Ferraz &amp; Almeida Advocacia · demo fictícia</span><span>OAB · sigilo profissional · LGPD</span></div></footer>
+  </section>
+
+  <!-- ===================== CONSULTA ===================== -->
+  <section class="screen" id="consulta" data-label="Agendar consulta" data-label-en="Book a consultation" data-label-es="Agendar consulta">
+    <div class="sec"><div class="wrap wrap--narrow">
+      <div class="head center"><span class="eyebrow">Agendamento online</span><h2 class="h2">Agende sua <em>consulta</em></h2><p class="lead mt">Leva menos de um minuto. Você recebe a confirmação por e-mail e WhatsApp.</p></div>
+      <div class="card" data-wizard>
+        <div class="steps"><i></i><i></i><i></i><i></i><i></i></div>
+
+        <div class="step">
+          <h3 class="step__title">Qual é o assunto?</h3>
+          <div class="opts" data-group="area" data-required>
+            <button class="opt" data-value="Trabalhista"><span class="ic">I.</span><span><b>Trabalhista</b><small>Rescisão, acordo, horas extras</small></span></button>
+            <button class="opt" data-value="Família"><span class="ic">II.</span><span><b>Família</b><small>Divórcio, guarda, inventário</small></span></button>
+            <button class="opt" data-value="Empresarial"><span class="ic">III.</span><span><b>Empresarial</b><small>Contratos, sociedade</small></span></button>
+            <button class="opt" data-value="Tributário"><span class="ic">IV.</span><span><b>Tributário</b><small>Autuação, planejamento</small></span></button>
+            <button class="opt" data-value="Imobiliário"><span class="ic">V.</span><span><b>Imobiliário</b><small>Compra, locação, usucapião</small></span></button>
+            <button class="opt" data-value="Consumidor"><span class="ic">VI.</span><span><b>Consumidor</b><small>Bancos, voos, cobranças</small></span></button>
+          </div>
+          <div class="step__nav"><span></span><button class="btn" data-next>Continuar →</button></div>
+        </div>
+
+        <div class="step">
+          <h3 class="step__title">Formato e horário</h3>
+          <div class="opts" data-group="formato" data-required>
+            <button class="opt" data-value="Presencial"><span class="ic">⌂</span><span><b>Presencial</b><small>No escritório</small></span></button>
+            <button class="opt" data-value="Videochamada"><span class="ic">◉</span><span><b>Videochamada</b><small>Link enviado por e-mail</small></span></button>
+          </div>
+          <p class="muted small mt">Dia</p>
+          <div class="slots" data-group="dia" data-required id="dias" style="margin-top:10px"></div>
+          <p class="muted small mt">Horário</p>
+          <div class="slots" data-group="hora" data-required style="margin-top:10px">
+            <button class="opt">09:00</button><button class="opt" disabled>10:00</button><button class="opt">11:00</button><button class="opt">14:00</button>
+            <button class="opt" disabled>15:00</button><button class="opt">16:00</button><button class="opt">17:00</button>
+          </div>
+          <div class="step__nav"><button class="btn btn--ghost" data-prev>← Voltar</button><button class="btn" data-next>Continuar →</button></div>
+        </div>
+
+        <div class="step">
+          <h3 class="step__title">Seus dados</h3>
+          <div class="form">
+            <label class="field">Nome completo<input class="input" name="nome" required placeholder="Mariana Souza"></label>
+            <label class="field">WhatsApp<input class="input" name="fone" required placeholder="(00) 90000-0000"></label>
+            <label class="field">Resumo do caso (opcional)<textarea class="input" name="resumo" placeholder="Ex.: fui demitida sem receber as verbas rescisórias"></textarea></label>
+          </div>
+          <div class="step__nav"><button class="btn btn--ghost" data-prev>← Voltar</button><button class="btn" data-next>Revisar →</button></div>
+        </div>
+
+        <div class="step">
+          <h3 class="step__title">Confira e confirme</h3>
+          <dl class="summary">
+            <div><dt>Área</dt><dd data-show="area"></dd></div>
+            <div><dt>Formato</dt><dd data-show="formato"></dd></div>
+            <div><dt>Data</dt><dd><span data-show="dia"></span> · <span data-show="hora"></span></dd></div>
+            <div><dt>Nome</dt><dd data-show="nome"></dd></div>
+            <div><dt>Valor da consulta</dt><dd>R$ 350,00 <span class="muted small">(abatido se fechar contrato)</span></dd></div>
+          </dl>
+          <div class="step__nav"><button class="btn btn--ghost" data-prev>← Voltar</button><button class="btn" data-next>Confirmar agendamento</button></div>
+        </div>
+
+        <div class="step done">
+          <svg class="check" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><path d="M30 52l13 13 27-29"/></svg>
+          <h3 class="step__title">Consulta confirmada, <span data-show="nome"></span>!</h3>
+          <p class="muted"><span data-show="area"></span> · <span data-show="dia"></span> às <span data-show="hora"></span> · <span data-show="formato"></span></p>
+          <div class="row mt" style="justify-content:center"><a class="btn" href="#portal">Ir para o portal do cliente →</a><button class="btn btn--ghost" data-restart>Novo agendamento</button></div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ===================== PORTAL ===================== -->
+  <section class="screen" id="portal" data-label="Portal do cliente" data-label-en="Client portal" data-label-es="Portal del cliente">
+    <div class="app">
+      <aside class="app__side">
+        <a href="#site" class="logo"><span class="mono-logo">F&amp;A</span>Portal</a>
+        <a class="is-on" href="#portal">◆ Visão geral</a><a href="#portal">§ Processos</a><a href="#portal">▤ Documentos</a><a href="#portal">◎ Financeiro</a><a href="#portal">✉ Mensagens</a>
+        <span class="spacer"></span>
+        <a href="#consulta">+ Nova consulta</a>
+      </aside>
+      <div class="app__main">
+        <div class="app__top">
+          <div><p class="muted small">Atualizado hoje às 09:42</p><h2>Olá, Mariana</h2></div>
+          <div class="row"><span class="badge badge--ok">Honorários em dia</span><span class="avatar">MS</span></div>
+        </div>
+        <div class="kpis">
+          <div class="kpi" data-reveal><small>Processos ativos</small><strong data-count="3">0</strong><em>1 com movimentação nova</em></div>
+          <div class="kpi" data-reveal><small>Documentos</small><strong data-count="18">0</strong><em>2 aguardando assinatura</em></div>
+          <div class="kpi" data-reveal><small>Próxima audiência</small><strong>12/11</strong><em style="color:var(--accent)">Vara do Trabalho · 14h</em></div>
+          <div class="kpi" data-reveal><small>Economia estimada</small><strong data-count="48700" data-pre="R$ ">0</strong><em>em acordos e recursos</em></div>
+        </div>
+        <div class="dash">
+          <div class="panel">
+            <div class="panel__h"><h3>Meus processos</h3><span class="muted small">clique para ver o andamento</span></div>
+            <div class="table-wrap"><table class="table"><thead><tr><th>Número</th><th>Ação</th><th>Status</th><th>Atualizado</th></tr></thead><tbody id="procs"></tbody></table></div>
+            <div class="panel__h mt"><h3 id="procTitle">Andamento</h3></div>
+            <div class="tl" id="tl"></div>
+          </div>
+          <div style="display:grid;gap:18px">
+            <div class="panel">
+              <div class="panel__h"><h3>Audiência em</h3><span class="badge badge--info">Videochamada</span></div>
+              <div class="count" id="count"><div><b>12</b><small>dias</small></div><div><b>04</b><small>horas</small></div><div><b>32</b><small>min</small></div></div>
+            </div>
+            <div class="panel">
+              <div class="panel__h"><h3>Fale com sua advogada</h3><span class="avatar" style="width:32px;height:32px;font-size:11px">CN</span></div>
+              <div class="chat" id="chat">
+                <div class="msg">Oi, Mariana! Protocolamos a réplica hoje. Agora aguardamos a audiência de conciliação.</div>
+                <div class="msg msg--me">Ótimo! Preciso levar algum documento?</div>
+                <div class="msg">Só o RG e a carteira de trabalho. Deixei a lista no portal. 😉</div>
+              </div>
+              <form class="chat-form" id="chatForm"><input class="input" placeholder="Escreva uma mensagem…" aria-label="Mensagem"><button class="btn btn--sm">Enviar</button></form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main></div>
+<script src="kit.js"></script>
+<script>
+(function () {
+  var D = window.Demo;
+  // próximos 6 dias úteis
+  var dias = D.$("#dias"), d = new Date(), n = 0, fmt = new Intl.DateTimeFormat("pt-BR", { weekday: "short", day: "2-digit" });
+  while (n < 6) { d.setDate(d.getDate() + 1); if (d.getDay() % 6 === 0) continue; n++;
+    dias.insertAdjacentHTML("beforeend", '<button class="opt">' + fmt.format(d).replace(".", "").replace(",", "") + "</button>"); }
+
+  var procs = [
+    { n: "0012345-67.2025.5.02.0011", a: "Reclamação trabalhista", s: ["Audiência marcada", "info"], u: "hoje",
+      tl: [["Hoje · 09:12", "Audiência de conciliação designada para 12/11, 14h."], ["28/10", "Réplica protocolada pela Dra. Camila Nunes."], ["14/10", "Contestação apresentada pela empresa."], ["02/10", "Ação distribuída à 11ª Vara do Trabalho."]] },
+    { n: "1009876-54.2024.8.26.0100", a: "Revisão de contrato bancário", s: ["Em andamento", "warn"], u: "21/10",
+      tl: [["21/10", "Perícia contábil deferida."], ["30/09", "Juntada de documentos pelo banco."], ["11/08", "Liminar concedida: cobrança suspensa."]] },
+    { n: "0004567-89.2023.8.26.0002", a: "Inventário extrajudicial", s: ["Concluído", "ok"], u: "03/09",
+      tl: [["03/09", "Escritura lavrada. Processo concluído."], ["15/08", "ITCMD recolhido."], ["20/07", "Partilha aprovada pelos herdeiros."]] }
+  ];
+  var tb = D.$("#procs");
+  function pick(i) {
+    D.$$("tr", tb).forEach(function (r, j) { r.classList.toggle("is-on", i === j); });
+    D.$("#procTitle").textContent = "Andamento · " + procs[i].a;
+    D.$("#tl").innerHTML = procs[i].tl.map(function (x, k) { return '<div style="animation-delay:' + k * 80 + 'ms"><small>' + x[0] + "</small><p>" + D.esc(x[1]) + "</p></div>"; }).join("");
+  }
+  tb.innerHTML = procs.map(function (p, i) {
+    return '<tr class="proc-row" data-i="' + i + '"><td>' + p.n + "</td><td>" + p.a + '</td><td><span class="badge badge--' + p.s[1] + '">' + p.s[0] + "</span></td><td>" + p.u + "</td></tr>";
+  }).join("");
+  tb.addEventListener("click", function (e) { var r = e.target.closest("tr"); if (r) pick(+r.dataset.i); });
+  pick(0);
+
+  // contagem regressiva fictícia (12 dias a partir de agora)
+  var end = Date.now() + ((12 * 24 + 4) * 60 + 32) * 60000, cells = D.$$("#count b");
+  setInterval(function () {
+    var m = Math.max(0, Math.floor((end - Date.now()) / 60000));
+    cells[0].textContent = Math.floor(m / 1440); cells[1].textContent = String(Math.floor(m % 1440 / 60)).padStart(2, "0"); cells[2].textContent = String(m % 60).padStart(2, "0");
+  }, 1000);
+
+  // chat com resposta automática
+  var chat = D.$("#chat");
+  D.$("#chatForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var inp = this.querySelector("input"), v = inp.value.trim(); if (!v) return;
+    chat.insertAdjacentHTML("beforeend", '<div class="msg msg--me">' + D.esc(v) + "</div>" + '<div class="msg" id="typing"><span class="typing"><i></i><i></i><i></i></span></div>');
+    inp.value = ""; chat.scrollTop = chat.scrollHeight;
+    setTimeout(function () { var t = D.$("#typing"); t.removeAttribute("id"); t.textContent = "Recebido! Vou analisar e te retorno ainda hoje. 👍"; chat.scrollTop = chat.scrollHeight; }, 1400);
+  });
+})();
+</script>
+</body>
+</html>
