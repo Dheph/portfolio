@@ -65,7 +65,19 @@ window.I18N = {
         clinica:       { name: "Dental clinic", desc: "Treatments, 24/7 online scheduling with calendar and the clinic's daily agenda.", screens: ["Website", "Scheduling", "Admin panel"] },
         barbearia:     { name: "Barbershop", desc: "Price list, booking by barber, loyalty stamp card, subscriptions and a live queue.", screens: ["Website", "Booking", "Loyalty club", "Admin panel"] },
         academia:      { name: "Gym & fitness", desc: "Plans and class schedule, a student app with workouts and progress, and QR check-in.", screens: ["Website", "Student app", "Check-in", "Admin panel"] },
+        petshop:       { name: "Pet shop", desc: "Grooming booking priced by pet size, live pet tracker with photos, vaccine card and a pet food subscription that ships before it runs out.", screens: ["Website", "Grooming booking", "Live pet tracker", "Admin panel"] },
         game:          { name: "Nebula Siege · mini game", desc: "An arcade shooter built from scratch on canvas: waves, bosses, level-ups and particles. Interactive experiences are on the menu too.", screens: ["Canvas 2D", "Touch & keyboard", "No engine"] }
+      }
+    },
+
+    automations: {
+      tag: "New · for small and mid-sized businesses",
+      title: "Smart automations",
+      lead: "Less copy-paste, more sales: WhatsApp support that never sleeps, new leads every day and follow-ups that don't forget anyone. Try each one live.",
+      items: {
+        whatsapp: { name: "WhatsApp AI assistant", desc: "Answers in seconds, books appointments on your calendar, checks orders and hands off to a human with the full history.", tags: ["24/7 replies", "Booking", "Reminders", "Human handoff"] },
+        leads:    { name: "Lead finder", desc: "Finds businesses in your niche and region, enriches them with website, socials and phone, and scores each opportunity.", tags: ["Public data", "Opportunity score", "Export", "Straight to CRM"] },
+        painel:   { name: "Follow-up, CRM & routines", desc: "Message sequences, sales pipeline, Pix payment reminders and review requests running on their own, with a live dashboard.", tags: ["Follow-up", "Pipeline", "Pix", "Results"] }
       }
     },
 

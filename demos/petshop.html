@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pet shop — demo · Jeffersom Ribeiro</title>
+  <meta name="description" content="Demo navegável de site + agendamento de banho e tosa + pet ao vivo + painel admin para pet shop. Dados fictícios." />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="kit.css" />
+  <style>
+    :root {
+      --bg: #fff8f1; --surface: #ffffff; --surface-2: #fff0e3; --line: rgba(74,48,26,.1);
+      --fg: #2b2118; --muted: #8a7766; --accent: #ff7a59; --accent-2: #2bb5a3; --accent-ink: #fff;
+      --radius: 22px; --btn-r: 999px;
+      --font-d: "Fredoka", system-ui, sans-serif; --font-b: "Nunito", system-ui, sans-serif;
+    }
+    .h1, .h2, .card h3, .step__title, .app__top h2, .panel__h h3, .kpi strong, .stat strong { font-weight: 600; letter-spacing: -.01em; }
+    .h1 { font-size: clamp(42px, 6.4cqi, 80px); }
+    .eyebrow { color: var(--accent-2); }
+    em { color: var(--accent); font-style: normal; position: relative; white-space: nowrap; }
+    .h1 em::after { content: ""; position: absolute; left: 0; right: 0; bottom: .06em; height: .22em; z-index: -1; border-radius: 99px; background: color-mix(in srgb, var(--accent) 22%, transparent); }
+    .logo b { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 13px; background: var(--accent); color: #fff; font-size: 19px; transform: rotate(-8deg); }
+    .card { box-shadow: 0 20px 40px -32px rgba(74,48,26,.35); }
+    .kpi, .panel { box-shadow: 0 16px 34px -30px rgba(74,48,26,.4); }
+
+    /* hero: cachorro balançando, bolhas de sabão subindo, patinhas */
+    .hero { position: relative; overflow: hidden; padding: 56px 0 84px; }
+    .hero::before { content: ""; position: absolute; width: 640px; height: 640px; right: -160px; top: -140px; border-radius: 50%; background: radial-gradient(circle, #ffe0cf, transparent 65%); }
+    .blob { position: relative; justify-self: center; width: min(420px, 90%); aspect-ratio: 1; display: grid; place-items: center;
+      border-radius: 46% 54% 42% 58% / 52% 44% 56% 48%; background: linear-gradient(145deg, #ffb59c, var(--accent) 55%, #ff5d7a); animation: morph 9s ease-in-out infinite;
+      box-shadow: 0 50px 90px -40px rgba(255,122,89,.8); }
+    @keyframes morph { 50% { border-radius: 56% 44% 58% 42% / 42% 58% 44% 56%; } }
+    .dog { font-size: clamp(120px, 18cqi, 190px); line-height: 1; transform-origin: 50% 90%; animation: wag 2.4s ease-in-out infinite; filter: drop-shadow(0 18px 18px rgba(0,0,0,.18)); }
+    @keyframes wag { 0%, 100% { rotate: -6deg; } 50% { rotate: 6deg; } }
+    .bub { position: absolute; bottom: 12%; width: var(--s); aspect-ratio: 1; border-radius: 50%; left: var(--l);
+      background: radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,.25) 40%, rgba(255,255,255,.05) 70%); border: 1px solid rgba(255,255,255,.7);
+      animation: rise var(--t) ease-in infinite; animation-delay: var(--dl); opacity: 0; }
+    @keyframes rise { 0% { transform: translateY(0) scale(.6); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(-330px) translateX(30px) scale(1.1); opacity: 0; } }
+    .tag-f { position: absolute; display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 18px; background: #fff; font-size: 14px; font-weight: 700; box-shadow: 0 20px 40px -20px rgba(74,48,26,.45); }
+    .tag-f small { display: block; color: var(--muted); font-weight: 600; font-size: 12px; }
+    .paws { position: absolute; left: 4%; bottom: 18px; display: flex; gap: 26px; opacity: .25; font-size: 22px; }
+    .paws span { animation: paw 3s infinite; animation-delay: calc(var(--i) * .35s); opacity: 0; }
+    .paws span:nth-child(odd) { translate: 0 -14px; }
+    @keyframes paw { 10%, 60% { opacity: 1; } 80%, 100% { opacity: 0; } }
+
+    .strip { background: var(--fg); color: #fff; padding: 18px 0; font: 600 22px/1 var(--font-d); }
+    .strip span::after { content: "🐾"; margin-left: 48px; }
+    .svc .icon { width: 64px; height: 64px; font-size: 30px; border-radius: 20px; }
+    .svc:nth-child(2) .icon { background: #e0f6f2; } .svc:nth-child(3) .icon { background: #efe9ff; } .svc:nth-child(4) .icon { background: #fff2cc; }
+    .price { font: 600 22px/1 var(--font-d); color: var(--accent); margin-top: 14px; }
+    .prod { padding: 18px; }
+    .prod__img { aspect-ratio: 1; display: grid; place-items: center; font-size: 64px; border-radius: 16px; background: var(--surface-2); transition: transform .4s var(--ease); }
+    .prod:hover .prod__img { transform: scale(1.04) rotate(-2deg); }
+    .prod h3 { font-size: 17px; margin: 14px 0 4px; }
+    .calc { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; background: linear-gradient(135deg, #2bb5a3, #1f8f80); color: #fff; border: 0; }
+    .calc .muted, .calc .field, .calc p { color: rgba(255,255,255,.85); }
+    .calc input[type=range] { width: 100%; accent-color: #fff; }
+    .calc .opt { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.25); color: #fff; }
+    .calc .opt.is-on { background: #fff; color: #1f8f80; box-shadow: none; }
+    .calc .out { padding: 22px; border-radius: 18px; background: rgba(0,0,0,.14); }
+    .calc .out strong { display: block; font: 600 46px/1 var(--font-d); }
+    .calc .btn { background: #fff; border-color: #fff; color: #1f8f80; }
+
+    /* pet ao vivo */
+    .cam { position: relative; aspect-ratio: 16 / 10; border-radius: 20px; overflow: hidden; display: grid; place-items: center;
+      background: radial-gradient(circle at 50% 70%, #ffe7da, #ffd0bb); }
+    .cam__e { font-size: 120px; animation: wag 1.6s ease-in-out infinite; transform-origin: 50% 90%; }
+    .cam__e.swap { animation: pop .5s var(--ease); }
+    @keyframes pop { from { transform: scale(.4); opacity: 0; } }
+    .cam .bub { --t: 3.2s; bottom: 6%; }
+    .cam__live { position: absolute; left: 14px; top: 14px; display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 99px; background: rgba(0,0,0,.55); color: #fff; font: 500 11px/1 "JetBrains Mono", monospace; }
+    .cam__live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #ff3b3b; animation: blink 1s infinite; }
+    .cam__cap { position: absolute; left: 14px; right: 14px; bottom: 14px; padding: 10px 14px; border-radius: 14px; background: rgba(255,255,255,.88); font-size: 14px; font-weight: 700; }
+    .tl { display: grid; gap: 0; margin-top: 20px; }
+    .tl > div { position: relative; display: flex; gap: 14px; padding: 0 0 18px 0; color: var(--muted); }
+    .tl > div::before { content: ""; position: absolute; left: 15px; top: 32px; bottom: 0; width: 2px; background: var(--line); }
+    .tl > div:last-child::before { display: none; }
+    .tl i { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--surface-2); font-style: normal; font-size: 15px; transition: background .4s, transform .4s var(--ease); }
+    .tl b { display: block; color: var(--fg); font-size: 15px; }
+    .tl .on i { background: var(--accent); transform: scale(1.1); }
+    .tl .on.cur i { box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent); animation: pulseI 1.4s infinite; }
+    @keyframes pulseI { 50% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--accent) 8%, transparent); } }
+    .tl .on b { color: var(--accent); } .tl > div:not(.on) { opacity: .55; }
+
+    /* admin */
+    .kcard .pe { font-size: 26px; float: right; margin: -2px 0 0 8px; }
+    .kcard .fl { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .kcard .fl span { padding: 3px 8px; border-radius: 99px; background: var(--surface-2); font-size: 11.5px; font-weight: 700; color: var(--fg); }
+    .kcard .fl .al { background: #ffe1e1; color: #b42318; }
+    #kPronto { background: color-mix(in srgb, var(--accent-2) 8%, var(--surface)); }
+    .pet-row { cursor: pointer; transition: background .2s; border-radius: 12px; }
+    .pet-row:hover { background: var(--surface-2); }
+    .pet-ava { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 15px; background: var(--surface-2); font-size: 26px; }
+    .srow { display: grid; grid-template-columns: 1.6fr 1.4fr .7fr auto; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .srow:last-child { border-bottom: 0; }
+    .srow .bar { height: 10px; }
+
+    @container (max-width: 760px) {
+      .calc { grid-template-columns: 1fr; }
+      .srow { grid-template-columns: 1.4fr 1fr auto; } .srow > :nth-child(3) { display: none; }
+      .tag-f { display: none; }
+    }
+  </style>
+</head>
+<body data-sector="petshop">
+<div class="stage"><main class="viewport">
+
+  <!-- ===================== SITE ===================== -->
+  <section class="screen" id="site" data-label="Site" data-label-en="Website" data-label-es="Sitio">
+    <header class="sitenav"><div class="wrap">
+      <a href="#site" class="logo"><b>🐾</b> Bicho Feliz</a>
+      <nav><a href="#servicos">Serviços</a><a href="#loja">Loja</a><a href="#racao">Assinatura de ração</a></nav>
+      <a class="btn btn--sm" href="#agendar">Agendar banho</a>
+    </div></header>
+
+    <div class="hero">
+      <div class="wrap split">
+        <div style="position:relative">
+          <span class="eyebrow" data-reveal>Pet spa · veterinário · loja</span>
+          <h1 class="h1" data-reveal>Seu pet <em>cheiroso</em>, feliz e bem cuidado.</h1>
+          <p class="lead" data-reveal>Banho e tosa com produtos hipoalergênicos, leva e traz grátis no bairro e fotos do seu bichinho direto no WhatsApp durante o banho.</p>
+          <div class="row mt" data-reveal><a class="btn" href="#agendar">Agendar banho &amp; tosa</a><a class="btn btn--ghost" href="#aovivo">Ver pet ao vivo</a></div>
+          <div class="stats" data-reveal>
+            <div class="stat"><strong data-count="4.9">0</strong><span>★ no Google</span></div>
+            <div class="stat"><strong data-count="12" data-suf=" mil">0</strong><span>banhos dados</span></div>
+            <div class="stat"><strong>0 km</strong><span>você não sai de casa</span></div>
+          </div>
+        </div>
+        <div class="blob" data-reveal>
+          <span class="dog">🐶</span>
+          <i class="bub" style="--s:34px;--l:18%;--t:4s;--dl:0s"></i><i class="bub" style="--s:20px;--l:32%;--t:3.4s;--dl:1.2s"></i>
+          <i class="bub" style="--s:44px;--l:62%;--t:4.6s;--dl:.6s"></i><i class="bub" style="--s:16px;--l:78%;--t:3s;--dl:2s"></i><i class="bub" style="--s:26px;--l:48%;--t:3.8s;--dl:2.6s"></i>
+          <div class="tag-f float" style="left:-40px;top:16%"><span style="font-size:24px">📸</span><div>Foto nova do Thor<small>agora · no banho</small></div></div>
+          <div class="tag-f float" style="right:-30px;bottom:12%;animation-delay:-3s"><span style="font-size:24px">🚗</span><div>Leva e traz<small>chega em 12 min</small></div></div>
+        </div>
+      </div>
+      <div class="paws"><span style="--i:0">🐾</span><span style="--i:1">🐾</span><span style="--i:2">🐾</span><span style="--i:3">🐾</span><span style="--i:4">🐾</span></div>
+    </div>
+
+    <div class="strip marquee" style="--speed:26s"><div><span>Banho &amp; tosa</span><span>Hidratação</span><span>Veterinário</span><span>Hotel &amp; creche</span><span>Leva e traz</span><span>Ração em casa</span></div></div>
+
+    <section class="sec" id="servicos"><div class="wrap">
+      <div class="head center"><span class="eyebrow" data-reveal>Tudo num lugar só</span><h2 class="h2" data-reveal>Cuidado de ponta a <em>patinha</em></h2></div>
+      <div class="grid">
+        <article class="card card--hover svc" data-reveal data-glow><div class="icon">🛁</div><h3>Banho &amp; tosa</h3><p>Tosa na tesoura ou máquina, hidratação e perfume suave. Fotos durante o banho.</p><div class="price">a partir de R$ 60</div></article>
+        <article class="card card--hover svc" data-reveal data-glow><div class="icon">🩺</div><h3>Veterinário</h3><p>Consultas, vacinas com lembrete automático e carteirinha digital.</p><div class="price">consulta R$ 140</div></article>
+        <article class="card card--hover svc" data-reveal data-glow><div class="icon">🏡</div><h3>Hotel &amp; creche</h3><p>Diárias com câmera ao vivo, recreação em grupo e relatório do dia.</p><div class="price">diária R$ 85</div></article>
+        <article class="card card--hover svc" data-reveal data-glow><div class="icon">🚗</div><h3>Leva e traz</h3><p>Buscamos e devolvemos seu pet. Grátis até 5 km, com rastreio do motorista.</p><div class="price">grátis*</div></article>
+      </div>
+    </div></section>
+
+    <section class="sec" id="loja" style="background:var(--surface-2)"><div class="wrap">
+      <div class="head row" style="justify-content:space-between;align-items:flex-end"><div><span class="eyebrow" data-reveal>Loja</span><h2 class="h2" data-reveal>Os queridinhos da semana</h2></div><span class="chip" data-reveal>Entrega em até 2h</span></div>
+      <div class="grid">
+        <article class="card prod" data-reveal><div class="prod__img">🦴</div><h3>Petisco natural 200g</h3><p class="small">Sem corantes · cães</p><div class="row" style="justify-content:space-between;margin-top:12px"><b class="price" style="margin:0">R$ 29,90</b><button class="btn btn--sm" data-add="Petisco natural">+</button></div></article>
+        <article class="card prod" data-reveal><div class="prod__img">🧸</div><h3>Pelúcia indestrutível</h3><p class="small">Com apito · todos os portes</p><div class="row" style="justify-content:space-between;margin-top:12px"><b class="price" style="margin:0">R$ 49,90</b><button class="btn btn--sm" data-add="Pelúcia">+</button></div></article>
+        <article class="card prod" data-reveal><div class="prod__img">🐟</div><h3>Sachê gato castrado</h3><p class="small">Caixa com 12 · salmão</p><div class="row" style="justify-content:space-between;margin-top:12px"><b class="price" style="margin:0">R$ 38,90</b><button class="btn btn--sm" data-add="Sachê">+</button></div></article>
+        <article class="card prod" data-reveal><div class="prod__img">🛏️</div><h3>Caminha nuvem M</h3><p class="small">Lavável · antialérgica</p><div class="row" style="justify-content:space-between;margin-top:12px"><b class="price" style="margin:0">R$ 159</b><button class="btn btn--sm" data-add="Caminha">+</button></div></article>
+      </div>
+    </div></section>
+
+    <section class="sec" id="racao"><div class="wrap">
+      <div class="card calc" data-reveal>
+        <div>
+          <span class="eyebrow" style="color:#fff">Assinatura de ração · 10% off</span>
+          <h2 class="h2" style="color:#fff">A ração chega <u>antes</u> de acabar.</h2>
+          <p class="muted mt">A gente calcula quanto seu pet come e programa a entrega sozinho.</p>
+          <label class="field mt">Peso do pet: <b id="kgV" style="color:#fff"></b><input type="range" id="kg" min="2" max="45" value="12"></label>
+          <p class="field mt">Tamanho do pacote</p>
+          <div class="chips" data-group="saco" id="saco"><button class="opt" data-value="3">3 kg</button><button class="opt" data-value="10">10 kg</button><button class="opt is-on" data-value="15">15 kg</button></div>
+        </div>
+        <div class="out">
+          <span class="muted small">Seu pet come cerca de</span><strong id="gDia">0 g</strong><span class="muted small">por dia · o pacote dura</span>
+          <strong id="dura" style="margin-top:10px">0 dias</strong>
+          <p class="mt" style="margin-top:16px">Próxima entrega: <b id="prox"></b></p>
+          <button class="btn btn--block mt" style="margin-top:18px" data-assina>Assinar com 10% off</button>
+        </div>
+      </div>
+    </div></section>
+    <footer class="foot"><div class="wrap"><span>© Bicho Feliz Pet Spa · demo fictícia</span><span>Rua das Patinhas, 120 · seg a sáb 8h–19h</span></div></footer>
+  </section>
+
+  <!-- ===================== AGENDAR ===================== -->
+  <section class="screen" id="agendar" data-label="Agendar banho" data-label-en="Grooming booking" data-label-es="Reservar baño">
+    <div class="sec"><div class="wrap wrap--narrow">
+      <div class="head center"><span class="eyebrow">Leva 1 minuto</span><h2 class="h2">Agende o <em>banho</em></h2></div>
+      <div class="card" data-wizard>
+        <div class="steps"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="step">
+          <h3 class="step__title">Quem vem tomar banho?</h3>
+          <div class="opts" data-group="porte" data-required id="porte">
+            <button class="opt" data-value="Pequeno" data-m="1"><span style="font-size:30px">🐕</span><span><b>Pequeno</b><small>até 10 kg</small></span></button>
+            <button class="opt" data-value="Médio" data-m="1.3"><span style="font-size:30px">🐕‍🦺</span><span><b>Médio</b><small>10 a 25 kg</small></span></button>
+            <button class="opt" data-value="Grande" data-m="1.7"><span style="font-size:30px">🦮</span><span><b>Grande</b><small>mais de 25 kg</small></span></button>
+            <button class="opt" data-value="Gato" data-m="1.2"><span style="font-size:30px">🐈</span><span><b>Gato</b><small>banho com calma</small></span></button>
+          </div>
+          <div class="step__nav"><span></span><button class="btn" data-next>Continuar →</button></div>
+        </div>
+        <div class="step">
+          <h3 class="step__title">Serviços</h3>
+          <div class="opts" data-group="serv" data-multi data-required id="servP">
+            <button class="opt" data-value="Banho" data-price="60"><span><b>Banho</b><small>shampoo neutro + perfume</small></span></button>
+            <button class="opt" data-value="Tosa" data-price="45"><span><b>Tosa completa</b><small>tesoura ou máquina</small></span></button>
+            <button class="opt" data-value="Hidratação" data-price="30"><span><b>Hidratação</b><small>pelos macios por semanas</small></span></button>
+            <button class="opt" data-value="Unhas" data-price="15"><span><b>Corte de unhas</b><small>+ limpeza de ouvidos</small></span></button>
+          </div>
+          <div class="step__nav"><button class="btn btn--ghost" data-prev>← Voltar</button><span class="row"><span class="muted">Total <b style="color:var(--accent);font:600 22px var(--font-d)" class="pTot">R$ 0</b></span><button class="btn" data-next>Continuar →</button></span></div>
+        </div>
+        <div class="step">
+          <h3 class="step__title">Quando e como?</h3>
+          <div class="opts" data-group="leva" data-required style="grid-template-columns:1fr 1fr">
+            <button class="opt is-on" data-value="Leva e traz"><span style="font-size:26px">🚗</span><span><b>Leva e traz</b><small>grátis até 5 km</small></span></button>
+            <button class="opt" data-value="Levo e busco"><span style="font-size:26px">🏃</span><span><b>Eu levo</b><small>aguarde no café</small></span></button>
+          </div>
+          <div class="slots mt" data-group="dia" data-required id="diasP"></div>
+          <div class="slots mt" data-group="hora" data-required>
+            <button class="opt">08:00</button><button class="opt" disabled>09:00</button><button class="opt">10:30</button><button class="opt">13:00</button><button class="opt" disabled>14:30</button><button class="opt">16:00</button>
+          </div>
+          <div class="step__nav"><button class="btn btn--ghost" data-prev>← Voltar</button><button class="btn" data-next>Continuar →</button></div>
+        </div>
+        <div class="step">
+          <h3 class="step__title">Seus dados</h3>
+          <div class="form"><label class="field">Nome do pet<input class="input" name="pet" required placeholder="Ex.: Thor"></label><label class="field">Seu WhatsApp<input class="input" name="fone" required placeholder="(00) 90000-0000"></label></div>
+          <dl class="summary mt"><div><dt>Porte</dt><dd data-show="porte"></dd></div><div><dt>Serviços</dt><dd data-show="serv"></dd></div><div><dt>Quando</dt><dd><span data-show="dia"></span> · <span data-show="hora"></span></dd></div><div><dt>Transporte</dt><dd data-show="leva"></dd></div><div><dt>Total</dt><dd class="pTot" style="color:var(--accent)"></dd></div></dl>
+          <div class="step__nav"><button class="btn btn--ghost" data-prev>← Voltar</button><button class="btn" data-next>Confirmar</button></div>
+        </div>
+        <div class="step done">
+          <svg class="check" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><path d="M30 52l13 13 27-29"/></svg>
+          <h3 class="step__title" style="font-size:34px">Agendado! 🐾</h3>
+          <p class="muted"><span data-show="pet"></span> vem <span data-show="dia"></span> às <span data-show="hora"></span>.</p>
+          <p class="muted small mt">Você recebe fotos durante o banho e um aviso quando estiver pronto.</p>
+          <div class="row mt" style="justify-content:center"><a class="btn" href="#aovivo">Acompanhar ao vivo →</a><button class="btn btn--ghost" data-restart>Agendar outro pet</button></div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ===================== PET AO VIVO ===================== -->
+  <section class="screen" id="aovivo" data-label="Pet ao vivo" data-label-en="Live pet tracker" data-label-es="Mascota en vivo">
+    <div class="wrap" style="padding-top:34px;padding-bottom:50px">
+      <div class="dash">
+        <div class="panel" data-reveal>
+          <div class="panel__h"><h3 style="font-size:24px">O Thor está no spa 🛁</h3><span class="badge badge--ok" id="stBadge">em andamento</span></div>
+          <div class="cam"><span class="cam__live" id="camT">AO VIVO</span><span class="cam__e" id="camE">🐶</span>
+            <i class="bub" style="--s:24px;--l:30%;--dl:0s"></i><i class="bub" style="--s:16px;--l:58%;--dl:1s"></i><i class="bub" style="--s:30px;--l:70%;--dl:2s"></i>
+            <div class="cam__cap" id="camC"></div></div>
+          <div class="tl" id="tl"></div>
+          <button class="btn btn--block" id="tlBtn" hidden>Pronto! Motorista saindo · ver rota 🚗</button>
+        </div>
+        <div style="display:grid;gap:18px">
+          <div class="panel" data-reveal>
+            <div class="panel__h"><h3>Carteirinha de vacinação</h3><span class="muted small">Thor · Shih-tzu · 4 anos</span></div>
+            <div class="list" id="vac"></div>
+          </div>
+          <div class="panel" data-reveal>
+            <div class="panel__h"><h3>Peso (kg)</h3><span class="badge badge--ok">saudável</span></div>
+            <div class="bars" style="height:120px" data-bars="6.8,7.1,7.4,7.2,7.3,7.0" data-labels="mai,jun,jul,ago,set,out" data-suf=" kg"></div>
+          </div>
+          <div class="panel row" data-reveal style="gap:18px">
+            <div class="ring" data-p="72" style="--s:86px;--w:9px;--c:var(--accent-2)"><b style="font:600 20px var(--font-d)">22d</b></div>
+            <div style="flex:1"><b>Ração Premium 15 kg</b><p class="muted small" style="margin-top:4px">Próxima entrega em 22 dias · assinatura ativa</p><button class="btn btn--ghost btn--sm" style="margin-top:10px" data-antecipa>Antecipar entrega</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAINEL ADMIN ===================== -->
+  <section class="screen" id="admin" data-label="Painel admin" data-label-en="Admin panel" data-label-es="Panel admin">
+    <div class="app">
+      <aside class="app__side">
+        <a href="#site" class="logo"><b style="width:32px;height:32px;font-size:16px">🐾</b> Bicho Feliz</a>
+        <a data-view="p-fluxo" class="is-on"><i>🛁</i>Fluxo do dia</a>
+        <a data-view="p-pets"><i>🐶</i>Pets &amp; tutores</a>
+        <a data-view="p-loja"><i>📦</i>Loja &amp; estoque</a>
+        <span class="spacer"></span>
+        <a href="#aovivo"><i>📸</i>Pet ao vivo</a>
+      </aside>
+      <div class="app__main">
+        <div class="app__top">
+          <div><p class="muted small" id="pHoje"></p><h2 data-view-title>Fluxo do dia</h2></div>
+          <div class="row"><button class="cmdk-btn" data-cmdk>⌕ <span class="t">Buscar pet, tutor, produto…</span><span class="kbd">⌘K</span></button><button class="bell" data-n="3" data-drawer="#p-notif" aria-label="Notificações">🔔</button><span class="avatar">CA</span></div>
+        </div>
+
+        <div class="view" id="p-fluxo">
+          <div class="kpis">
+            <div class="kpi"><small>Pets hoje</small><strong data-count="18">0</strong><em>4 encaixes pelo WhatsApp</em></div>
+            <div class="kpi"><small>Faturamento</small><strong data-count="2140" data-pre="R$ ">0</strong><em>▲ 11% vs. semana passada</em></div>
+            <div class="kpi"><small>Leva e traz</small><strong data-count="7">0</strong><em>rota otimizada · 23 km</em></div>
+          </div>
+          <div class="toolbar"><span class="muted small">Arraste os cards (ou toque em →). Em “Pronto” o tutor é avisado no WhatsApp.</span></div>
+          <div class="kanban" id="kb">
+            <div class="kcol"><h4>Check-in <span data-n></span></h4><div class="kcards"></div></div>
+            <div class="kcol"><h4>No banho <span data-n></span></h4><div class="kcards"></div></div>
+            <div class="kcol"><h4>Na tosa <span data-n></span></h4><div class="kcards"></div></div>
+            <div class="kcol" id="kPronto"><h4>Pronto <span data-n></span></h4><div class="kcards"></div></div>
+          </div>
+        </div>
+
+        <div class="view" id="p-pets">
+          <div class="toolbar">
+            <input class="input" data-filter="#petL" placeholder="Buscar pet ou tutor…" aria-label="Buscar pet ou tutor">
+            <div class="chips" data-group="pf" data-chips="#petL"><button class="opt is-on" data-value="all">Todos</button><button class="opt" data-value="vac">Vacina vencendo</button><button class="opt" data-value="banho">Sem banho +30 dias</button><button class="opt" data-value="racao">Assinantes de ração</button></div>
+          </div>
+          <div class="panel"><div class="list" id="petL"></div></div>
+        </div>
+
+        <div class="view" id="p-loja">
+          <div class="kpis">
+            <div class="kpi"><small>Vendas da loja hoje</small><strong data-count="1386" data-pre="R$ ">0</strong><em>32 pedidos · 9 pelo site</em></div>
+            <div class="kpi"><small>Assinaturas de ração</small><strong data-count="64">0</strong><em>R$ 12.800/mês recorrente</em></div>
+            <div class="kpi"><small>Itens abaixo do mínimo</small><strong id="lowN">0</strong><em style="color:var(--warn)">repor esta semana</em></div>
+          </div>
+          <div class="dash">
+            <div class="panel"><div class="panel__h"><h3>Estoque</h3><span class="muted small">reposição em 1 clique</span></div><div id="stock"></div></div>
+            <div class="panel">
+              <div class="panel__h"><h3>Entregas de ração · esta semana</h3></div>
+              <div class="list">
+                <div class="todo"><span class="box"></span><div><b>Mariana L. · Golden 15 kg</b><div class="muted small">seg · 9h–12h · Pix recorrente</div></div></div>
+                <div class="todo"><span class="box"></span><div><b>Rafael S. · Gato castrado 10 kg</b><div class="muted small">ter · 14h–18h · cartão</div></div></div>
+                <div class="todo"><span class="box"></span><div><b>Juliana P. · Filhote 3 kg</b><div class="muted small">qua · 9h–12h · cartão</div></div></div>
+                <div class="todo"><span class="box"></span><div><b>Bruno T. · Premium 15 kg</b><div class="muted small">sex · 14h–18h · Pix recorrente</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <template id="p-notif" data-title="Notificações">
+      <div class="list">
+        <div><span class="icon">📅</span><div><b>Novo agendamento pelo site</b><div class="muted small">Luna · banho + hidratação · amanhã 10h30</div></div></div>
+        <div><span class="icon">💉</span><div><b>3 vacinas vencem esta semana</b><div class="muted small">lembretes automáticos enviados</div></div></div>
+        <div><span class="icon">📦</span><div><b>Ração Premium 15 kg acabando</b><div class="muted small">4 unidades · 6 assinaturas na semana</div></div></div>
+      </div>
+    </template>
+  </section>
+
+</main></div>
+<script src="kit.js"></script>
+<script>
+(function () {
+  var D = window.Demo, $ = D.$, $$ = D.$$, esc = D.esc;
+  var dm = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short" });
+
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest("[data-add]");
+    if (a) D.toast(a.dataset.add + " na sacola 🛍️");
+    if (e.target.closest("[data-assina]")) D.toast("Assinatura criada · entregas automáticas com 10% off 🐾");
+    if (e.target.closest("[data-antecipa]")) D.toast("Entrega antecipada para amanhã 🚚");
+  });
+
+  /* ração: energia de manutenção (70·kg^0,75 × 1,6) ÷ 3,6 kcal/g de ração seca */
+  function racao(kg) { return Math.round(70 * Math.pow(kg, 0.75) * 1.6 / 3.6); }
+  console.assert(racao(10) === 175, "racao(10kg) deveria ser 175 g/dia", racao(10));
+  function calc() {
+    var kg = +$("#kg").value, saco = +($("#saco .is-on") || { dataset: { value: 15 } }).dataset.value;
+    var g = racao(kg), dias = Math.floor(saco * 1000 / g), d = new Date();
+    d.setDate(d.getDate() + dias - 3); // entrega 3 dias antes de acabar
+    $("#kgV").textContent = kg + " kg";
+    $("#gDia").textContent = g + " g";
+    $("#dura").textContent = dias + " dias";
+    $("#prox").textContent = dm.format(d).replace(".", "");
+  }
+  $("#kg").addEventListener("input", calc);
+  $("#saco").addEventListener("pick", calc);
+  calc();
+
+  /* agendamento: preço por porte */
+  function total() {
+    var p = $("#porte .is-on"), m = p ? +p.dataset.m : 1;
+    var s = $$("#servP .is-on").reduce(function (t, o) { return t + +o.dataset.price; }, 0);
+    var v = Math.round(s * m / 5) * 5;
+    $$(".pTot").forEach(function (n) { n.textContent = "R$ " + v; });
+  }
+  $("#porte").addEventListener("pick", total);
+  $("#servP").addEventListener("pick", total);
+  var d = new Date(), n = 0, f = new Intl.DateTimeFormat("pt-BR", { weekday: "short", day: "2-digit" });
+  while (n < 6) { if (d.getDay() !== 0) { $("#diasP").insertAdjacentHTML("beforeend", '<button class="opt">' + (n ? f.format(d).replace(".", "").replace(",", "") : "Hoje") + "</button>"); n++; } d.setDate(d.getDate() + 1); }
+
+  /* pet ao vivo: etapas avançam sozinhas */
+  var ST = [["Check-in", "🐶", "Chegou todo animado e já ganhou um petisco", "09:12"], ["Banho", "🛁", "Shampoo hipoalergênico, água morninha", "09:20"],
+    ["Secagem", "💨", "Secador silencioso, sem estresse", "09:48"], ["Tosa", "✂️", "Tosa bebê, do jeitinho que você pediu", "10:05"], ["Pronto!", "🎀", "Cheiroso e de lacinho novo. Saindo para entrega!", "10:40"]];
+  var stage = D.shot ? 3 : 0, tlT;
+  function renderTl() {
+    $("#tl").innerHTML = ST.map(function (s, i) {
+      return '<div class="' + (i <= stage ? "on" : "") + (i === stage ? " cur" : "") + '"><i>' + (i < stage ? "✓" : s[1]) + "</i><div><b>" + s[0] + '</b><span class="small">' + (i <= stage ? s[3] + " · " + s[2] : "aguardando") + "</span></div></div>";
+    }).join("");
+    var e = $("#camE"); e.textContent = ST[stage][1]; e.classList.remove("swap"); void e.offsetWidth; e.classList.add("swap");
+    $("#camC").textContent = "📸 " + ST[stage][2];
+    $("#camT").textContent = "AO VIVO · " + ST[stage][3];
+    var done = stage === ST.length - 1;
+    $("#tlBtn").hidden = !done;
+    $("#stBadge").textContent = done ? "pronto" : "em andamento";
+  }
+  function play() {
+    clearInterval(tlT);
+    tlT = setInterval(function () { if (stage < ST.length - 1) { stage++; renderTl(); if (stage === ST.length - 1) D.toast("WhatsApp: “O Thor está pronto e cheiroso! 🐾”"); } else clearInterval(tlT); }, 3500);
+  }
+  document.addEventListener("demo:screen", function (e) { if (e.detail === "aovivo" && !D.shot) { stage = 0; renderTl(); play(); } });
+  if (location.hash === "#aovivo" && !D.shot) play();
+  $("#tlBtn").addEventListener("click", function () { D.toast("Motorista Diego · chega em 12 min 🚗"); });
+  renderTl();
+
+  var VAC = [["V10 (polivalente)", "aplicada 12/03 · reforço em mar/2027", "ok"], ["Antirrábica", "vence em 9 dias", "warn"], ["Giárdia", "vencida há 3 dias", "bad"], ["Gripe canina", "aplicada 08/08 · em dia", "ok"]];
+  $("#vac").innerHTML = VAC.map(function (v) {
+    return '<div><span style="font-size:20px">💉</span><div style="flex:1"><b>' + v[0] + '</b><div class="muted small">' + v[1] + "</div></div>" +
+      (v[2] === "ok" ? '<span class="badge badge--ok">em dia</span>' : '<button class="btn btn--sm" data-vac="' + esc(v[0]) + '">Agendar dose</button>') + "</div>";
+  }).join("");
+  $("#vac").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-vac]"); if (!b) return;
+    b.outerHTML = '<span class="badge badge--info">agendada</span>';
+    D.toast(b.dataset.vac + " agendada para sábado 9h 💉");
+  });
+
+  /* ===================== Painel admin ===================== */
+  $("#pHoje").textContent = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long" }).format(new Date());
+
+  // [coluna, emoji, pet, raça, serviço, tutor, flags]
+  var FL = [[0, "🐕", "Bolinha", "Poodle", "Banho + tosa", "Carla M.", "🚗"], [0, "🐈", "Mia", "SRD", "Banho", "Pedro A.", ""], [0, "🦮", "Zeus", "Golden", "Banho + hidratação", "Mariana L.", "🚗"],
+    [1, "🐶", "Thor", "Shih-tzu", "Banho + tosa bebê", "Ana P.", "📸"], [1, "🐕", "Pipoca", "Spitz", "Banho", "Lucas R.", "⚠ alergia"],
+    [2, "🐩", "Luna", "Poodle", "Tosa na tesoura", "Juliana P.", "🚗"], [3, "🐕‍🦺", "Max", "Border collie", "Banho", "Rafael S.", ""]];
+  var cols = $$("#kb .kcards");
+  FL.forEach(function (c) {
+    cols[c[0]].insertAdjacentHTML("beforeend", '<div class="kcard" draggable="true" data-pet="' + esc(c[2]) + '" data-tutor="' + esc(c[5]) + '"><span class="pe">' + c[1] + "</span><b>" + esc(c[2]) + "</b>" + esc(c[3]) + " · " + esc(c[4]) +
+      '<div class="fl"><span>' + esc(c[5]) + "</span>" + (c[6] ? '<span class="' + (c[6].indexOf("alergia") >= 0 ? "al" : "") + '">' + c[6] + "</span>" : "") + '</div><footer><span class="small">' + (8 + FL.indexOf(c)) + ':00</span><button class="kadv" aria-label="Avançar">→</button></footer></div>');
+  });
+  D.kcount($("#kb"));
+  $("#kb").addEventListener("kmove", function (e) {
+    var c = e.target;
+    if (e.detail.to.id === "kPronto") e.detail.msg = "WhatsApp para " + c.dataset.tutor + ": “Tudo pronto com " + c.dataset.pet + "! Cheirinho de banho novo 🐾”";
+  });
+
+  // [emoji, pet, raça, idade, tutor, tags, último banho, pesos]
+  var PETS = [["🐶", "Thor", "Shih-tzu", "4 anos", "Ana P.", "vac racao", "hoje", "6.8,7.1,7.4,7.2,7.3,7.0"], ["🦮", "Zeus", "Golden", "6 anos", "Mariana L.", "racao", "hoje", "31,32,32.5,33,32,31.5"],
+    ["🐈", "Mia", "SRD", "2 anos", "Pedro A.", "", "hoje", "3.9,4.1,4.2,4.2,4.3,4.4"], ["🐕", "Fred", "Beagle", "8 anos", "Sônia F.", "banho vac", "há 41 dias", "14,14.6,15.2,15.8,16.1,16.5"],
+    ["🐩", "Luna", "Poodle", "3 anos", "Juliana P.", "racao", "hoje", "5.2,5.1,5.3,5.2,5.4,5.3"], ["🐕", "Nina", "Dachshund", "5 anos", "Otávio B.", "banho", "há 36 dias", "8,8.2,8.1,8.4,8.3,8.5"],
+    ["🐈‍⬛", "Salem", "SRD", "7 anos", "Rafael S.", "vac racao", "há 12 dias", "5.5,5.4,5.6,5.5,5.3,5.2"]];
+  $("#petL").innerHTML = PETS.map(function (p, i) {
+    return '<div class="pet-row" data-tag="' + p[5] + '" data-i="' + i + '"><span class="pet-ava">' + p[0] + '</span><div style="flex:1"><b>' + esc(p[1]) + ' <span class="muted small" style="font-weight:600">' + esc(p[2]) + " · " + p[3] + '</span></b><div class="muted small">tutor ' + esc(p[4]) + " · último banho " + p[6] + "</div></div>" +
+      (p[5].indexOf("vac") >= 0 ? '<span class="badge badge--warn">vacina</span>' : "") + (p[5].indexOf("banho") >= 0 ? '<span class="badge badge--bad">sumido</span>' : "") + (p[5].indexOf("racao") >= 0 ? '<span class="badge badge--info">ração</span>' : "") + "</div>";
+  }).join("");
+  $("#petL").addEventListener("click", function (e) {
+    var r = e.target.closest(".pet-row"); if (!r) return;
+    var p = PETS[+r.dataset.i];
+    D.drawer(p[0] + " " + p[1], '<dl class="summary"><div><dt>Raça</dt><dd>' + esc(p[2]) + "</dd></div><div><dt>Idade</dt><dd>" + p[3] + "</dd></div><div><dt>Tutor</dt><dd>" + esc(p[4]) + "</dd></div><div><dt>Último banho</dt><dd>" + p[6] + "</dd></div></dl>" +
+      '<div class="panel"><div class="panel__h"><h3>Peso (kg)</h3></div><div class="bars" style="height:110px" data-bars="' + p[7] + '" data-labels="mai,jun,jul,ago,set,out" data-suf=" kg"></div></div>' +
+      '<p class="muted small">📝 ' + (p[5].indexOf("vac") >= 0 ? "Vacina vence esta semana. " : "") + "Prefere tosa curta, fica nervoso com secador alto." + "</p>" +
+      '<div class="row"><button class="btn btn--sm" data-msg="Lembrete enviado para ' + esc(p[4]) + ' 💬">Enviar lembrete</button><button class="btn btn--ghost btn--sm" data-msg="Banho agendado para ' + esc(p[1]) + ' 🛁">Agendar banho</button></div>');
+  });
+  document.addEventListener("click", function (e) { var m = e.target.closest("[data-msg]"); if (m) { D.closeLayer(); D.toast(m.dataset.msg); } });
+
+  // [produto, qtd, máximo]
+  var ST2 = [["Ração Premium 15 kg", 4, 30], ["Ração gato castrado 10 kg", 11, 20], ["Shampoo hipoalergênico 5 L", 2, 12], ["Petisco natural 200g", 46, 60], ["Areia sílica 1,6 kg", 7, 40], ["Tapete higiênico 30 un.", 22, 30]];
+  function stock() {
+    var low = 0;
+    $("#stock").innerHTML = ST2.map(function (s, i) {
+      var p = s[1] / s[2] * 100, isLow = p < 25; if (isLow) low++;
+      return '<div class="srow"><b>' + esc(s[0]) + '</b><div class="bar"><i style="--v:' + p + "%;--c:" + (isLow ? "var(--bad)" : "var(--accent-2)") + '"></i></div><span class="muted small">' + s[1] + "/" + s[2] + "</span>" +
+        (isLow ? '<button class="btn btn--sm" data-repor="' + i + '">Repor</button>' : '<span class="badge badge--ok">ok</span>') + "</div>";
+    }).join("");
+    $("#lowN").textContent = low;
+  }
+  $("#stock").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-repor]"); if (!b) return;
+    var s = ST2[+b.dataset.repor], prev = s[1];
+    s[1] = s[2]; stock();
+    D.toast("Pedido enviado ao fornecedor: " + s[0], false, function () { s[1] = prev; stock(); });
+  });
+  stock();
+
+  D.cmd("Ver pets com vacina vencendo", function () { D.go("admin"); $('[data-view="p-pets"]').click(); $('[data-chips="#petL"] [data-value="vac"]').click(); });
+  D.cmd("Repor estoque", function () { D.go("admin"); $('[data-view="p-loja"]').click(); });
+})();
+</script>
+</body>
+</html>

@@ -17,17 +17,17 @@
       views: "Admin panel", actions: "Actions", search: "Search screens and actions…", none: "Nothing found", nav: "navigate", open: "open", close: "close",
       undo: "Undo", moved: "Moved to", done: "Marked as done", saved: "Saved",
       wa: "Get in touch", waMsg: "Hi Jeffersom! I saw the {s} demo on your portfolio and I'd like a project like this.",
-      sectors: { advocacia: "Law firm", contabilidade: "Accounting firm", restaurante: "Restaurant", clinica: "Dental clinic", barbearia: "Barbershop", academia: "Gym & fitness", game: "Mini game" } },
+      sectors: { advocacia: "Law firm", contabilidade: "Accounting firm", restaurante: "Restaurant", clinica: "Dental clinic", barbearia: "Barbershop", academia: "Gym & fitness", petshop: "Pet shop", automacao: "Smart automations", game: "Mini game" } },
     pt: { back: "Voltar ao portfólio", live: "Demo ao vivo · dados fictícios", cta: "Quero um assim", screens: "Telas", pick: "Escolha uma opção para continuar",
       views: "Painel admin", actions: "Ações", search: "Buscar telas e ações…", none: "Nada encontrado", nav: "navegar", open: "abrir", close: "fechar",
       undo: "Desfazer", moved: "Movido para", done: "Concluído", saved: "Salvo",
       wa: "Entre em contato", waMsg: "Olá, Jeffersom! Vi a demo de {s} no seu portfólio e quero um projeto assim.",
-      sectors: { advocacia: "Advocacia", contabilidade: "Contabilidade", restaurante: "Restaurante", clinica: "Clínica odontológica", barbearia: "Barbearia", academia: "Academia", game: "Mini game" } },
+      sectors: { advocacia: "Advocacia", contabilidade: "Contabilidade", restaurante: "Restaurante", clinica: "Clínica odontológica", barbearia: "Barbearia", academia: "Academia", petshop: "Pet shop", automacao: "Automações inteligentes", game: "Mini game" } },
     es: { back: "Volver al portafolio", live: "Demo en vivo · datos ficticios", cta: "Quiero uno así", screens: "Pantallas", pick: "Elige una opción para continuar",
       views: "Panel admin", actions: "Acciones", search: "Buscar pantallas y acciones…", none: "Nada encontrado", nav: "navegar", open: "abrir", close: "cerrar",
       undo: "Deshacer", moved: "Movido a", done: "Completado", saved: "Guardado",
       wa: "Contáctame", waMsg: "¡Hola, Jeffersom! Vi la demo de {s} en tu portafolio y quiero un proyecto así.",
-      sectors: { advocacia: "Despacho de abogados", contabilidade: "Contabilidad", restaurante: "Restaurante", clinica: "Clínica dental", barbearia: "Barbería", academia: "Gimnasio", game: "Mini juego" } }
+      sectors: { advocacia: "Despacho de abogados", contabilidade: "Contabilidad", restaurante: "Restaurante", clinica: "Clínica dental", barbearia: "Barbería", academia: "Gimnasio", petshop: "Tienda de mascotas", automacao: "Automatizaciones inteligentes", game: "Mini juego" } }
   }[LANG];
 
   var body = document.body;

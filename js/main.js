@@ -208,6 +208,22 @@
         '<span class="sol__more">' + esc(t("solutions.open")) + ' <span aria-hidden="true">→</span></span></div>';
       box.appendChild(a);
     });
+    var ab = $("#autos"); if (!ab) return;
+    ab.innerHTML = "";
+    (D.automations || []).forEach(function (s) {
+      var c = t("automations.items." + s.id) || {};
+      var a = el("a", "sol");
+      a.href = "demos/automacao.html#" + s.screen;
+      a.style.setProperty("--accent", s.accent);
+      a.setAttribute("data-reveal", "");
+      a.innerHTML =
+        '<div class="sol__shot"><img src="assets/auto-' + s.id + '.jpg" alt="" loading="lazy" /></div>' +
+        '<div class="sol__body"><span class="sol__icon" aria-hidden="true">' + s.icon + '</span>' +
+        '<h3 class="sol__title">' + esc(c.name) + '</h3><p class="sol__desc">' + esc(c.desc) + '</p>' +
+        '<div class="sol__screens">' + (c.tags || []).map(function (x) { return "<span>" + esc(x) + "</span>"; }).join("") + "</div>" +
+        '<span class="sol__more">' + esc(t("solutions.open")) + ' <span aria-hidden="true">→</span></span></div>';
+      ab.appendChild(a);
+    });
   }
 
   /* ---------------- Work (filters + grid) ---------------- */

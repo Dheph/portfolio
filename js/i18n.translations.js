@@ -63,7 +63,19 @@ window.I18N.pt = {
       clinica:       { name: "Clínica odontológica", desc: "Tratamentos, agendamento online 24h com calendário e a agenda do dia da clínica.", screens: ["Site", "Agendamento", "Painel admin"] },
       barbearia:     { name: "Barbearia", desc: "Tabela de preços, agendamento por barbeiro, cartão fidelidade, assinaturas e fila ao vivo.", screens: ["Site", "Agendamento", "Clube fidelidade", "Painel admin"] },
       academia:      { name: "Academia", desc: "Planos e grade de aulas, app do aluno com treino e evolução, e check-in por QR.", screens: ["Site", "App do aluno", "Check-in", "Painel admin"] },
+      petshop:       { name: "Pet shop", desc: "Agendamento de banho e tosa com preço por porte, pet ao vivo com fotos, carteirinha de vacinas e assinatura de ração que chega antes de acabar.", screens: ["Site", "Banho & tosa", "Pet ao vivo", "Painel admin"] },
       game:          { name: "Nebula Siege · mini game", desc: "Um shooter arcade feito do zero em canvas: ondas, chefes, upgrades e partículas. Experiências interativas também estão no cardápio.", screens: ["Canvas 2D", "Toque & teclado", "Sem engine"] }
+    }
+  },
+
+  automations: {
+    tag: "Novo · para pequenas e médias empresas",
+    title: "Automações inteligentes",
+    lead: "Menos copiar e colar, mais vendas: atendimento no WhatsApp que nunca dorme, leads novos todo dia e follow-up que não esquece ninguém. Teste cada um ao vivo.",
+    items: {
+      whatsapp: { name: "Atendimento com IA no WhatsApp", desc: "Responde em segundos, agenda direto na sua agenda, consulta pedidos e passa para um humano com todo o histórico.", tags: ["Resposta 24h", "Agendamento", "Lembretes", "Atendente humano"] },
+      leads:    { name: "Busca de leads", desc: "Encontra empresas do seu nicho na sua região, enriquece com site, redes e telefone e dá nota de oportunidade para cada uma.", tags: ["Dados públicos", "Score de oportunidade", "Planilha", "Direto no CRM"] },
+      painel:   { name: "Follow-up, CRM e rotinas", desc: "Sequências de mensagens, pipeline de vendas, cobrança Pix e pedido de avaliação rodando sozinhos, com painel ao vivo.", tags: ["Follow-up", "Pipeline", "Pix", "Resultados"] }
     }
   },
 
@@ -332,7 +344,19 @@ window.I18N.es = {
       clinica:       { name: "Clínica dental", desc: "Tratamientos, agenda online 24h con calendario y la agenda diaria de la clínica.", screens: ["Sitio", "Agendar cita", "Panel admin"] },
       barbearia:     { name: "Barbería", desc: "Lista de precios, reservas por barbero, tarjeta de fidelidad, suscripciones y fila en vivo.", screens: ["Sitio", "Reservas", "Club de fidelidad", "Panel admin"] },
       academia:      { name: "Gimnasio", desc: "Planes y horario de clases, app del alumno con entrenamientos y progreso, y check-in con QR.", screens: ["Sitio", "App del alumno", "Check-in", "Panel admin"] },
+      petshop:       { name: "Tienda de mascotas", desc: "Reserva de baño y peluquería con precio por tamaño, mascota en vivo con fotos, cartilla de vacunas y suscripción de alimento que llega antes de que se acabe.", screens: ["Sitio", "Baño y peluquería", "Mascota en vivo", "Panel admin"] },
       game:          { name: "Nebula Siege · mini juego", desc: "Un shooter arcade hecho desde cero en canvas: oleadas, jefes, mejoras y partículas. Las experiencias interactivas también están en el menú.", screens: ["Canvas 2D", "Táctil y teclado", "Sin motor"] }
+    }
+  },
+
+  automations: {
+    tag: "Nuevo · para pequeñas y medianas empresas",
+    title: "Automatizaciones inteligentes",
+    lead: "Menos copiar y pegar, más ventas: atención por WhatsApp que nunca duerme, leads nuevos cada día y seguimiento que no olvida a nadie. Prueba cada una en vivo.",
+    items: {
+      whatsapp: { name: "Asistente con IA en WhatsApp", desc: "Responde en segundos, agenda en tu calendario, consulta pedidos y pasa a una persona con todo el historial.", tags: ["Respuesta 24h", "Reservas", "Recordatorios", "Atención humana"] },
+      leads:    { name: "Búsqueda de leads", desc: "Encuentra empresas de tu nicho en tu región, las enriquece con sitio, redes y teléfono y puntúa cada oportunidad.", tags: ["Datos públicos", "Puntuación", "Exportar", "Directo al CRM"] },
+      painel:   { name: "Seguimiento, CRM y rutinas", desc: "Secuencias de mensajes, pipeline de ventas, cobros por Pix y pedidos de reseña funcionando solos, con panel en vivo.", tags: ["Seguimiento", "Pipeline", "Pix", "Resultados"] }
     }
   },
 

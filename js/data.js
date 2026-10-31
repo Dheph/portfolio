@@ -24,7 +24,15 @@ window.DATA = {
     { id: "clinica", accent: "#0ea5e9", icon: "🦷" },
     { id: "barbearia", accent: "#e0a526", icon: "✂" },
     { id: "academia", accent: "#c6ff3d", icon: "⚡" },
+    { id: "petshop", accent: "#ff7a59", icon: "🐾" },
     { id: "game", accent: "#b26bff", icon: "◆", wide: true }
+  ],
+
+  /* área de automações: cada produto abre uma tela de demos/automacao.html (miniatura em assets/auto-<id>.jpg) */
+  automations: [
+    { id: "whatsapp", screen: "whats", accent: "#25d366", icon: "💬" },
+    { id: "leads", screen: "leads", accent: "#7c5cff", icon: "🔎" },
+    { id: "painel", screen: "admin", accent: "#f59e0b", icon: "⚡" }
   ],
 
   projects: [
