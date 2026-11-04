@@ -26,7 +26,8 @@ window.DATA = {
     { id: "academia", accent: "#c6ff3d", icon: "⚡" },
     { id: "petshop", accent: "#ff7a59", icon: "🐾" },
     { id: "imobiliaria", accent: "#c8743f", icon: "⌂" },
-    { id: "game", accent: "#b26bff", icon: "◆" }
+    { id: "moda", accent: "#9b3b32", icon: "✦" },
+    { id: "game", accent: "#b26bff", icon: "◆", wide: true }
   ],
 
   /* área de automações: cada produto abre uma tela de demos/automacao.html (miniatura em assets/auto-<id>.jpg) */

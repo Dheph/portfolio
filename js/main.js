@@ -196,7 +196,7 @@
     box.innerHTML = "";
     (D.solutions || []).forEach(function (s) {
       var c = t("solutions.items." + s.id) || {};
-      var a = el("a", "sol");
+      var a = el("a", "sol" + (s.wide ? " sol--wide" : ""));
       a.href = "demos/" + s.id + ".html";
       a.style.setProperty("--accent", s.accent);
       a.setAttribute("data-reveal", "");

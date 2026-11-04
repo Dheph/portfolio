@@ -1,0 +1,951 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Loja de moda — demo · Jeffersom Ribeiro</title>
+  <meta name="description" content="Demo navegável de loja de moda: vitrine, lookbook comprável, página de produto com guia de tamanho, provador virtual com check do look, checkout com Pix e painel admin. Dados fictícios." />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Jost:wght@300;400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="kit.css" />
+  <style>
+    :root {
+      --bg: #f6f1ea; --surface: #fffdf9; --surface-2: #efe7dc; --line: rgba(29,26,23,.12);
+      --fg: #1d1a17; --muted: #7a7067; --accent: #1d1a17; --accent-2: #9b3b32; --accent-ink: #f6f1ea;
+      --radius: 6px; --btn-r: 0px;
+      --font-d: "Bodoni Moda", Didot, Georgia, serif; --font-b: "Jost", system-ui, sans-serif;
+    }
+    .h1, .h2, .card h3, .step__title, .app__top h2, .panel__h h3, .kpi strong, .drawer__h h3 { font-weight: 400; letter-spacing: -.01em; }
+    em { color: var(--accent-2); font-style: italic; }
+    .eyebrow { color: var(--muted); font-weight: 500; letter-spacing: .28em; }
+    .btn { text-transform: uppercase; letter-spacing: .16em; font-size: 12.5px; font-weight: 500; padding: 16px 26px; }
+    .btn--sm { padding: 11px 16px; font-size: 11.5px; }
+    .btn--wine { background: var(--accent-2); border-color: var(--accent-2); color: #fff; }
+    .chips .opt, .seg .opt { border-radius: 0; }
+    .opt.is-on { box-shadow: none; }
+
+    /* barra de avisos + nav */
+    .ann { background: var(--fg); color: var(--bg); font: 400 12px/1 var(--font-b); letter-spacing: .14em; text-transform: uppercase; padding: 10px 0; }
+    .ann span::after { content: "✦"; margin-left: 48px; opacity: .6; }
+    .snav { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+    .snav .wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 70px; }
+    .snav nav { display: flex; gap: 26px; }
+    .snav nav button, .ic { border: 0; background: none; cursor: pointer; font: 400 13px var(--font-b); letter-spacing: .14em; text-transform: uppercase; color: var(--fg); padding: 6px 0; position: relative; }
+    .snav nav button::after { content: ""; position: absolute; left: 0; right: 100%; bottom: 0; height: 1px; background: currentColor; transition: right .35s var(--ease); }
+    .snav nav button:hover::after { right: 0; }
+    .snav nav .hot { color: var(--accent-2); }
+    .brand { border: 0; background: none; cursor: pointer; font: 400 30px/1 var(--font-d); letter-spacing: .32em; color: var(--fg); padding-left: .32em; }
+    .icons { display: flex; justify-content: flex-end; gap: 16px; align-items: center; }
+    .ic { font-size: 19px; letter-spacing: 0; text-transform: none; }
+    .ic[data-n]:not([data-n="0"])::after { content: attr(data-n); position: absolute; top: -4px; right: -10px; min-width: 18px; height: 18px; border-radius: 99px; background: var(--accent-2); color: #fff; font: 600 10.5px/18px var(--font-b); text-align: center; }
+    .ic.bump { animation: bump .5s var(--ease); }
+    @keyframes bump { 40% { transform: scale(1.35) rotate(-8deg); } }
+    .burger { display: none; }
+
+    /* hero editorial */
+    .hero { display: grid; grid-template-columns: 1.05fr .95fr; min-height: 640px; }
+    .hero__t { display: flex; flex-direction: column; justify-content: center; padding: 60px 56px; }
+    .hero .h1 { font-size: clamp(54px, 7.4cqi, 112px); line-height: .92; letter-spacing: -.03em; margin: 22px 0; }
+    .hero .h1 .ln { display: block; overflow: hidden; }
+    .hero .h1 .ln span { display: inline-block; animation: up 1.1s var(--ease) both; }
+    .hero .h1 .ln:nth-child(2) span { animation-delay: .12s; } .hero .h1 .ln:nth-child(3) span { animation-delay: .24s; }
+    @keyframes up { from { transform: translateY(105%); } }
+    .hero__m { position: relative; overflow: hidden; }
+    .hero__m img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hero__m img:first-child { animation: kb 14s ease-in-out infinite alternate; }
+    @keyframes kb { to { transform: scale(1.1) translate(-2%, 1%); } }
+    .hero__m .card2 { position: absolute; width: 38%; aspect-ratio: 3 / 4; left: 6%; bottom: 7%; object-fit: cover; border: 8px solid var(--bg); box-shadow: 0 30px 60px -20px rgba(0,0,0,.5); animation: floatC 7s ease-in-out infinite; inset: auto auto 7% 6%; height: auto; }
+    @keyframes floatC { 50% { transform: translateY(-14px) rotate(-1.5deg); } }
+    .tagp { position: absolute; right: 6%; top: 8%; padding: 14px 18px; background: var(--bg); font: 400 13px var(--font-b); letter-spacing: .1em; text-transform: uppercase; box-shadow: 0 20px 40px -20px rgba(0,0,0,.4); }
+    .tagp b { display: block; font: 400 28px var(--font-d); letter-spacing: 0; text-transform: none; color: var(--accent-2); }
+    .big-mq { padding: 26px 0; border-block: 1px solid var(--line); font: 400 clamp(40px, 6cqi, 78px)/1 var(--font-d); font-style: italic; }
+    .big-mq span::after { content: "·"; margin-left: 48px; color: var(--accent-2); }
+
+    /* coleções */
+    .cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .col { position: relative; aspect-ratio: 3 / 4.4; overflow: hidden; border: 0; padding: 0; cursor: pointer; color: #fff; text-align: left; background: var(--surface-2); }
+    .col img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--ease); }
+    .col:hover img { transform: scale(1.08); }
+    .col span { position: absolute; inset: auto 0 0; padding: 70px 20px 20px; background: linear-gradient(transparent, rgba(0,0,0,.6)); font: 400 30px/1 var(--font-d); }
+    .col small { display: block; margin-top: 8px; font: 400 11.5px var(--font-b); letter-spacing: .2em; text-transform: uppercase; opacity: .85; }
+
+    /* produto (card) */
+    .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px 18px; }
+    .pd { position: relative; cursor: pointer; }
+    .pd__i { position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: var(--surface-2); }
+    .pd__i img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+    .pd:hover .pd__i img { transform: scale(1.06); }
+    .pd__q { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px; background: rgba(246,241,234,.94); transform: translateY(101%); transition: transform .45s var(--ease); }
+    .pd:hover .pd__q, .pd:focus-within .pd__q { transform: none; }
+    .pd__q p { margin: 0 0 8px; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+    .pd__q div { display: flex; gap: 6px; }
+    .pd__q button { flex: 1; padding: 9px 0; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font: 500 12px var(--font-b); transition: background .2s, color .2s; }
+    .pd__q button:hover { background: var(--fg); color: var(--bg); }
+    .pd__q button[disabled] { opacity: .3; text-decoration: line-through; cursor: not-allowed; }
+    .pd__b { padding: 12px 2px 0; display: grid; gap: 4px; }
+    .pd__b b { font-weight: 400; font-size: 15px; }
+    .pd__b span { font-size: 14px; } .pd__b s { color: var(--muted); margin-right: 6px; }
+    .pd__b small { color: var(--muted); font-size: 12.5px; }
+    .dots { display: flex; gap: 5px; margin-top: 2px; } .dots i { width: 11px; height: 11px; border-radius: 50%; border: 1px solid var(--line); }
+    .bdg { position: absolute; left: 10px; top: 10px; z-index: 1; padding: 6px 9px; background: var(--bg); font: 500 10.5px var(--font-b); letter-spacing: .16em; text-transform: uppercase; }
+    .bdg--sale { background: var(--accent-2); color: #fff; }
+    .heart { position: absolute; right: 10px; top: 10px; z-index: 1; border: 0; background: none; font-size: 20px; cursor: pointer; color: var(--fg); transition: transform .25s var(--ease); }
+    .heart:hover { transform: scale(1.15); } .heart.on { color: var(--accent-2); animation: pop2 .4s var(--ease); }
+
+    /* lookbook com hotspots */
+    .shoplook { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
+    .lk { position: relative; overflow: hidden; }
+    .lk img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+    .hs { position: absolute; width: 30px; height: 30px; transform: translate(-50%, -50%); border-radius: 50%; border: 0; cursor: pointer; background: rgba(255,255,255,.95); box-shadow: 0 0 0 0 rgba(255,255,255,.7); animation: hsP 2s infinite; font: 500 15px var(--font-b); }
+    .hs.on { background: var(--accent-2); color: #fff; }
+    @keyframes hsP { 70% { box-shadow: 0 0 0 14px rgba(255,255,255,0); } }
+    .hpop { display: flex; gap: 16px; align-items: center; padding: 16px; background: var(--surface); border: 1px solid var(--line); margin-top: 18px; animation: screenIn .45s var(--ease); }
+    .hpop img { width: 84px; aspect-ratio: 3 / 4; object-fit: cover; }
+    .perks { display: grid; grid-template-columns: repeat(4, 1fr); border-block: 1px solid var(--line); }
+    .perks div { padding: 26px 20px; text-align: center; font-size: 14px; color: var(--muted); border-right: 1px solid var(--line); }
+    .perks div:last-child { border-right: 0; }
+    .perks b { display: block; font: 400 22px var(--font-d); color: var(--fg); margin-bottom: 6px; }
+    .provcta { display: grid; grid-template-columns: 1fr 1fr; background: var(--fg); color: var(--bg); overflow: hidden; }
+    .provcta > div { padding: 56px; }
+    .provcta .lead { color: rgba(246,241,234,.75); }
+    .provcta .btn { background: var(--bg); color: var(--fg); border-color: var(--bg); }
+    .provcta svg { width: 100%; height: 440px; background: radial-gradient(circle at 50% 40%, #3a332d, #1d1a17 70%); }
+
+    /* página de produto */
+    .pp { display: grid; grid-template-columns: 1.15fr .85fr; gap: 50px; align-items: start; padding: 30px 0 60px; }
+    .pp__g { display: grid; grid-template-columns: 76px 1fr; gap: 12px; position: sticky; top: 84px; }
+    .pp__th { display: grid; gap: 10px; align-content: start; }
+    .pp__th button { padding: 0; border: 1px solid transparent; background: var(--surface-2); cursor: pointer; aspect-ratio: 3 / 4; overflow: hidden; opacity: .55; transition: opacity .2s, border-color .2s; }
+    .pp__th button.on { opacity: 1; border-color: var(--fg); }
+    .pp__th img, .pp__th svg { width: 100%; height: 100%; object-fit: cover; }
+    .pp__main { position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: var(--surface-2); cursor: zoom-in; }
+    .pp__main img, .pp__main svg { width: 100%; height: 100%; object-fit: cover; animation: screenIn .5s var(--ease); transition: transform .2s; }
+    .pp__main.zoom img { transform: scale(2); }
+    .pp h1 { font: 400 clamp(34px, 3.6cqi, 46px)/1.05 var(--font-d); margin: 10px 0 12px; }
+    .price { font-size: 22px; } .price s { color: var(--muted); font-size: 16px; margin-right: 8px; }
+    .pix { color: var(--muted); font-size: 14px; margin-top: 4px; }
+    .lbl { display: flex; justify-content: space-between; margin: 26px 0 10px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
+    .lbl button { border: 0; background: none; padding: 0; cursor: pointer; font: inherit; text-decoration: underline; text-underline-offset: 4px; color: var(--fg); }
+    .sw { display: flex; gap: 10px; }
+    .sw button { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); cursor: pointer; outline: 1px solid transparent; outline-offset: 3px; transition: outline-color .2s, transform .2s; }
+    .sw button:hover { transform: scale(1.08); } .sw button.on { outline-color: var(--fg); }
+    .sz { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    .sz button { position: relative; padding: 13px 0; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font: 500 14px var(--font-b); transition: background .2s, color .2s, border-color .2s; }
+    .sz button:hover { border-color: var(--fg); }
+    .sz button.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+    .sz button.out { color: var(--muted); background: repeating-linear-gradient(135deg, transparent 0 7px, var(--line) 7px 8px); }
+    .sz button.rec::after { content: "★"; position: absolute; top: -9px; right: -6px; width: 18px; height: 18px; border-radius: 50%; background: var(--accent-2); color: #fff; font-size: 10px; line-height: 18px; }
+    .fitbar { position: relative; height: 4px; background: var(--surface-2); margin: 12px 0 6px; }
+    .fitbar i { position: absolute; top: 50%; width: 14px; height: 14px; border-radius: 50%; background: var(--fg); transform: translate(-50%, -50%); }
+    .fitl { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; }
+    .acc { border-top: 1px solid var(--line); }
+    .acc details { border-bottom: 1px solid var(--line); }
+    .acc summary { padding: 18px 0; cursor: pointer; list-style: none; display: flex; justify-content: space-between; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; }
+    .acc summary::after { content: "+"; font-size: 18px; transition: transform .3s; } .acc details[open] summary::after { transform: rotate(45deg); }
+    .acc details > div { padding: 0 0 18px; color: var(--muted); line-height: 1.7; font-size: 15px; }
+    .rev { padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .rev b { font-weight: 500; } .stars { color: var(--accent-2); letter-spacing: 2px; }
+    .fly { position: fixed; z-index: 95; pointer-events: none; object-fit: cover; box-shadow: 0 20px 40px -10px rgba(0,0,0,.4); }
+
+    /* provador virtual */
+    .prov { display: grid; grid-template-columns: 300px 1fr 340px; min-height: calc(100cqh); }
+    .prov__l, .prov__r { padding: 24px; background: var(--surface); border-right: 1px solid var(--line); }
+    .prov__r { border-right: 0; border-left: 1px solid var(--line); }
+    .stagem { position: relative; padding: 70px 16px 24px; background: radial-gradient(ellipse at 50% 30%, #fffaf3, var(--surface-2) 75%); }
+    .stk { position: sticky; top: 84px; display: grid; justify-items: center; gap: 12px; }
+    .stagem svg { height: min(72svh, 660px); width: auto; overflow: visible; }
+    #fig { animation: breathe 5s ease-in-out infinite; transform-origin: 150px 600px; }
+    @keyframes breathe { 50% { transform: translateY(-2px) scaleY(1.004); } }
+    .gm { stroke: rgba(0,0,0,.22); stroke-width: 1.3; stroke-linejoin: round; }
+    .ln { fill: none; stroke: rgba(0,0,0,.24); stroke-width: 1.3; stroke-linecap: round; }
+    .face { fill: none; stroke: rgba(60,30,20,.45); stroke-width: 1.4; stroke-linecap: round; }
+    .drop { animation: drop .7s var(--ease) both; }
+    @keyframes drop { from { opacity: 0; transform: translateY(-26px); } 60% { opacity: 1; } }
+    .sway { animation: sway 4.5s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 0; }
+    @keyframes sway { 50% { transform: skewX(1.6deg); } }
+    .mtool { position: absolute; top: 18px; left: 18px; right: 18px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; pointer-events: none; }
+    .mtool > * { pointer-events: auto; }
+    .fitbadge { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; max-width: 92%; }
+    .fitbadge span { padding: 6px 10px; background: var(--surface); border: 1px solid var(--line); font-size: 12px; animation: kIn .4s var(--ease); white-space: nowrap; }
+    .fitbadge .warn { border-color: var(--warn); color: #9a5b00; }
+    .wtabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--line); margin: 0 -24px 16px; padding: 0 24px; }
+    .wtabs button { flex: none; padding: 12px 10px; border: 0; background: none; cursor: pointer; font: 500 11.5px var(--font-b); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid transparent; }
+    .wtabs button.on { color: var(--fg); border-color: var(--fg); }
+    .wgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .wi { position: relative; display: grid; gap: 6px; padding: 10px; border: 1px solid var(--line); background: var(--bg); cursor: pointer; text-align: left; transition: border-color .2s, transform .25s var(--ease); }
+    .wi:hover { transform: translateY(-2px); border-color: var(--fg); }
+    .wi.on { border-color: var(--accent-2); background: color-mix(in srgb, var(--accent-2) 6%, var(--bg)); }
+    .wi.on::after { content: "✓ vestindo"; position: absolute; top: 6px; right: 6px; font-size: 10px; letter-spacing: .1em; color: var(--accent-2); }
+    .wi svg { width: 100%; height: 96px; }
+    .wi b { font-weight: 500; font-size: 13px; } .wi span { font-size: 12.5px; color: var(--muted); }
+    .sel { padding: 16px; margin-top: 16px; border: 1px solid var(--line); background: var(--bg); animation: screenIn .4s var(--ease); }
+    .score { display: flex; gap: 16px; align-items: center; }
+    .score .ring { --s: 96px; --w: 8px; }
+    .score .ring b { font: 400 30px var(--font-d); }
+    .tips { display: grid; gap: 8px; margin-top: 14px; font-size: 14px; }
+    .tips div { display: flex; gap: 10px; padding: 10px 12px; background: var(--bg); border-left: 2px solid var(--c, var(--ok)); animation: kIn .4s var(--ease) both; }
+    .mini { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; font-size: 14px; }
+    .mini span:nth-child(even) { text-align: right; }
+    .lookbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: space-between; padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--line); }
+    .lookbar b { font: 400 26px var(--font-d); }
+    .prof label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+    .prof input[type=range] { width: 100%; accent-color: var(--fg); }
+    .prof label b { color: var(--fg); font-weight: 500; }
+    .tones { display: flex; gap: 8px; } .tones button { width: 30px; height: 30px; border-radius: 50%; border: 0; cursor: pointer; outline: 1px solid transparent; outline-offset: 3px; }
+    .tones button.on { outline-color: var(--fg); }
+
+    /* sacola */
+    .ship { margin-bottom: 16px; font-size: 14px; }
+    .ship .bar { margin-top: 8px; height: 5px; }
+    .ci { display: grid; grid-template-columns: 70px 1fr auto; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); align-items: center; animation: kIn .4s var(--ease); }
+    .ci img, .ci svg { width: 70px; aspect-ratio: 3 / 4; object-fit: cover; background: var(--surface-2); }
+    .ci b { font-weight: 500; } .ci small { display: block; color: var(--muted); }
+    .qty { display: inline-flex; border: 1px solid var(--line); margin-top: 8px; } .qty button { width: 28px; height: 28px; border: 0; background: none; cursor: pointer; } .qty span { width: 24px; text-align: center; line-height: 28px; font-size: 13px; }
+    .tot { display: grid; gap: 8px; margin: 16px 0; font-size: 15px; } .tot div { display: flex; justify-content: space-between; }
+
+    /* checkout */
+    .co { display: grid; grid-template-columns: 1.2fr .8fr; gap: 40px; align-items: start; padding: 40px 0 60px; }
+    .co .summary-box { position: sticky; top: 90px; padding: 24px; background: var(--surface); border: 1px solid var(--line); }
+    .qr { width: 180px; height: 180px; margin: 0 auto; display: block; background: #fff; padding: 10px; border: 1px solid var(--line); }
+    .track { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 26px; text-align: center; font-size: 12px; color: var(--muted); }
+    .track div { position: relative; padding-top: 22px; } .track div::before { content: ""; position: absolute; top: 4px; left: 50%; width: 12px; height: 12px; border-radius: 50%; transform: translateX(-50%); background: var(--surface-2); border: 2px solid var(--line); }
+    .track div.on { color: var(--fg); } .track div.on::before { background: var(--accent-2); border-color: var(--accent-2); }
+
+    /* painel */
+    .tp { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .tp img, .tp svg { width: 42px; height: 54px; object-fit: cover; flex: none; background: var(--surface-2); }
+    .grade td, .grade th { text-align: center; } .grade td:first-child, .grade th:first-child { text-align: left; }
+    .grade td.z { color: #fff; background: var(--bad); } .grade td.l { background: #fdecc8; }
+    .grade td img { width: 34px; height: 44px; object-fit: cover; vertical-align: middle; margin-right: 10px; }
+    .kcard .ord { display: flex; gap: 4px; margin-top: 8px; } .kcard .ord img { width: 26px; height: 34px; object-fit: cover; }
+
+    @container (max-width: 1100px) {
+      .prov { grid-template-columns: minmax(0, 1fr) 340px; } .prov__l { grid-column: 1 / -1; order: 3; border-right: 0; border-top: 1px solid var(--line); }
+    }
+    @container (max-width: 900px) {
+      .hero, .shoplook, .provcta, .pp, .co { grid-template-columns: 1fr; }
+      .hero__m { min-height: 520px; } .hero__t { padding: 44px 24px; }
+      .grid4 { grid-template-columns: 1fr 1fr; } .cols { grid-template-columns: 1fr 1fr; }
+      .perks { grid-template-columns: 1fr 1fr; } .perks div:nth-child(2) { border-right: 0; } .perks div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .pp__g { position: static; grid-template-columns: 1fr; } .pp__th { grid-auto-flow: column; grid-auto-columns: 64px; order: 2; overflow-x: auto; }
+      .prov { grid-template-columns: minmax(0, 1fr); } .prov__r { border-left: 0; border-top: 1px solid var(--line); } .stk { position: static; } .stagem svg { height: 520px; }
+      .co .summary-box { position: static; }
+    }
+    @container (max-width: 760px) {
+      .snav nav { display: none; } .burger { display: block; }
+      .snav .wrap { grid-template-columns: auto 1fr auto; } .brand { justify-self: center; font-size: 24px; }
+      .provcta > div { padding: 36px 24px; }
+      .pd__q { transform: none; position: static; padding: 8px 0 0; background: none; } .pd__q p { display: none; }
+    }
+  </style>
+</head>
+<body data-sector="moda">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <pattern id="flo" width="26" height="26" patternUnits="userSpaceOnUse"><rect width="26" height="26" fill="#f2e8d6"/><circle cx="6" cy="6" r="3.4" fill="#c86f7c"/><circle cx="19" cy="18" r="3" fill="#d99a5b"/><circle cx="20" cy="5" r="1.6" fill="#6f8f6a"/><circle cx="6" cy="19" r="1.8" fill="#6f8f6a"/></pattern>
+  <pattern id="str" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#f3eee5"/><rect width="4.5" height="12" fill="#1d1a17"/></pattern>
+  <pattern id="pla" width="18" height="18" patternUnits="userSpaceOnUse"><rect width="18" height="18" fill="#3e5c8a"/><path d="M0 4h18M0 13h18M4 0v18M13 0v18" stroke="#2a4068" stroke-width="2"/><path d="M0 9h18M9 0v18" stroke="#a9bede" stroke-width=".8"/></pattern>
+</defs></svg>
+<div class="stage"><main class="viewport">
+
+  <!-- ===================== LOJA ===================== -->
+  <section class="screen" id="loja" data-label="Loja" data-label-en="Store" data-label-es="Tienda">
+    <div data-top></div>
+    <div class="hero">
+      <div class="hero__t">
+        <span class="eyebrow" data-reveal>Coleção Verão 27</span>
+        <h1 class="h1"><span class="ln"><span>Leveza</span></span><span class="ln"><span>que <em>vira</em></span></span><span class="ln"><span>presença.</span></span></h1>
+        <p class="lead" data-reveal>Linho, seda e tricô pensados para o calor. Prove no provador virtual, receba em casa e troque grátis em até 30 dias.</p>
+        <div class="row mt" data-reveal><button class="btn" data-act="novidades">Ver novidades</button><button class="btn btn--ghost" data-go-prov>✦ Provador virtual</button></div>
+      </div>
+      <div class="hero__m"><img src="../assets/moda/look2.jpg" alt="Modelo com vestido vermelho"><img class="card2" src="../assets/moda/look4.jpg" alt=""><div class="tagp float">Vestido Carmim<b>R$ 459</b></div></div>
+    </div>
+    <div class="big-mq marquee" style="--speed:30s"><div><span>Linho</span><span>Seda</span><span>Tricô</span><span>Alfaiataria</span><span>Feito no Brasil</span></div></div>
+
+    <section class="sec"><div class="wrap">
+      <div class="cols" data-reveal>
+        <button class="col" data-cat="vestidos"><img src="../assets/moda/look2.jpg" alt="" loading="lazy"><span>Vestidos<small>leveza pro verão</small></span></button>
+        <button class="col" data-cat="blusas"><img src="../assets/moda/p-tricot.jpg" alt="" loading="lazy"><span>Tricôs &amp; blusas<small>texturas naturais</small></span></button>
+        <button class="col" data-cat="calcas"><img src="../assets/moda/p-listrada.jpg" alt="" loading="lazy"><span>Calças &amp; saias<small>caimento fluido</small></span></button>
+        <button class="col" data-cat="acessorios"><img src="../assets/moda/p-bolsa.jpg" alt="" loading="lazy"><span>Acessórios<small>o toque final</small></span></button>
+      </div>
+    </div></section>
+
+    <section class="sec" id="novidades" style="padding-top:0"><div class="wrap">
+      <div class="row" style="justify-content:space-between;margin-bottom:28px"><div><span class="eyebrow" data-reveal>Mais desejados</span><h2 class="h2" data-reveal>Escolhidos a dedo</h2></div>
+        <div class="chips" data-group="cat" id="catChips"><button class="opt is-on" data-value="all">Tudo</button><button class="opt" data-value="vestidos">Vestidos</button><button class="opt" data-value="blusas">Blusas</button><button class="opt" data-value="calcas">Calças</button><button class="opt" data-value="acessorios">Acessórios</button></div></div>
+      <div class="grid4" id="shopGrid"></div>
+    </div></section>
+
+    <div class="perks"><div><b>Frete grátis</b>acima de R$ 299</div><div><b>5% off no Pix</b>aprovação na hora</div><div><b>Troca grátis</b>em até 30 dias</div><div><b>Até 6× sem juros</b>no cartão</div></div>
+
+    <section class="sec" id="lookbook"><div class="wrap shoplook">
+      <div class="lk" data-reveal><img src="../assets/moda/look1.jpg" alt="Look da semana" loading="lazy"><div id="hsBox"></div></div>
+      <div>
+        <span class="eyebrow" data-reveal>Compre o look</span>
+        <h2 class="h2" data-reveal>Inverno na cidade, <em>sem esforço</em>.</h2>
+        <p class="lead mt" data-reveal>Toque nos pontos da foto para ver cada peça e levar o look inteiro com 10% de desconto.</p>
+        <div id="hpop"></div>
+        <button class="btn mt" id="buyLook1">Levar o look completo · −10%</button>
+      </div>
+    </div></section>
+
+    <section class="provcta"><div>
+      <span class="eyebrow" style="color:#c9b9a6">Exclusivo</span>
+      <h2 class="h2">Prove antes de <em style="color:#e7a598">comprar</em>.</h2>
+      <p class="lead mt">Monte looks numa modelo com as suas medidas, veja o caimento de cada tamanho e receba a opinião da nossa stylist. Quem usa o provador devolve 34% menos.</p>
+      <button class="btn mt" data-go-prov>Abrir o provador virtual</button>
+    </div><svg id="ctaFig" viewBox="0 0 300 640" role="img" aria-label="Modelo ilustrada"></svg></section>
+
+    <section class="sec"><div class="wrap">
+      <div class="head center"><span class="eyebrow" data-reveal>@aurea.atelier</span><h2 class="h2" data-reveal>Vestido por vocês</h2></div>
+      <div class="grid4" data-reveal>
+        <img src="../assets/moda/look5.jpg" alt="" loading="lazy" style="aspect-ratio:1;object-fit:cover"><img src="../assets/moda/look7.jpg" alt="" loading="lazy" style="aspect-ratio:1;object-fit:cover">
+        <img src="../assets/moda/look3.jpg" alt="" loading="lazy" style="aspect-ratio:1;object-fit:cover"><img src="../assets/moda/look6.jpg" alt="" loading="lazy" style="aspect-ratio:1;object-fit:cover">
+      </div>
+      <form class="row mt" style="justify-content:center;margin-top:50px" data-mock="Cupom BEMVINDA10 enviado para o seu e-mail ✉️"><input class="input" type="email" required placeholder="Seu e-mail para ganhar 10% na 1ª compra" aria-label="E-mail" style="max-width:380px"><button class="btn">Quero 10%</button></form>
+    </div></section>
+    <footer class="foot"><div class="wrap"><span>© ÁUREA atelier · demo fictícia</span><span>Rua das Sedas, 88 · atendimento seg a sáb 10h–20h</span></div></footer>
+  </section>
+
+  <!-- ===================== PRODUTO ===================== -->
+  <section class="screen" id="produto" data-label="Produto" data-label-en="Product" data-label-es="Producto">
+    <div data-top></div>
+    <div class="wrap">
+      <div class="pp">
+        <div class="pp__g"><div class="pp__th" id="ppTh"></div><div class="pp__main" id="ppMain"></div></div>
+        <div>
+          <span class="eyebrow" id="ppCat"></span>
+          <h1 id="ppName"></h1>
+          <div class="price" id="ppPrice"></div>
+          <div class="pix" id="ppPix"></div>
+          <p class="small" style="margin-top:12px;color:var(--accent-2)" id="ppHot"></p>
+          <div class="lbl"><span>Cor: <b id="ppColor" style="font-weight:500"></b></span></div>
+          <div class="sw" id="ppSw"></div>
+          <div class="lbl"><span>Tamanho</span><button id="ppGuide">Qual é o meu tamanho?</button></div>
+          <div class="sz" id="ppSz"></div>
+          <p class="small muted" id="ppRec" style="margin-top:10px"></p>
+          <div style="display:grid;gap:10px;margin-top:22px">
+            <button class="btn btn--block" id="ppAdd">Adicionar à sacola</button>
+            <button class="btn btn--ghost btn--block" id="ppTry">✦ Provar no provador virtual</button>
+          </div>
+          <div class="row small muted" style="margin-top:16px;gap:18px"><span>🚚 Chega em 2 dias úteis</span><span>↺ Troca grátis 30 dias</span></div>
+          <div class="lbl" style="margin-top:30px"><span>Como veste</span><span class="muted" style="letter-spacing:0;text-transform:none">142 avaliações</span></div>
+          <div class="fitbar"><i id="ppFit"></i></div><div class="fitl"><span>Pequeno</span><span>Perfeito</span><span>Grande</span></div>
+          <div class="acc mt">
+            <details open><summary>Detalhes</summary><div id="ppDesc"></div></details>
+            <details><summary>Composição e cuidados</summary><div>100% linho certificado, tingimento natural. Lavar à mão em água fria, secar à sombra, passar do avesso.</div></details>
+            <details><summary>Entrega</summary><div><form class="row" id="cepF" style="gap:8px"><input class="input" name="cep" required inputmode="numeric" placeholder="Seu CEP" style="max-width:180px" aria-label="CEP"><button class="btn btn--sm">Calcular</button></form><p id="cepR" style="margin-top:10px"></p></div></details>
+          </div>
+          <div class="lbl" style="margin-top:34px"><span>Avaliações</span><span><span class="stars">★★★★★</span> 4,8</span></div>
+          <div class="rev"><b>Marina L.</b> <span class="stars">★★★★★</span><p class="muted small" style="margin-top:6px">Tecido maravilhoso e o provador acertou meu tamanho em cheio. Vesti no casamento da minha irmã!</p></div>
+          <div class="rev"><b>Juliana P.</b> <span class="stars">★★★★☆</span><p class="muted small" style="margin-top:6px">Linda, mas veste um pouco justo no busto. Peguei o M seguindo a recomendação e ficou perfeito.</p></div>
+        </div>
+      </div>
+      <div class="head"><span class="eyebrow">Complete o look</span><h2 class="h2">Combina com</h2></div>
+      <div class="grid4" id="ppMatch" style="margin-bottom:70px"></div>
+    </div>
+  </section>
+
+  <!-- ===================== PROVADOR VIRTUAL ===================== -->
+  <section class="screen" id="provador" data-label="Provador virtual" data-label-en="Virtual fitting room" data-label-es="Probador virtual">
+    <div data-top></div>
+    <div class="prov">
+      <aside class="prov__l prof">
+        <span class="eyebrow">Sua modelo</span>
+        <h3 style="font:400 26px var(--font-d);margin:8px 0 18px">Suas medidas</h3>
+        <label>Altura <b id="vAlt"></b><input type="range" id="rAlt" min="150" max="185" value="165"></label>
+        <label>Peso <b id="vPes"></b><input type="range" id="rPes" min="45" max="100" value="60"></label>
+        <p class="small muted" style="margin:-4px 0 14px">Tamanho sugerido: <b id="vRec" style="color:var(--accent-2)"></b></p>
+        <p class="small muted" style="margin-bottom:8px">Tom de pele</p>
+        <div class="tones" id="tones"></div>
+        <p class="small muted" style="margin:16px 0 8px">Cabelo</p>
+        <div class="chips" data-group="hair" id="hairC"><button class="opt is-on" data-value="long">Longo</button><button class="opt" data-value="bob">Chanel</button><button class="opt" data-value="bun">Coque</button><button class="opt" data-value="short">Curto</button></div>
+        <div class="tones" id="hairT" style="margin-top:10px"></div>
+        <p class="small muted" style="margin:22px 0 8px">Ocasião do look</p>
+        <div class="chips" data-group="occ" id="occC"><button class="opt is-on" data-value="trabalho">Trabalho</button><button class="opt" data-value="casual">Casual</button><button class="opt" data-value="festa">Festa</button><button class="opt" data-value="praia">Praia</button></div>
+      </aside>
+      <div class="stagem">
+        <div class="mtool"><button class="btn btn--ghost btn--sm" id="surp" style="background:var(--surface)">✦ Me surpreenda</button><div class="row" style="gap:8px"><button class="btn btn--ghost btn--sm" id="undress" style="background:var(--surface)">Tirar tudo</button><button class="btn btn--ghost btn--sm" id="saveL" style="background:var(--surface)">♡ Salvar look</button></div></div>
+        <div class="stk"><svg id="model" viewBox="0 0 300 640" role="img" aria-label="Modelo vestindo o look montado"></svg>
+        <div class="fitbadge" id="fitB"></div></div>
+      </div>
+      <aside class="prov__r">
+        <div class="wtabs" id="wtabs"></div>
+        <div class="wgrid" id="wgrid"></div>
+        <div id="wsel"></div>
+        <div class="sel" style="margin-top:18px">
+          <div class="score"><div class="ring" id="scR" data-p="0"><div><b id="scN">0</b></div></div><div><span class="eyebrow">Check do look</span><p style="margin-top:6px;font:400 20px var(--font-d)" id="scT"></p></div></div>
+          <div class="tips" id="tips"></div>
+          <div class="lookbar"><div><small class="muted">Look completo</small><br><b id="lkTot">R$ 0</b></div><button class="btn btn--wine" id="buyLook">Comprar o look</button></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===================== CHECKOUT ===================== -->
+  <section class="screen" id="checkout" data-label="Checkout" data-label-en="Checkout" data-label-es="Pago">
+    <div data-top></div>
+    <div class="wrap co">
+      <div class="card" data-wizard id="coW">
+        <div class="steps"><i></i><i></i><i></i><i></i></div>
+        <div class="step">
+          <h3 class="step__title">Entrega</h3>
+          <div class="form"><label class="field">Nome completo<input class="input" name="nome" required placeholder="Como está no documento"></label>
+            <div class="grid" style="grid-template-columns:1fr 2fr;gap:12px"><label class="field">CEP<input class="input" name="cep" required inputmode="numeric" placeholder="00000-000"></label><label class="field">Endereço<input class="input" name="end" required placeholder="Rua, número, complemento"></label></div></div>
+          <p class="field mt">Frete</p>
+          <div class="opts" data-group="frete" data-required style="grid-template-columns:1fr 1fr">
+            <button class="opt is-on" data-value="Padrão"><span><b>Padrão · 2 dias úteis</b><small id="frP">grátis</small></span></button>
+            <button class="opt" data-value="Expresso"><span><b>Expresso · hoje até 21h</b><small>R$ 24,90</small></span></button>
+          </div>
+          <div class="step__nav"><button class="btn btn--ghost" data-go-bag>← Sacola</button><button class="btn" data-next>Pagamento →</button></div>
+        </div>
+        <div class="step">
+          <h3 class="step__title">Pagamento</h3>
+          <div class="opts" data-group="pag" data-required style="grid-template-columns:1fr 1fr">
+            <button class="opt is-on" data-value="Pix"><span style="font-size:24px">◈</span><span><b>Pix · 5% off</b><small>aprovação na hora</small></span></button>
+            <button class="opt" data-value="Cartão"><span style="font-size:24px">▭</span><span><b>Cartão</b><small>até 6× sem juros</small></span></button>
+          </div>
+          <div class="step__nav"><button class="btn btn--ghost" data-prev>← Voltar</button><button class="btn" data-next>Revisar →</button></div>
+        </div>
+        <div class="step">
+          <h3 class="step__title">Revise seu pedido</h3>
+          <dl class="summary"><div><dt>Entrega para</dt><dd data-show="nome"></dd></div><div><dt>Endereço</dt><dd data-show="end"></dd></div><div><dt>Frete</dt><dd data-show="frete"></dd></div><div><dt>Pagamento</dt><dd data-show="pag"></dd></div></dl>
+          <div class="step__nav"><button class="btn btn--ghost" data-prev>← Voltar</button><button class="btn btn--wine" data-next>Finalizar compra</button></div>
+        </div>
+        <div class="step done">
+          <svg class="check" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><path d="M30 52l13 13 27-29"/></svg>
+          <h3 class="step__title" style="font-size:34px">Pedido <span id="ordN"></span> confirmado</h3>
+          <div id="payBox"></div>
+          <div class="track"><div class="on">Pago</div><div>Separando</div><div>Enviado</div><div>Entregue</div></div>
+          <p class="muted small mt">Você acompanha tudo pelo WhatsApp e pelo e-mail.</p>
+          <div class="row mt" style="justify-content:center"><button class="btn" data-act="home">Continuar comprando</button></div>
+        </div>
+      </div>
+      <aside class="summary-box"><span class="eyebrow">Resumo</span><div id="coList" style="margin-top:12px"></div><div class="tot" id="coTot"></div></aside>
+    </div>
+  </section>
+
+  <!-- ===================== PAINEL ADMIN ===================== -->
+  <section class="screen" id="admin" data-label="Painel admin" data-label-en="Admin panel" data-label-es="Panel admin">
+    <div class="app">
+      <aside class="app__side">
+        <a href="#loja" class="logo" style="font:400 21px var(--font-d);letter-spacing:.18em;padding-left:12px">ÁUREA</a>
+        <a data-view="m-vend" class="is-on"><i>◔</i>Vendas</a>
+        <a data-view="m-ped"><i>▦</i>Pedidos</a>
+        <a data-view="m-est"><i>▤</i>Estoque por grade</a>
+        <a data-view="m-prov"><i>✦</i>Provador</a>
+        <span class="spacer"></span>
+        <a href="#loja"><i>↗</i>Ver a loja</a>
+      </aside>
+      <div class="app__main">
+        <div class="app__top">
+          <div><p class="muted small" id="mHoje"></p><h2 data-view-title>Vendas</h2></div>
+          <div class="row"><button class="cmdk-btn" data-cmdk>⌕ <span class="t">Buscar pedido, produto…</span><span class="kbd">⌘K</span></button><button class="bell" data-n="2" data-drawer="#m-notif" aria-label="Notificações">🔔</button><span class="avatar" style="background:var(--fg);color:var(--bg)">AV</span></div>
+        </div>
+        <div class="view" id="m-vend">
+          <div class="kpis">
+            <div class="kpi"><small>Faturamento hoje</small><strong id="kFat">R$ 0</strong><em>▲ 18% vs. ontem</em></div>
+            <div class="kpi"><small>Pedidos</small><strong id="kPed">0</strong><em>62% pelo celular</em></div>
+            <div class="kpi"><small>Ticket médio</small><strong>R$ 412</strong><em>▲ R$ 58 com “compre o look”</em></div>
+            <div class="kpi"><small>Conversão</small><strong data-count="3.8" data-suf="%">0</strong><em>provador: 18%</em></div>
+          </div>
+          <div class="dash">
+            <div class="panel"><div class="panel__h"><h3>Vendas por hora</h3><span class="muted small">hoje</span></div><div class="bars" data-bars="320,180,90,140,410,980,1240,860,1520,1980,2240,1760" data-labels="9h,10h,11h,12h,13h,14h,15h,16h,17h,18h,19h,20h" data-pre="R$ "></div></div>
+            <div class="panel"><div class="panel__h"><h3>Mais vendidos</h3><span class="muted small">7 dias</span></div><div id="topP"></div></div>
+          </div>
+        </div>
+        <div class="view" id="m-ped">
+          <div class="toolbar"><span class="muted small">Arraste (ou toque em →). Cada etapa avisa a cliente no WhatsApp.</span></div>
+          <div class="kanban" id="kb">
+            <div class="kcol" data-k="pago"><h4>Pago <span data-n></span></h4><div class="kcards"></div></div>
+            <div class="kcol" data-k="sep"><h4>Separando <span data-n></span></h4><div class="kcards"></div></div>
+            <div class="kcol" data-k="env"><h4>Enviado <span data-n></span></h4><div class="kcards"></div></div>
+            <div class="kcol" data-k="ent"><h4>Entregue <span data-n></span></h4><div class="kcards"></div></div>
+          </div>
+        </div>
+        <div class="view" id="m-est">
+          <div class="toolbar"><input class="input" data-filter="#gradeB" placeholder="Buscar produto…" aria-label="Buscar produto"><span class="spacer"></span><span class="muted small">Clique numa quantidade para editar · <span style="color:var(--bad)">■</span> esgotado · <span style="color:#d29a1e">■</span> acabando</span></div>
+          <div class="panel table-wrap"><table class="table grade"><thead><tr><th>Produto</th><th>PP</th><th>P</th><th>M</th><th>G</th><th>GG</th><th>Total</th></tr></thead><tbody id="gradeB"></tbody></table></div>
+        </div>
+        <div class="view" id="m-prov">
+          <div class="kpis">
+            <div class="kpi"><small>Looks montados hoje</small><strong data-count="1284">0</strong><em>▲ 31% na semana</em></div>
+            <div class="kpi"><small>Provador → compra</small><strong data-count="18" data-suf="%">0</strong><em>site sem provador: 2,1%</em></div>
+            <div class="kpi"><small>Devoluções por tamanho</small><strong>−34%</strong><em>desde a ativação</em></div>
+            <div class="kpi"><small>Itens por pedido</small><strong>2,7</strong><em>antes: 1,4</em></div>
+          </div>
+          <div class="dash">
+            <div class="panel"><div class="panel__h"><h3>Combinações mais provadas</h3></div><div id="topLooks"></div></div>
+            <div class="panel"><div class="panel__h"><h3>Tamanhos recomendados</h3></div><div class="bars" style="height:150px" data-bars="6,22,38,24,10" data-labels="PP,P,M,G,GG" data-suf="%"></div>
+              <p class="muted small mt">Use para planejar a grade da próxima coleção: M e G concentram 62% das clientes.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <template id="m-notif" data-title="Notificações">
+      <div class="list">
+        <div><span class="icon">✦</span><div><b>Look salvo virou pedido</b><div class="muted small">Camila R. · vestido + scarpin · R$ 808</div></div></div>
+        <div><span class="icon">▤</span><div><b>Vestido Carmim acabando no M</b><div class="muted small">2 peças · 31 pessoas provaram hoje</div></div></div>
+      </div>
+    </template>
+  </section>
+
+</main></div>
+<script src="kit.js"></script>
+<script>
+(function () {
+  var D = window.Demo, $ = D.$, $$ = D.$$, esc = D.esc, IMG = "../assets/moda/";
+  var brl = function (v) { return "R$ " + v.toLocaleString("pt-BR", { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }); };
+  var SIZES = ["PP", "P", "M", "G", "GG"];
+  document.addEventListener("click", function (e) { var t = e.target.closest("[data-toast]"); if (t) D.toast(t.dataset.toast); });
+
+  /* ================= guarda-roupa: peças do provador (cores reais + estampas) ================= */
+  // occ: ocasiões em que a peça funciona · off: modelagem (−1 veste pequeno, +1 veste grande)
+  var W = {
+    tee:     { cat: "top", n: "Camiseta Essencial", p: 89, c: [["Off-white", "#f1ece2"], ["Preto", "#26231f"], ["Areia", "#d6c4a4"], ["Oliva", "#6d7a56"]], occ: ["casual", "praia", "trabalho"], off: 0 },
+    shirt:   { cat: "top", n: "Camisa de Linho", p: 259, c: [["Branco", "#f7f5ef"], ["Azul céu", "#a9c1dc"], ["Terracota", "#c2724e"]], occ: ["trabalho", "casual", "praia"], off: 0 },
+    tricot:  { cat: "top", n: "Tricô Brisa", p: 239, c: [["Creme", "#eee3cc"], ["Caramelo", "#b27a46"], ["Musgo", "#5d6b48"], ["Preto", "#2a2623"]], occ: ["trabalho", "casual"], off: 1 },
+    blazer:  { cat: "outer", n: "Blazer Alfaiataria", p: 699, c: [["Xadrez azul", "url(#pla)", "#3e5c8a"], ["Marinho", "#26314d"], ["Areia", "#cdb995"], ["Preto", "#221f1c"]], occ: ["trabalho", "festa"], off: 0 },
+    bomber:  { cat: "outer", n: "Jaqueta Bomber", p: 389, c: [["Rosé", "#c58a6c"], ["Oliva", "#5f6b45"], ["Preto", "#221f1c"]], occ: ["casual"], off: 1 },
+    pants:   { cat: "bottom", n: "Calça Fluida", p: 279, c: [["Rosé", "#d9a99a"], ["Listrada", "url(#str)", "#2a2623", 1], ["Off-white", "#ece5d8"], ["Preto", "#221f1c"]], occ: ["trabalho", "festa", "casual"], off: 0 },
+    jeans:   { cat: "bottom", n: "Jeans Reto", p: 299, c: [["Índigo", "#3d5a86"], ["Claro", "#8eaccc"], ["Preto", "#2a2a2e"]], occ: ["casual"], off: -1 },
+    skirt:   { cat: "bottom", n: "Saia Midi Plissada", p: 329, c: [["Terracota", "#b8623f"], ["Verde", "#5f7656"], ["Preto", "#221f1c"], ["Caramelo", "#b07c4a"]], occ: ["trabalho", "festa", "casual"], off: 0 },
+    dress:   { cat: "dress", n: "Vestido Midi", p: 459, c: [["Carmim", "#b3262d"], ["Floral", "url(#flo)", "#c86f7c", 1], ["Preto", "#221f1c"], ["Esmeralda", "#1f7a5a"]], occ: ["festa", "casual", "praia"], off: -1 },
+    sneaker: { cat: "shoes", n: "Tênis Couro", p: 399, c: [["Branco", "#f6f4ef"], ["Preto", "#221f1c"]], occ: ["casual", "praia"] },
+    loafer:  { cat: "shoes", n: "Mocassim", p: 449, c: [["Preto", "#1f1c1a"], ["Caramelo", "#9a6334"]], occ: ["trabalho", "casual"] },
+    heels:   { cat: "shoes", n: "Scarpin", p: 349, c: [["Nude", "#d9b89c"], ["Vermelho", "#b3262d"], ["Preto", "#1f1c1a"]], occ: ["festa", "trabalho"] },
+    bag:     { cat: "bag", n: "Bolsa Tóquio", p: 529, c: [["Vermelha", "#b8312f"], ["Preta", "#1f1c1a"], ["Caramelo", "#a86b3c"]], occ: ["trabalho", "festa", "casual"] },
+    glasses: { cat: "glasses", n: "Óculos Lua", p: 199, c: [["Tartaruga", "#5a3a22"], ["Preto", "#1f1c1a"]], occ: ["casual", "praia"] },
+    hat:     { cat: "hat", n: "Chapéu de Palha", p: 189, c: [["Palha", "#d6bd86"], ["Preto", "#221f1c"]], occ: ["praia", "casual"] }
+  };
+  var TABS = [["top", "Blusas"], ["outer", "Casacos"], ["bottom", "Calças & saias"], ["dress", "Vestidos"], ["shoes", "Sapatos"], ["acc", "Acessórios"]];
+  var ACC = { bag: 1, glasses: 1, hat: 1 };
+
+  /* ================= croqui: corpo + peças em SVG (40 “unidades” por cabeça) ================= */
+  var MIR = ' transform="matrix(-1 0 0 1 300 0)"';
+  var both = function (tag) { return tag + tag.replace(/\/>$/, MIR + "/>"); };
+  var SKIN = '<rect x="140" y="84" width="20" height="36" rx="9"/>' +
+    '<path d="M112 122 Q150 112 188 122 L186 176 Q180 212 178 232 Q192 262 194 294 L106 294 Q108 262 122 232 Q120 212 114 176 Z"/>' +
+    both('<path d="M106 288 Q100 370 118 444 Q122 520 128 596 L144 596 Q146 520 147 444 Q152 372 151 300 Z"/>') +
+    both('<path d="M114 122 Q98 126 96 152 L90 232 Q86 282 88 324 L102 324 Q104 282 108 234 L118 164 Z"/>') +
+    both('<ellipse cx="136" cy="603" rx="10" ry="6"/>');
+  var HANDS = both('<ellipse cx="95" cy="334" rx="8" ry="12"/>');
+  var HAIR = {
+    long: ['<path d="M124 48 Q118 12 150 12 Q182 12 176 48 L190 162 Q150 176 110 162 Z"/>', '<path d="M126 54 Q124 20 150 20 Q178 20 175 52 Q166 32 146 34 Q134 38 126 54 Z"/>'],
+    bob: ['<path d="M121 50 Q117 12 150 12 Q183 12 179 50 L183 98 Q150 108 117 98 Z"/>', '<path d="M126 54 Q124 20 150 20 Q178 20 175 52 Q166 32 146 34 Q134 38 126 54 Z"/>'],
+    bun: ['<circle cx="150" cy="14" r="14"/>', '<path d="M126 52 Q124 22 150 22 Q176 22 174 52 Q168 32 150 32 Q132 32 126 52 Z"/>'],
+    short: ["", '<path d="M125 52 Q122 18 150 18 Q178 18 175 52 Q170 30 150 30 Q130 30 125 52 Z"/>']
+  };
+  var G = {
+    tee: function (f) { return '<path class="gm" fill="' + f + '" d="M128 112 Q150 130 172 112 L190 120 L214 168 L196 178 L186 158 L188 272 Q150 280 112 272 L114 158 L104 178 L86 168 L110 120 Z"/><path class="ln" d="M130 116 Q150 132 170 116 M114 262 Q150 270 186 262"/>'; },
+    tricot: function (f) { return '<path class="gm" fill="' + f + '" d="M130 112 Q150 124 170 112 L190 120 Q206 128 207 158 L214 316 L196 318 L189 186 L189 278 Q150 286 111 278 L111 186 L104 318 L86 316 L93 158 Q94 128 110 120 Z"/><path class="ln" d="M112 266 Q150 274 188 266 M88 304 L105 306 M195 306 L212 304 M132 118 Q150 128 168 118"/>' +
+      '<path class="ln" style="stroke-dasharray:2 5" d="M130 150 L128 260 M150 136 L150 270 M170 150 L172 260"/>'; },
+    shirt: function (f) { return '<path class="gm" fill="' + f + '" d="M132 112 L168 112 L190 120 Q206 128 207 158 L214 316 L196 318 L189 186 L190 292 Q150 300 110 292 L111 186 L104 318 L86 316 L93 158 Q94 128 110 120 Z"/>' +
+      '<path class="gm" fill="' + f + '" d="M134 108 L150 132 L138 144 Z M166 108 L150 132 L162 144 Z"/><path class="ln" d="M150 132 L150 294 M88 300 L106 302 M194 302 L212 300"/>' +
+      [150, 176, 202, 228, 254].map(function (y) { return '<circle cx="153" cy="' + y + '" r="1.8" fill="rgba(0,0,0,.35)"/>'; }).join(""); },
+    blazer: function (f) { return both('<path class="gm" fill="' + f + '" d="M128 112 L148 176 L150 306 Q128 310 104 304 L107 190 L103 320 L84 318 L91 158 Q92 126 110 119 Z"/>') +
+      both('<path class="gm" fill="' + f + '" style="filter:brightness(.88)" d="M128 112 L146 172 L131 158 L122 128 Z"/>') + both('<path class="ln" d="M110 258 L132 258"/>') + '<circle cx="146" cy="240" r="2.6" fill="rgba(0,0,0,.45)"/>'; },
+    bomber: function (f) { return '<path class="gm" fill="' + f + '" d="M130 112 Q150 122 170 112 L192 120 Q210 130 210 160 L216 312 L196 316 L190 190 L190 264 Q150 272 110 264 L110 190 L104 316 L84 312 L90 160 Q90 130 108 120 Z"/>' +
+      '<path class="ln" d="M150 120 L150 268 M111 252 Q150 260 189 252 M86 300 L104 303 M196 303 L214 300 M130 112 Q150 126 170 112"/>'; },
+    pants: function (f) { return '<path class="gm" fill="' + f + '" d="M117 226 L183 226 L196 300 L208 598 L156 598 L151 318 L149 318 L144 598 L92 598 L104 300 Z"/><path class="ln" d="M117 238 L183 238 M124 330 L116 596 M176 330 L184 596"/>'; },
+    jeans: function (f) { return '<path class="gm" fill="' + f + '" d="M117 226 L183 226 L192 300 L186 598 L154 598 L151 332 L149 332 L146 598 L114 598 L108 300 Z"/><path class="ln" style="stroke:rgba(255,220,160,.55)" d="M117 237 L183 237 M150 238 L150 300 M122 246 Q131 262 140 246 M178 246 Q169 262 160 246 M116 586 L146 586 M154 586 L184 586"/>'; },
+    skirt: function (f) { return '<g class="sway"><path class="gm" fill="' + f + '" d="M120 226 L180 226 Q198 330 222 470 Q150 486 78 470 Q102 330 120 226 Z"/><path class="ln" d="M120 236 L180 236 M134 240 L116 474 M142 240 L132 478 M150 240 L150 482 M158 240 L168 478 M166 240 L184 474"/></g>'; },
+    dress: function (f) { return '<g class="sway"><path class="gm" fill="' + f + '" d="M128 116 L138 114 Q150 130 162 114 L172 116 L184 150 L178 228 Q200 330 224 482 Q150 498 76 482 Q100 330 122 228 L116 150 Z"/><path class="ln" d="M122 228 Q150 236 178 228 M136 240 L114 480 M164 240 L186 480 M150 240 L150 490"/></g>'; },
+    sneaker: function (f) { return both('<path class="gm" fill="' + f + '" d="M122 590 L146 590 Q153 602 153 614 L117 614 Q114 600 122 590 Z"/>') + both('<path class="ln" d="M117 609 L153 609"/>'); },
+    loafer: function (f) { return both('<path class="gm" fill="' + f + '" d="M124 596 L146 596 Q154 606 152 614 L120 614 Q117 604 124 596 Z"/>') + both('<path class="ln" style="stroke:rgba(255,255,255,.35)" d="M126 602 L144 602"/>'); },
+    heels: function (f) { return both('<path class="gm" fill="' + f + '" d="M126 592 L146 592 L153 614 L130 612 Z"/>') + both('<path d="M130 610 L127 628" stroke="' + f + '" stroke-width="3.5" stroke-linecap="round"/>'); },
+    bag: function (f) { return '<path d="M205 322 Q216 336 212 352" fill="none" stroke="' + f + '" stroke-width="2.5"/><rect class="gm" fill="' + f + '" x="186" y="350" width="50" height="40" rx="7"/><path class="gm" fill="' + f + '" style="filter:brightness(.85)" d="M186 357 Q211 376 236 357 L236 352 Q236 350 230 350 L192 350 Q186 350 186 352 Z"/><circle cx="211" cy="368" r="3" fill="#e2c37a"/>'; },
+    glasses: function (f) { return '<circle cx="139" cy="58" r="8.5" fill="rgba(20,16,12,.6)" stroke="' + f + '" stroke-width="2.6"/><circle cx="161" cy="58" r="8.5" fill="rgba(20,16,12,.6)" stroke="' + f + '" stroke-width="2.6"/><path d="M147.5 57 Q150 54 152.5 57" fill="none" stroke="' + f + '" stroke-width="2"/>'; },
+    hat: function (f) { return '<ellipse class="gm" fill="' + f + '" cx="150" cy="36" rx="56" ry="11"/><path class="gm" fill="' + f + '" d="M124 36 Q124 4 150 4 Q176 4 176 36 Z"/><path d="M124 30 Q150 35 176 30" fill="none" stroke="#1d1a17" stroke-width="4"/>'; }
+  };
+  var VIEW = { top: "70 100 160 230", outer: "70 100 160 230", bottom: "80 215 140 395", dress: "66 104 168 400", shoes: "108 584 84 48", bag: "180 316 62 80", glasses: "126 44 48 26", hat: "90 0 120 50" };
+
+  /* tamanho sugerido por IMC; a silhueta da modelo acompanha */
+  function recIdx(h, w) { var b = w / Math.pow(h / 100, 2); return b < 19 ? 0 : b < 21.5 ? 1 : b < 24.5 ? 2 : b < 28 ? 3 : 4; }
+  console.assert(recIdx(165, 58) === 1 && recIdx(170, 68) === 2 && recIdx(160, 70) === 3, "recIdx");
+  var PROF = { h: 165, w: 60, skin: "#e9c3a3", hair: "long", hc: "#3b2a20" };
+  var bodyK = function () { var b = PROF.w / Math.pow(PROF.h / 100, 2); return Math.max(.86, Math.min(1.2, .9 + (b - 19) * .028)); };
+  var LOOK = {}; // cat -> {id, ci, s}
+  var recFor = function (id) { return Math.max(0, Math.min(4, recIdx(PROF.h, PROF.w) - (W[id].off || 0))); };
+  function fitOf(cat) {
+    var it = LOOK[cat]; if (!it || W[it.id].cat === "shoes" || ACC[cat]) return null;
+    var d = it.s - recFor(it.id);
+    return d <= -2 ? ["Apertado demais", .93, 1] : d === -1 ? ["Justo", .975, 0] : d === 0 ? ["Caimento ideal", 1, 0] : d === 1 ? ["Mais soltinho", 1.05, 0] : ["Largo demais", 1.1, 1];
+  }
+  function fillOf(id, ci) { return W[id].c[ci][1]; }
+  function piece(cat, anim) {
+    var it = LOOK[cat]; if (!it) return "";
+    var f = fitOf(cat), sc = f ? f[1] : 1;
+    return '<g class="' + (anim === cat ? "drop" : "") + '" transform="translate(150 0) scale(' + sc + ' 1) translate(-150 0)">' + G[it.id](fillOf(it.id, it.ci)) + "</g>";
+  }
+  function figure(look, anim) {
+    var save = LOOK; LOOK = look;
+    var k = bodyK(), hair = HAIR[PROF.hair];
+    var s = '<ellipse cx="150" cy="618" rx="64" ry="7" fill="rgba(0,0,0,.13)"/><g id="fig"><g fill="' + PROF.hc + '">' + hair[0] + "</g>" +
+      '<g transform="translate(150 0) scale(' + k + ' 1) translate(-150 0)"><g fill="' + PROF.skin + '">' + SKIN + "</g>" +
+      piece("shoes", anim) + piece("bottom", anim) + piece("dress", anim) + piece("top", anim) + piece("outer", anim) + '<g fill="' + PROF.skin + '">' + HANDS + "</g>" + piece("bag", anim) + "</g>" +
+      '<ellipse cx="150" cy="58" rx="24" ry="30" fill="' + PROF.skin + '"/><path class="face" d="M137 49 q5 -3 10 0 M153 49 q5 -3 10 0 M139 59 q4 2 8 0 M153 59 q4 2 8 0 M150 61 q-2 7 1 9"/><path d="M144 76 q6 4 12 0" fill="none" stroke="#b5655a" stroke-width="2.2" stroke-linecap="round"/>' +
+      '<g fill="' + PROF.hc + '">' + hair[1] + "</g>" + piece("glasses", anim) + piece("hat", anim) + "</g>";
+    LOOK = save; return s;
+  }
+  function thumb(id, ci) { return '<svg viewBox="' + VIEW[W[id].cat] + '" aria-hidden="true">' + G[id](fillOf(id, ci)) + "</svg>"; }
+
+  /* ================= check do look: harmonia de cores, ocasião e completude ================= */
+  function hsl(hex) {
+    var r = parseInt(hex.substr(1, 2), 16) / 255, g = parseInt(hex.substr(3, 2), 16) / 255, b = parseInt(hex.substr(5, 2), 16) / 255;
+    var mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn, s = d ? d / (1 - Math.abs(2 * l - 1)) : 0, h = 0;
+    if (d) h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    return [(h * 60 + 360) % 360, s, l, d];
+  }
+  function harmony(cols, prints) {
+    // “cor” = croma alto; areia, nude, palha, jeans e oliva contam como neutros
+    var sat = cols.map(hsl).filter(function (c) { return c[3] >= .33 && c[2] > .15 && c[2] < .85; });
+    var hs = [];
+    sat.forEach(function (c) { if (!hs.some(function (h) { return Math.min(Math.abs(h - c[0]), 360 - Math.abs(h - c[0])) < 18; })) hs.push(c[0]); });
+    var r;
+    if (!hs.length) r = [95, "Paleta neutra: elegante e fácil de usar"];
+    else if (hs.length === 1) r = [93, "Um ponto de cor sobre neutros: equilíbrio perfeito"];
+    else if (hs.length === 2) { var d = Math.min(Math.abs(hs[0] - hs[1]), 360 - Math.abs(hs[0] - hs[1])); r = d < 45 ? [88, "Tons análogos: harmonia suave"] : Math.abs(d - 180) < 35 ? [84, "Cores complementares: contraste ousado e bonito"] : [62, "Duas cores fortes competindo"]; }
+    else r = [48, "Muitas cores fortes: escolha uma para ser a estrela"];
+    if (prints > 1) r = [r[0] - 25, "Duas estampas brigando: deixe só uma"];
+    return r;
+  }
+  console.assert(harmony(["#f1ece2", "#26231f", "#d6c4a4"], 0)[0] === 95 && harmony(["#b3262d", "#1f7a5a", "#c58a6c"], 0)[0] < 60, "harmony");
+  function check(occ) {
+    var items = Object.keys(LOOK).map(function (k) { return LOOK[k]; });
+    var hasMain = LOOK.dress || (LOOK.top && LOOK.bottom), tips = [];
+    if (!items.length) return { s: 0, t: "Vista a modelo para começar", tips: [["→", "Escolha uma peça no guarda-roupa ao lado", "var(--muted)"]] };
+    var cols = items.map(function (it) { var c = W[it.id].c[it.ci]; return c[2] || c[1]; }), prints = items.filter(function (it) { return W[it.id].c[it.ci][3]; }).length;
+    var h = harmony(cols, prints);
+    tips.push([h[0] >= 80 ? "✓" : "!", h[1], h[0] >= 80 ? "var(--ok)" : "var(--warn)"]);
+    var fitOk = items.filter(function (it) { return W[it.id].occ.indexOf(occ) >= 0; }).length / items.length, oc = Math.round(fitOk * 100);
+    var miss = items.filter(function (it) { return W[it.id].occ.indexOf(occ) < 0; }).map(function (it) { return W[it.id].n; });
+    tips.push(miss.length ? ["!", miss.join(", ") + (miss.length > 1 ? " não combinam" : " não combina") + " com a ocasião", "var(--warn)"] : ["✓", "Todas as peças funcionam para " + occ, "var(--ok)"]);
+    var comp = 100;
+    if (!hasMain) { comp = 40; tips.push(["!", LOOK.top ? "Falta a parte de baixo" : LOOK.bottom ? "Falta a parte de cima" : "Falta a peça principal", "var(--bad)"]); }
+    if (!LOOK.shoes) { comp -= 25; tips.push(["→", "Um sapato fecha o look", "var(--muted)"]); }
+    if (!LOOK.bag && !LOOK.glasses && !LOOK.hat) tips.push(["→", "Um acessório dá personalidade", "var(--muted)"]);
+    Object.keys(LOOK).forEach(function (c) { var f = fitOf(c); if (f && f[2]) tips.push(["!", W[LOOK[c].id].n + ": " + f[0].toLowerCase() + ", tente outro tamanho", "var(--bad)"]); });
+    if (LOOK.dress && LOOK.outer && W[LOOK.outer.id].n.indexOf("Blazer") === 0) tips.push(["✦", "Vestido + blazer: truque de stylist para ir do trabalho ao jantar", "var(--accent-2)"]);
+    var s = Math.max(0, Math.round(.4 * h[0] + .4 * oc + .2 * Math.max(0, comp)));
+    return { s: s, t: s >= 85 ? "Look impecável ✦" : s >= 70 ? "Muito bom, quase lá" : s >= 50 ? "Dá pra melhorar" : "Vamos rever?", tips: tips };
+  }
+
+  /* ================= produtos da loja (foto real) ================= */
+  // [id, nome, categoria, preço, preço antigo, foto, peça do provador, índice de cor, selo, esgotados]
+  var P = [
+    ["carmim", "Vestido Carmim", "vestidos", 459, 0, "p-carmim", "dress", 0, "Novo", [3]], ["floral", "Vestido Floral Brisa", "vestidos", 389, 459, "p-floral", "dress", 1, "−15%", []],
+    ["tricot", "Tricô Brisa", "blusas", 239, 0, "p-tricot", "tricot", 0, "", [0]], ["tee", "Camiseta Essencial", "blusas", 89, 0, "p-tee", "tee", 0, "Mais vendido", []],
+    ["bomber", "Jaqueta Bomber Rosé", "blusas", 389, 0, "p-bomber", "bomber", 0, "", []], ["blazer", "Blazer Xadrez Azul", "blusas", 699, 0, "p-blazer", "blazer", 0, "Últimas peças", [0, 4]],
+    ["calca", "Calça Fluida Rosé", "calcas", 279, 0, "p-calca", "pants", 0, "", []], ["listrada", "Calça Listrada", "calcas", 319, 0, "p-listrada", "pants", 1, "Novo", []],
+    ["jeans", "Jeans Reto Vintage", "calcas", 299, 349, "p-jeans", "jeans", 0, "−15%", []], ["bolsa", "Bolsa Tóquio", "acessorios", 529, 0, "p-bolsa", "bag", 0, "", []],
+    ["oculos", "Óculos Lua", "acessorios", 199, 0, "p-oculos", "glasses", 0, "", []], ["scarpin", "Scarpin Floral", "acessorios", 349, 0, "p-scarpin", "heels", 1, "", []]
+  ];
+  var byId = function (id) { return P.filter(function (p) { return p[0] === id; })[0]; };
+  var favs = {};
+  function card(p) {
+    var oneSize = W[p[6]].cat === "bag" || W[p[6]].cat === "glasses";
+    return '<article class="pd" data-p="' + p[0] + '" tabindex="0"><div class="pd__i">' + (p[8] ? '<span class="bdg' + (p[8][0] === "−" ? " bdg--sale" : "") + '">' + p[8] + "</span>" : "") +
+      '<button class="heart' + (favs[p[0]] ? " on" : "") + '" data-fav="' + p[0] + '" aria-label="Favoritar">' + (favs[p[0]] ? "♥" : "♡") + '</button><img src="' + IMG + p[5] + '.jpg" alt="' + esc(p[1]) + '" loading="lazy">' +
+      '<div class="pd__q"><p>Adicionar rápido</p><div>' + (oneSize ? '<button data-quick="' + p[0] + '" data-s="U">Tamanho único</button>' : SIZES.map(function (s, i) { return '<button data-quick="' + p[0] + '" data-s="' + s + '"' + (p[9].indexOf(i) >= 0 ? " disabled" : "") + ">" + s + "</button>"; }).join("")) + "</div></div></div>" +
+      '<div class="pd__b"><b>' + esc(p[1]) + "</b><span>" + (p[4] ? "<s>" + brl(p[4]) + "</s>" : "") + brl(p[3]) + "</span><small>ou 6× de " + brl(Math.round(p[3] / 6 * 100) / 100) + '</small><div class="dots">' + W[p[6]].c.map(function (c) { return '<i style="background:' + (c[1].indexOf("url") === 0 ? c[2] : c[1]) + '"></i>'; }).join("") + "</div></div></article>";
+  }
+  function grid(cat) { $("#shopGrid").innerHTML = P.filter(function (p) { return cat === "all" || p[2] === cat; }).map(card).join(""); }
+  grid("all");
+  $("#catChips").addEventListener("pick", function (e) { grid(e.detail.dataset.value); });
+
+  /* ================= barra superior (igual em todas as telas da loja) ================= */
+  var TOP = '<div class="ann marquee" style="--speed:40s"><div><span>Frete grátis acima de R$ 299</span><span>5% off no Pix</span><span>Troca grátis em 30 dias</span><span>Provador virtual: prove antes de comprar</span></div></div>' +
+    '<header class="snav"><div class="wrap"><nav><button data-act="novidades">Novidades</button><button data-act="vestidos">Vestidos</button><button data-act="lookbook">Lookbook</button><button class="hot" data-go-prov>✦ Provador</button></nav>' +
+    '<button class="ic burger" data-act="menu" aria-label="Menu">☰</button><button class="brand" data-act="home">ÁUREA</button>' +
+    '<div class="icons"><button class="ic" data-act="busca" aria-label="Buscar">⌕</button><button class="ic" data-act="favs" aria-label="Favoritos" data-n="0">♡</button><button class="ic" data-act="bag" aria-label="Sacola" data-n="0">👜</button></div></div></header>';
+  $$("[data-top]").forEach(function (n) { n.outerHTML = TOP; });
+  $$(".ann .marquee > div, .ann > div").forEach(function (m) { if (!m.dataset.dup) { m.innerHTML += m.innerHTML; m.dataset.dup = 1; } });
+
+  /* ================= sacola ================= */
+  var CART = [];
+  var sub = function () { return CART.reduce(function (s, i) { return s + i.p * i.q; }, 0); };
+  function bagCount() { var n = CART.reduce(function (s, i) { return s + i.q; }, 0); $$('[data-act="bag"]').forEach(function (b) { b.dataset.n = n; b.classList.remove("bump"); void b.offsetWidth; b.classList.add("bump"); }); }
+  function add(item, from) {
+    var ex = CART.filter(function (c) { return c.key === item.key; })[0];
+    if (ex) ex.q++; else CART.push(Object.assign({ q: 1 }, item));
+    if (from) fly(from); else bagCount();
+  }
+  function fly(img) {
+    var bag = $$('[data-act="bag"]').filter(function (b) { return b.offsetParent; })[0], r = img.getBoundingClientRect();
+    if (!bag || !r.width) return bagCount();
+    var b = bag.getBoundingClientRect(), f = img.cloneNode(true);
+    f.className = "fly"; f.removeAttribute("id"); f.style.cssText += ";left:" + r.left + "px;top:" + r.top + "px;width:" + r.width + "px;height:" + r.height + "px";
+    document.body.appendChild(f);
+    var a = f.animate([{ transform: "none", opacity: 1, borderRadius: "0" }, { transform: "translate(" + (b.left + b.width / 2 - r.left - r.width / 2) + "px," + (b.top + b.height / 2 - r.top - r.height / 2) + "px) scale(" + 24 / r.width + ")", opacity: .6, borderRadius: "50%" }],
+      { duration: D.shot ? 1 : 750, easing: "cubic-bezier(.6,-.2,.4,1)" });
+    a.onfinish = function () { f.remove(); bagCount(); };
+  }
+  function bagHtml() {
+    var s = sub(), need = Math.max(0, 299 - s);
+    return '<div class="ship">' + (need ? "Faltam <b>" + brl(need) + "</b> para o frete grátis" : "✓ Você ganhou <b>frete grátis</b>") + '<div class="bar"><i style="--v:' + Math.min(100, s / 299 * 100) + '%;--c:var(--accent-2)"></i></div></div>' +
+      (CART.length ? CART.map(function (c, i) {
+        return '<div class="ci">' + (c.img ? '<img src="' + IMG + c.img + '.jpg" alt="">' : thumb(c.w, c.ci)) + "<div><b>" + esc(c.n) + "</b><small>" + esc(c.cor) + " · " + c.s + '</small><div class="qty"><button data-q="' + i + '" data-d="-1" aria-label="Menos">−</button><span>' + c.q + '</span><button data-q="' + i + '" data-d="1" aria-label="Mais">+</button></div></div><b>' + brl(c.p * c.q) + "</b></div>";
+      }).join("") + '<div class="tot"><div><span>Subtotal</span><span>' + brl(s) + "</span></div><div><span>No Pix (5% off)</span><b>" + brl(Math.round(s * 95) / 100) + '</b></div></div><button class="btn btn--block" data-act="checkout">Finalizar compra</button><button class="btn btn--ghost btn--block" style="margin-top:8px" data-act="closebag">Continuar comprando</button>'
+        : '<p class="muted" style="padding:30px 0;text-align:center">Sua sacola está vazia.<br>Que tal começar pelo <button class="linkb" data-go-prov style="border:0;background:none;text-decoration:underline;cursor:pointer;font:inherit">provador virtual</button>?</p>');
+  }
+  function openBag() { D.drawer("Sacola", bagHtml()); }
+  document.addEventListener("click", function (e) {
+    var q = e.target.closest("[data-q]"); if (!q) return;
+    var c = CART[+q.dataset.q]; c.q += +q.dataset.d; if (c.q <= 0) CART.splice(+q.dataset.q, 1);
+    bagCount(); $(".drawer").innerHTML = $(".drawer").innerHTML.split('<div class="ship">')[0] + bagHtml();
+  });
+
+  /* ================= página de produto ================= */
+  var cur = P[0], curC = 0, curS = -1, curImg = 0;
+  function openP(id) { cur = byId(id) || P[0]; curC = cur[7]; curS = -1; curImg = 0; fillP(); D.go("produto"); }
+  function fillP() {
+    var w = W[cur[6]], oneSize = w.cat === "bag" || w.cat === "glasses", rec = recFor(cur[6]);
+    var imgs = [cur[5], cur[2] === "vestidos" ? "look2" : cur[2] === "acessorios" ? "look1" : "look4", "svg"];
+    $("#ppTh").innerHTML = imgs.map(function (k, i) { return '<button data-pi="' + i + '" class="' + (i === curImg ? "on" : "") + '" aria-label="Foto ' + (i + 1) + '">' + (k === "svg" ? '<svg viewBox="0 0 300 640">' + figure(lookWith(cur[6], curC)) + "</svg>" : '<img src="' + IMG + k + '.jpg" alt="">') + "</button>"; }).join("");
+    var k = imgs[curImg];
+    $("#ppMain").innerHTML = k === "svg" ? '<svg viewBox="0 0 300 640" style="background:radial-gradient(ellipse at 50% 35%,#fffaf3,var(--surface-2) 75%)">' + figure(lookWith(cur[6], curC)) + "</svg>" : '<img src="' + IMG + k + '.jpg" alt="' + esc(cur[1]) + '">';
+    $("#ppCat").textContent = { vestidos: "Vestidos", blusas: "Blusas & casacos", calcas: "Calças & saias", acessorios: "Acessórios" }[cur[2]];
+    $("#ppName").textContent = cur[1];
+    $("#ppPrice").innerHTML = (cur[4] ? "<s>" + brl(cur[4]) + "</s>" : "") + brl(cur[3]);
+    $("#ppPix").textContent = brl(Math.round(cur[3] * 95) / 100) + " no Pix · ou 6× de " + brl(Math.round(cur[3] / 6 * 100) / 100) + " sem juros";
+    $("#ppHot").textContent = "✦ " + (12 + cur[3] % 23) + " pessoas provaram esta peça hoje";
+    $("#ppColor").textContent = w.c[curC][0];
+    $("#ppSw").innerHTML = w.c.map(function (c, i) { return '<button data-sw="' + i + '" class="' + (i === curC ? "on" : "") + '" style="background:' + c[1] + '" aria-label="' + c[0] + '" title="' + c[0] + '"></button>'; }).join("");
+    $("#ppSz").innerHTML = oneSize ? '<button class="on" style="grid-column:1/-1">Tamanho único</button>' : SIZES.map(function (s, i) { return '<button data-sz="' + i + '" class="' + (i === curS ? "on " : "") + (cur[9].indexOf(i) >= 0 ? "out " : "") + (i === rec ? "rec" : "") + '">' + s + "</button>"; }).join("");
+    $("#ppGuide").hidden = oneSize;
+    $("#ppRec").innerHTML = oneSize ? "" : "★ Sugerido para você: <b>" + SIZES[rec] + "</b> (" + PROF.h + " cm, " + PROF.w + " kg)" + (w.off ? " · esta peça " + (w.off > 0 ? "veste grande" : "veste pequeno") : "");
+    $("#ppFit").style.left = (50 - (w.off || 0) * 26) + "%";
+    $("#ppDesc").textContent = cur[1] + " em tecido natural com toque macio e caimento fluido. Modelagem pensada para o calor brasileiro, acabamento à mão. A modelo veste M e tem 1,74 m.";
+    $("#ppMatch").innerHTML = P.filter(function (p) { return p !== cur && p[2] !== cur[2]; }).slice(0, 4).map(card).join("");
+  }
+  function lookWith(id, ci) { var l = {}, c = W[id].cat; l[c] = { id: id, ci: ci, s: recFor(id) }; if (c !== "dress" && c !== "top") l.top = { id: "tee", ci: 0, s: 2 }; if (c === "top" || c === "outer") l.bottom = { id: "pants", ci: 2, s: 2 }; if (c !== "shoes") l.shoes = { id: "loafer", ci: 0, s: 2 }; if (c === "dress") delete l.top; return l; }
+  $("#ppTh").addEventListener("click", function (e) { var b = e.target.closest("[data-pi]"); if (b) { curImg = +b.dataset.pi; fillP(); } });
+  $("#ppMain").addEventListener("click", function (e) { if (curImg === 2) return; var m = $("#ppMain"); m.classList.toggle("zoom"); });
+  $("#ppMain").addEventListener("pointermove", function (e) { var m = $("#ppMain"), r = m.getBoundingClientRect(), i = $("img", m); if (i) i.style.transformOrigin = ((e.clientX - r.left) / r.width * 100) + "% " + ((e.clientY - r.top) / r.height * 100) + "%"; });
+  $("#ppSw").addEventListener("click", function (e) { var b = e.target.closest("[data-sw]"); if (b) { curC = +b.dataset.sw; curImg = 2; fillP(); } });
+  $("#ppSz").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-sz]"); if (!b) return;
+    if (b.classList.contains("out")) { D.drawer("Avise-me quando chegar", '<p class="muted">' + esc(cur[1]) + " · tamanho " + SIZES[+b.dataset.sz] + '</p><form class="form" data-mock="Pronto! Te avisamos no WhatsApp assim que repor 💬"><input class="input" required placeholder="Seu WhatsApp" aria-label="WhatsApp"><button class="btn">Me avise</button></form>'); return; }
+    curS = +b.dataset.sz; fillP();
+  });
+  $("#ppAdd").addEventListener("click", function () {
+    var w = W[cur[6]], one = w.cat === "bag" || w.cat === "glasses";
+    if (!one && curS < 0) { D.toast("Escolha um tamanho", true); D.shake($("#ppSz")); return; }
+    add({ key: cur[0] + curC + curS, n: cur[1], cor: w.c[curC][0], s: one ? "U" : SIZES[curS], p: cur[3], img: cur[5], w: cur[6], ci: curC }, $("#ppMain img, #ppMain svg"));
+    D.toast(cur[1] + " na sacola · " + (sub() >= 299 ? "frete grátis ✓" : "faltam " + brl(299 - sub()) + " para frete grátis"));
+  });
+  $("#ppTry").addEventListener("click", function () { wear(cur[6], curC, curS >= 0 ? curS : recFor(cur[6])); D.go("provador"); });
+  $("#ppGuide").addEventListener("click", function () {
+    D.drawer("Qual é o meu tamanho?", '<div class="prof"><label>Altura <b id="gA">' + PROF.h + ' cm</b><input type="range" id="gAr" min="150" max="185" value="' + PROF.h + '"></label><label>Peso <b id="gP">' + PROF.w + ' kg</b><input type="range" id="gPr" min="45" max="100" value="' + PROF.w + '"></label></div>' +
+      '<div class="sel" style="text-align:center"><span class="eyebrow">Seu tamanho</span><div id="gR" style="font:400 64px var(--font-d)"></div><p class="muted small" id="gT"></p></div>' +
+      '<table class="table"><thead><tr><th>Tam.</th><th>Busto</th><th>Cintura</th><th>Quadril</th></tr></thead><tbody>' + SIZES.map(function (s, i) { return "<tr><td>" + s + "</td><td>" + (80 + i * 6) + "</td><td>" + (62 + i * 6) + "</td><td>" + (88 + i * 6) + "</td></tr>"; }).join("") + "</tbody></table>" +
+      '<button class="btn btn--block" id="gOk">Usar este tamanho</button>');
+    function g() { PROF.h = +$("#gAr").value; PROF.w = +$("#gPr").value; var r = recFor(cur[6]); $("#gA").textContent = PROF.h + " cm"; $("#gP").textContent = PROF.w + " kg"; $("#gR").textContent = SIZES[r]; $("#gT").textContent = (86 + (PROF.h + PROF.w) % 9) + "% das clientes com medidas parecidas ficaram com " + SIZES[r] + " e não trocaram."; }
+    $("#gAr").addEventListener("input", g); $("#gPr").addEventListener("input", g); g();
+    $("#gOk").addEventListener("click", function () { curS = recFor(cur[6]); D.closeLayer(); syncProf(); fillP(); D.toast("Tamanho " + SIZES[curS] + " selecionado ✓"); });
+  });
+  $("#cepF").addEventListener("submit", function (e) { e.preventDefault(); $("#cepR").innerHTML = "✓ <b>Grátis</b> · chega quinta-feira · <b>Expresso R$ 24,90</b> chega hoje até 21h"; });
+
+  /* ================= provador virtual ================= */
+  var tab = "top", lastAnim = null;
+  var TONES = ["#f3d7c2", "#e9c3a3", "#c99470", "#9c6a48", "#6e4630"], HC = ["#1d1611", "#3b2a20", "#7a4a26", "#c99a5b", "#9a9590"];
+  $("#tones").innerHTML = TONES.map(function (t) { return '<button data-tone="' + t + '" style="background:' + t + '" aria-label="Tom de pele"></button>'; }).join("");
+  $("#hairT").innerHTML = HC.map(function (t) { return '<button data-hc="' + t + '" style="background:' + t + '" aria-label="Cor do cabelo"></button>'; }).join("");
+  $("#wtabs").innerHTML = TABS.map(function (t) { return '<button data-tab="' + t[0] + '">' + t[1] + "</button>"; }).join("");
+  function occ() { return $("#occC .is-on").dataset.value; }
+  function wear(id, ci, s) {
+    var c = W[id].cat;
+    if (c === "dress") { delete LOOK.top; delete LOOK.bottom; }
+    if (c === "top" || c === "bottom") delete LOOK.dress;
+    LOOK[c] = { id: id, ci: ci == null ? 0 : ci, s: s == null ? recFor(id) : s };
+    lastAnim = c; tab = ACC[c] ? "acc" : c;
+    drawProv();
+  }
+  function drawProv() {
+    $("#model").innerHTML = figure(LOOK, lastAnim); lastAnim = null;
+    $$("#wtabs button").forEach(function (b) { b.classList.toggle("on", b.dataset.tab === tab); });
+    var ids = Object.keys(W).filter(function (id) { return tab === "acc" ? ACC[W[id].cat] : W[id].cat === tab; });
+    $("#wgrid").innerHTML = ids.map(function (id) {
+      var on = LOOK[W[id].cat] && LOOK[W[id].cat].id === id, ci = on ? LOOK[W[id].cat].ci : 0;
+      return '<button class="wi' + (on ? " on" : "") + '" data-w="' + id + '">' + thumb(id, ci) + "<b>" + W[id].n + "</b><span>" + brl(W[id].p) + "</span></button>";
+    }).join("");
+    var sel = ids.filter(function (id) { return LOOK[W[id].cat] && LOOK[W[id].cat].id === id; })[0];
+    if (sel) {
+      var it = LOOK[W[sel].cat], w = W[sel], fit = fitOf(w.cat), rec = recFor(sel), sized = w.cat !== "shoes" && !ACC[w.cat];
+      $("#wsel").innerHTML = '<div class="sel"><div class="row" style="justify-content:space-between"><b style="font-weight:500">' + w.n + '</b><button class="linkb" data-off="' + w.cat + '" style="border:0;background:none;cursor:pointer;color:var(--muted);font:inherit;text-decoration:underline">tirar</button></div>' +
+        '<p class="small muted" style="margin:10px 0 8px">Cor: ' + w.c[it.ci][0] + '</p><div class="sw">' + w.c.map(function (c, i) { return '<button data-wc="' + i + '" class="' + (i === it.ci ? "on" : "") + '" style="background:' + c[1] + ';width:28px;height:28px" title="' + c[0] + '" aria-label="' + c[0] + '"></button>'; }).join("") + "</div>" +
+        (sized ? '<p class="small muted" style="margin:14px 0 8px">Tamanho · ' + (fit ? '<b style="color:' + (fit[2] ? "var(--bad)" : "var(--fg)") + '">' + fit[0] + "</b>" : "") + '</p><div class="sz">' + SIZES.map(function (s, i) { return '<button data-ws="' + i + '" class="' + (i === it.s ? "on " : "") + (i === rec ? "rec" : "") + '" style="padding:9px 0">' + s + "</button>"; }).join("") + "</div>" : "") + "</div>";
+    } else $("#wsel").innerHTML = "";
+    $("#fitB").innerHTML = Object.keys(LOOK).map(function (c) { var f = fitOf(c); return f ? '<span class="' + (f[2] ? "warn" : "") + '">' + W[LOOK[c].id].n.split(" ")[0] + " " + SIZES[LOOK[c].s] + " · " + f[0] + "</span>" : ""; }).join("");
+    var ck = check(occ()), r = $("#scR");
+    D.setP(r, ck.s); r.style.setProperty("--c", ck.s >= 85 ? "var(--ok)" : ck.s >= 60 ? "var(--warn)" : "var(--bad)");
+    $("#scN").textContent = ck.s; $("#scT").textContent = ck.t;
+    $("#tips").innerHTML = ck.tips.map(function (t, i) { return '<div style="--c:' + t[2] + ";animation-delay:" + i * 60 + 'ms"><b>' + t[0] + "</b><span>" + esc(t[1]) + "</span></div>"; }).join("");
+    $("#lkTot").textContent = brl(Object.keys(LOOK).reduce(function (s, c) { return s + W[LOOK[c].id].p; }, 0));
+    $$("#tones button").forEach(function (b) { b.classList.toggle("on", b.dataset.tone === PROF.skin); });
+    $$("#hairT button").forEach(function (b) { b.classList.toggle("on", b.dataset.hc === PROF.hc); });
+    $("#ctaFig").innerHTML = figure(LOOK.dress || LOOK.top ? LOOK : PRESETS[0]);
+  }
+  function syncProf() { $("#rAlt").value = PROF.h; $("#rPes").value = PROF.w; $("#vAlt").textContent = PROF.h + " cm"; $("#vPes").textContent = PROF.w + " kg"; $("#vRec").textContent = SIZES[recIdx(PROF.h, PROF.w)]; }
+  $("#rAlt").addEventListener("input", function () { PROF.h = +this.value; syncProf(); drawProv(); });
+  $("#rPes").addEventListener("input", function () { PROF.w = +this.value; syncProf(); drawProv(); });
+  $("#tones").addEventListener("click", function (e) { var b = e.target.closest("[data-tone]"); if (b) { PROF.skin = b.dataset.tone; drawProv(); } });
+  $("#hairT").addEventListener("click", function (e) { var b = e.target.closest("[data-hc]"); if (b) { PROF.hc = b.dataset.hc; drawProv(); } });
+  $("#hairC").addEventListener("pick", function (e) { PROF.hair = e.detail.dataset.value; drawProv(); });
+  $("#occC").addEventListener("pick", drawProv);
+  $("#wtabs").addEventListener("click", function (e) { var b = e.target.closest("[data-tab]"); if (b) { tab = b.dataset.tab; drawProv(); } });
+  $("#wgrid").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-w]"); if (!b) return;
+    var id = b.dataset.w, c = W[id].cat;
+    if (LOOK[c] && LOOK[c].id === id) { delete LOOK[c]; drawProv(); } else wear(id);
+  });
+  $("#wsel").addEventListener("click", function (e) {
+    var t = e.target.closest("[data-wc],[data-ws],[data-off]"); if (!t) return;
+    var sel = $("#wgrid .wi.on"), c = sel && W[sel.dataset.w].cat;
+    if (t.dataset.off) { delete LOOK[t.dataset.off]; drawProv(); return; }
+    if (t.dataset.wc != null) { LOOK[c].ci = +t.dataset.wc; lastAnim = c; }
+    if (t.dataset.ws != null) LOOK[c].s = +t.dataset.ws;
+    drawProv();
+  });
+  var PRESETS = [
+    { dress: { id: "dress", ci: 0, s: 1 }, heels: 0, shoes: { id: "heels", ci: 0, s: 2 }, bag: { id: "bag", ci: 1, s: 2 } },
+    { top: { id: "shirt", ci: 0, s: 1 }, bottom: { id: "pants", ci: 1, s: 1 }, shoes: { id: "loafer", ci: 0, s: 2 }, outer: { id: "blazer", ci: 1, s: 1 } },
+    { top: { id: "tee", ci: 0, s: 1 }, bottom: { id: "jeans", ci: 0, s: 2 }, shoes: { id: "sneaker", ci: 0, s: 2 }, glasses: { id: "glasses", ci: 0, s: 2 }, outer: { id: "bomber", ci: 0, s: 1 } },
+    { top: { id: "tricot", ci: 0, s: 1 }, bottom: { id: "skirt", ci: 0, s: 1 }, shoes: { id: "heels", ci: 0, s: 2 }, bag: { id: "bag", ci: 2, s: 2 } },
+    { dress: { id: "dress", ci: 1, s: 1 }, shoes: { id: "sneaker", ci: 0, s: 2 }, hat: { id: "hat", ci: 0, s: 2 }, glasses: { id: "glasses", ci: 0, s: 2 } }
+  ];
+  PRESETS.forEach(function (p) { delete p.heels; });
+  var pi = 1; // o provador abre com PRESETS[1]
+  $("#surp").addEventListener("click", function () {
+    pi = (pi + 1) % PRESETS.length; LOOK = JSON.parse(JSON.stringify(PRESETS[pi]));
+    Object.keys(LOOK).forEach(function (c) { if (!ACC[c] && c !== "shoes") LOOK[c].s = recFor(LOOK[c].id); });
+    $("#model").style.opacity = 0; setTimeout(function () { $("#model").style.opacity = 1; tab = "top"; lastAnim = null; drawProv(); $$("#model .gm").length; }, 180);
+  });
+  $("#model").style.transition = "opacity .18s";
+  $("#undress").addEventListener("click", function () { var old = LOOK; LOOK = {}; drawProv(); D.toast("Look desmontado", false, function () { LOOK = old; drawProv(); }); });
+  var SAVED = [];
+  $("#saveL").addEventListener("click", function () { SAVED.push(JSON.parse(JSON.stringify(LOOK))); D.toast("Look salvo nos favoritos ♡ · te avisamos se alguma peça entrar em promoção"); });
+  $("#buyLook").addEventListener("click", function () {
+    var cs = Object.keys(LOOK); if (!cs.length) return D.toast("Monte um look primeiro", true);
+    cs.forEach(function (c) { var it = LOOK[c], w = W[it.id], p = P.filter(function (x) { return x[6] === it.id; })[0]; add({ key: it.id + it.ci + it.s, n: w.n, cor: w.c[it.ci][0], s: w.cat === "shoes" ? 37 : ACC[c] ? "U" : SIZES[it.s], p: w.p, img: p && p[7] === it.ci ? p[5] : "", w: it.id, ci: it.ci }); });
+    fly($("#model")); D.toast(cs.length + " peças na sacola · tamanhos do provador já selecionados ✦");
+  });
+  LOOK = JSON.parse(JSON.stringify(PRESETS[1]));
+  syncProf(); drawProv();
+
+  /* ================= lookbook com hotspots ================= */
+  var HS = [[50, 20, "oculos"], [52, 52, "casaco"], [16, 62, "bolsa"]];
+  P.push(["casaco", "Casaco Bordô Lã", "blusas", 899, 0, "p-casaco", "blazer", 3, "", []]);
+  $("#hsBox").innerHTML = HS.map(function (h, i) { return '<button class="hs" style="left:' + h[0] + "%;top:" + h[1] + '%" data-hs="' + i + '" aria-label="Ver peça">+</button>'; }).join("");
+  $("#hsBox").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-hs]"); if (!b) return;
+    $$("#hsBox .hs").forEach(function (x) { x.classList.toggle("on", x === b); });
+    var p = byId(HS[+b.dataset.hs][2]);
+    $("#hpop").innerHTML = '<div class="hpop"><img src="' + IMG + p[5] + '.jpg" alt=""><div style="flex:1"><b style="font-weight:500">' + p[1] + "</b><p>" + brl(p[3]) + '</p><button class="linkb" data-p-open="' + p[0] + '" style="border:0;background:none;padding:0;cursor:pointer;text-decoration:underline;font:inherit;margin-top:6px">Ver detalhes</button></div><button class="btn btn--sm" data-quick="' + p[0] + '" data-s="' + (W[p[6]].cat === "glasses" || W[p[6]].cat === "bag" ? "U" : "M") + '">+ Sacola</button></div>';
+  });
+  $("#buyLook1").addEventListener("click", function () { HS.forEach(function (h) { var p = byId(h[2]); add({ key: p[0] + "lk", n: p[1], cor: W[p[6]].c[p[7]][0], s: "M", p: Math.round(p[3] * .9), img: p[5], w: p[6], ci: p[7] }); }); fly($(".lk img")); D.toast("Look completo na sacola com 10% off ✦"); });
+
+  /* ================= checkout ================= */
+  function coRender() {
+    var s = sub(), fr = $('#coW [data-group="frete"] .is-on'), exp = fr && fr.dataset.value === "Expresso", pix = $('#coW [data-group="pag"] .is-on'), isPix = !pix || pix.dataset.value === "Pix";
+    var frete = exp ? 24.9 : s >= 299 ? 0 : 19.9, desc = isPix ? Math.round(s * 5) / 100 : 0;
+    $("#frP").textContent = s >= 299 ? "grátis" : "R$ 19,90";
+    $("#coList").innerHTML = CART.map(function (c) { return '<div class="ci" style="grid-template-columns:56px 1fr auto">' + (c.img ? '<img src="' + IMG + c.img + '.jpg" alt="" style="width:56px">' : thumb(c.w, c.ci)) + "<div><b>" + esc(c.n) + "</b><small>" + esc(c.cor) + " · " + c.s + " · " + c.q + "×</small></div><span>" + brl(c.p * c.q) + "</span></div>"; }).join("") || '<p class="muted small">Sacola vazia.</p>';
+    $("#coTot").innerHTML = "<div><span>Subtotal</span><span>" + brl(s) + "</span></div><div><span>Frete</span><span>" + (frete ? brl(frete) : "grátis") + "</span></div>" + (desc ? "<div><span>Pix 5% off</span><span>−" + brl(desc) + "</span></div>" : "") +
+      '<div style="border-top:1px solid var(--line);padding-top:10px;font-size:18px"><b>Total</b><b>' + brl(Math.round((s + frete - desc) * 100) / 100) + "</b></div>";
+    return Math.round((s + frete - desc) * 100) / 100;
+  }
+  $("#coW").addEventListener("pick", coRender);
+  var ORD = 1027;
+  $("#coW").addEventListener("step", function (e) {
+    coRender();
+    if (e.detail !== 3) return;
+    var total = coRender(), isPix = $('#coW [data-group="pag"] .is-on').dataset.value === "Pix", n = "#A" + (++ORD);
+    $("#ordN").textContent = n;
+    var cells = ""; for (var y = 0; y < 21; y++) for (var x = 0; x < 21; x++) { var fin = (x < 7 && y < 7) || (x > 13 && y < 7) || (x < 7 && y > 13), on = fin ? (x % 6 === 0 || y % 6 === 0 || (x % 14 > 1 && x % 14 < 5 && y % 14 > 1 && y % 14 < 5)) : ((x * 7 + y * 13 + x * y) % 5 < 2); if (on) cells += '<rect x="' + x + '" y="' + y + '" width="1" height="1"/>'; }
+    $("#payBox").innerHTML = isPix ? '<p class="muted">Pague ' + brl(total) + ' com o Pix abaixo. A confirmação é automática.</p><svg class="qr mt" viewBox="0 0 21 21" shape-rendering="crispEdges">' + cells + '</svg><button class="btn btn--ghost btn--sm mt" data-toast="Código Pix copiado ✓">Copiar código Pix</button>' : '<p class="muted">Pagamento de ' + brl(total) + " aprovado no cartão.</p>";
+    if (CART.length) kcard("pago", ($('#coW [name="nome"]').value || "Cliente").split(" ")[0], n, CART.slice(), total);
+    CART = []; bagCount();
+  });
+
+  /* ================= navegação geral ================= */
+  function section(id) { D.go("loja"); setTimeout(function () { document.getElementById(id).scrollIntoView({ behavior: "smooth" }); }, 60); }
+  function toggleFav(id) { if (favs[id]) delete favs[id]; else favs[id] = 1; $$('[data-fav="' + id + '"]').forEach(function (h) { h.classList.toggle("on", !!favs[id]); h.textContent = favs[id] ? "♥" : "♡"; }); $$('[data-act="favs"]').forEach(function (b) { b.dataset.n = Object.keys(favs).length; }); if (favs[id]) D.toast("Salvo nos favoritos ♡"); }
+  document.addEventListener("click", function (e) {
+    var t;
+    if ((t = e.target.closest("[data-fav]"))) { e.stopPropagation(); toggleFav(t.dataset.fav); return; }
+    if ((t = e.target.closest("[data-quick]"))) {
+      e.stopPropagation(); var p = byId(t.dataset.quick);
+      add({ key: p[0] + p[7] + t.dataset.s, n: p[1], cor: W[p[6]].c[p[7]][0], s: t.dataset.s, p: p[3], img: p[5], w: p[6], ci: p[7] }, (t.closest(".pd") || t.closest(".hpop")).querySelector("img"));
+      D.toast(p[1] + " (" + t.dataset.s + ") na sacola"); return;
+    }
+    if ((t = e.target.closest("[data-p-open]"))) { openP(t.dataset.pOpen); return; }
+    if ((t = e.target.closest(".pd"))) { openP(t.dataset.p); return; }
+    if ((t = e.target.closest("[data-cat]"))) { section("novidades"); var c = $('#catChips [data-value="' + t.dataset.cat + '"]'); c.click(); return; }
+    if (e.target.closest("[data-go-prov]")) { D.closeLayer(); D.go("provador"); return; }
+    if (e.target.closest("[data-go-bag]")) { openBag(); return; }
+    if (!(t = e.target.closest("[data-act]"))) return;
+    var a = t.dataset.act;
+    if (a === "home") { D.closeLayer(); D.go("loja"); }
+    else if (a === "novidades" || a === "lookbook") { D.closeLayer(); section(a); }
+    else if (a === "vestidos") { D.closeLayer(); section("novidades"); $('#catChips [data-value="vestidos"]').click(); }
+    else if (a === "bag") openBag();
+    else if (a === "closebag") D.closeLayer();
+    else if (a === "checkout") { D.closeLayer(); D.go("checkout"); coRender(); }
+    else if (a === "favs") D.drawer("Favoritos", Object.keys(favs).length ? '<div class="grid4" style="grid-template-columns:1fr 1fr">' + Object.keys(favs).map(function (id) { return card(byId(id)); }).join("") + "</div>" : '<p class="muted">Toque no ♡ das peças para salvar aqui.</p>');
+    else if (a === "busca") D.drawer("Buscar", '<input class="input" id="qIn" placeholder="Vestido, linho, bolsa…" aria-label="Buscar" autofocus><div class="grid4" id="qRes" style="grid-template-columns:1fr 1fr;margin-top:16px">' + P.slice(0, 4).map(card).join("") + "</div>");
+    else if (a === "menu") D.drawer("ÁUREA", '<div class="list"><button class="ic" data-act="novidades" style="text-align:left">Novidades</button><button class="ic" data-act="vestidos" style="text-align:left">Vestidos</button><button class="ic" data-act="lookbook" style="text-align:left">Lookbook</button><button class="ic" data-go-prov style="text-align:left;color:var(--accent-2)">✦ Provador virtual</button><button class="ic" data-act="favs" style="text-align:left">Favoritos</button></div>');
+  });
+  document.addEventListener("input", function (e) {
+    if (e.target.id !== "qIn") return;
+    var q = e.target.value.toLowerCase();
+    $("#qRes").innerHTML = P.filter(function (p) { return (p[1] + " " + p[2]).toLowerCase().indexOf(q) >= 0; }).map(card).join("") || '<p class="muted">Nada encontrado.</p>';
+  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.classList && e.target.classList.contains("pd")) openP(e.target.dataset.p); });
+
+  /* ================= painel admin ================= */
+  $("#mHoje").textContent = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long" }).format(new Date());
+  var FAT = 14860, PEDN = 36;
+  function kpis() { $("#kFat").textContent = brl(FAT); $("#kPed").textContent = PEDN; }
+  function kcard(col, name, n, items, total) {
+    $('#kb [data-k="' + col + '"] .kcards').insertAdjacentHTML("afterbegin", '<div class="kcard" draggable="true" data-n="' + n + '" data-c="' + esc(name) + '"><b>' + n + " · " + esc(name) + "</b>" + items.length + (items.length > 1 ? " peças" : " peça") + " · " + brl(total) +
+      '<div class="ord">' + items.slice(0, 4).map(function (i) { return i.img ? '<img src="' + IMG + i.img + '.jpg" alt="">' : ""; }).join("") + '</div><footer><span class="small">' + (col === "pago" ? "agora" : "hoje") + '</span><button class="kadv" aria-label="Avançar">→</button></footer></div>');
+    D.kcount($("#kb"));
+    if (col === "pago" && n !== "#A1019") { FAT += Math.round(total); PEDN++; kpis(); }
+  }
+  [["ent", "Renata", "#A1019", ["carmim", "scarpin"]], ["env", "Paula", "#A1022", ["tricot", "calca"]], ["env", "Bia", "#A1023", ["bolsa"]], ["sep", "Lívia", "#A1025", ["floral", "oculos", "scarpin"]], ["pago", "Camila", "#A1026", ["blazer", "listrada"]]].forEach(function (o) {
+    var it = o[3].map(function (id) { var p = byId(id); return { img: p[5], p: p[3] }; });
+    kcard(o[0], o[1], o[2], it, it.reduce(function (s, i) { return s + i.p; }, 0));
+  });
+  FAT = 14860; PEDN = 36; kpis();
+  $("#kb").addEventListener("kmove", function (e) {
+    var k = e.detail.to.dataset.k, c = e.target;
+    e.detail.msg = k === "sep" ? "Separação iniciada · " + c.dataset.n : k === "env" ? "Etiqueta gerada · rastreio enviado no WhatsApp da " + c.dataset.c : k === "ent" ? "Entregue ✓ · pedido de avaliação agendado para amanhã" : "";
+  });
+  $("#topP").innerHTML = ["carmim", "tee", "tricot", "bolsa", "listrada"].map(function (id, i) { var p = byId(id); return '<div class="tp"><img src="' + IMG + p[5] + '.jpg" alt=""><div style="flex:1"><b style="font-weight:500">' + p[1] + '</b><div class="muted small">' + [48, 41, 33, 27, 22][i] + " vendidos</div></div><span>" + brl(p[3] * [48, 41, 33, 27, 22][i]) + "</span></div>"; }).join("");
+  // grade de estoque: produto x tamanho
+  var EST = P.filter(function (p) { var c = W[p[6]].cat; return c !== "bag" && c !== "glasses" && c !== "shoes"; }).map(function (p, i) { return [p, SIZES.map(function (s, j) { return p[9].indexOf(j) >= 0 ? 0 : 1 + (i * 5 + j * 7) % 13 + (j === 2 ? 3 : 0); })]; });
+  function grade() {
+    $("#gradeB").innerHTML = EST.map(function (r, i) {
+      var t = r[1].reduce(function (a, b) { return a + b; }, 0);
+      return '<tr><td><img src="' + IMG + r[0][5] + '.jpg" alt="">' + esc(r[0][1]) + "</td>" + r[1].map(function (q, j) { return '<td class="' + (q === 0 ? "z" : q < 3 ? "l" : "") + '"><span data-edit="Estoque atualizado · grade sincronizada com a loja" data-g="' + i + "-" + j + '">' + q + "</span></td>"; }).join("") + "<td><b>" + t + "</b></td></tr>";
+    }).join("");
+  }
+  $("#gradeB").addEventListener("edited", function (e) { var k = e.target.dataset.g.split("-"), v = parseInt(e.target.textContent, 10); if (v >= 0) { EST[+k[0]][1][+k[1]] = v; var p = EST[+k[0]][0], at = p[9].indexOf(+k[1]); if (v > 0 && at >= 0) p[9].splice(at, 1); if (v === 0 && at < 0) p[9].push(+k[1]); } grade(); });
+  grade();
+  $("#topLooks").innerHTML = PRESETS.slice(0, 4).map(function (l, i) {
+    var names = Object.keys(l).map(function (c) { return W[l[c].id].n.split(" ")[0]; }).join(" + ");
+    return '<div class="tp"><svg viewBox="40 0 220 640">' + figure(l) + '</svg><div style="flex:1"><b style="font-weight:500">' + names + '</b><div class="muted small">' + [412, 288, 201, 164][i] + " provas · " + [24, 19, 15, 12][i] + "% viraram compra</div></div></div>";
+  }).join("");
+
+  D.cmd("Abrir provador virtual", function () { D.go("provador"); });
+  D.cmd("Ver estoque acabando", function () { D.go("admin"); $('[data-view="m-est"]').click(); });
+  D.cmd("Me surpreenda (look aleatório)", function () { D.go("provador"); $("#surp").click(); });
+  fillP();
+})();
+</script>
+</body>
+</html>

@@ -67,6 +67,7 @@ window.I18N = {
         academia:      { name: "Gym & fitness", desc: "Plans and class schedule, a student app with workouts and progress, and QR check-in.", screens: ["Website", "Student app", "Check-in", "Admin panel"] },
         petshop:       { name: "Pet shop", desc: "Grooming booking priced by pet size, live pet tracker with photos, vaccine card and a pet food subscription that ships before it runs out.", screens: ["Website", "Grooming booking", "Live pet tracker", "Admin panel"] },
         imobiliaria:   { name: "Real estate agency", desc: "Search with list and map, a property page built to sell (full-screen gallery, 360° tour, interactive floor plan, financing simulator), online viewings and a floor plan editor for agents.", screens: ["Website", "Property search", "Property page", "Book a viewing", "Agent dashboard"] },
+        moda:          { name: "Fashion store", desc: "Editorial storefront, shoppable lookbook, product page with size guide and a virtual fitting room: dress a model with your measurements and get a stylist-style look check.", screens: ["Store", "Product", "Virtual fitting room", "Checkout", "Admin panel"] },
         game:          { name: "Nebula Siege · mini game", desc: "An arcade shooter built from scratch on canvas: waves, bosses, level-ups and particles. Interactive experiences are on the menu too.", screens: ["Canvas 2D", "Touch & keyboard", "No engine"] }
       }
     },
