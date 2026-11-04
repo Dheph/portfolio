@@ -64,6 +64,7 @@ window.I18N.pt = {
       barbearia:     { name: "Barbearia", desc: "Tabela de preços, agendamento por barbeiro, cartão fidelidade, assinaturas e fila ao vivo.", screens: ["Site", "Agendamento", "Clube fidelidade", "Painel admin"] },
       academia:      { name: "Academia", desc: "Planos e grade de aulas, app do aluno com treino e evolução, e check-in por QR.", screens: ["Site", "App do aluno", "Check-in", "Painel admin"] },
       petshop:       { name: "Pet shop", desc: "Agendamento de banho e tosa com preço por porte, pet ao vivo com fotos, carteirinha de vacinas e assinatura de ração que chega antes de acabar.", screens: ["Site", "Banho & tosa", "Pet ao vivo", "Painel admin"] },
+      imobiliaria:   { name: "Imobiliária", desc: "Busca com lista e mapa, página do imóvel feita para vender (galeria em tela cheia, tour 360°, planta interativa, simulador de financiamento), visita online e editor de plantas para o corretor.", screens: ["Site", "Busca de imóveis", "Página do imóvel", "Agendar visita", "Painel do corretor"] },
       game:          { name: "Nebula Siege · mini game", desc: "Um shooter arcade feito do zero em canvas: ondas, chefes, upgrades e partículas. Experiências interativas também estão no cardápio.", screens: ["Canvas 2D", "Toque & teclado", "Sem engine"] }
     }
   },
@@ -345,6 +346,7 @@ window.I18N.es = {
       barbearia:     { name: "Barbería", desc: "Lista de precios, reservas por barbero, tarjeta de fidelidad, suscripciones y fila en vivo.", screens: ["Sitio", "Reservas", "Club de fidelidad", "Panel admin"] },
       academia:      { name: "Gimnasio", desc: "Planes y horario de clases, app del alumno con entrenamientos y progreso, y check-in con QR.", screens: ["Sitio", "App del alumno", "Check-in", "Panel admin"] },
       petshop:       { name: "Tienda de mascotas", desc: "Reserva de baño y peluquería con precio por tamaño, mascota en vivo con fotos, cartilla de vacunas y suscripción de alimento que llega antes de que se acabe.", screens: ["Sitio", "Baño y peluquería", "Mascota en vivo", "Panel admin"] },
+      imobiliaria:   { name: "Inmobiliaria", desc: "Búsqueda con lista y mapa, página del inmueble pensada para vender (galería a pantalla completa, tour 360°, plano interactivo, simulador de financiación), visitas online y editor de planos para el corredor.", screens: ["Sitio", "Búsqueda", "Página del inmueble", "Agendar visita", "Panel del corredor"] },
       game:          { name: "Nebula Siege · mini juego", desc: "Un shooter arcade hecho desde cero en canvas: oleadas, jefes, mejoras y partículas. Las experiencias interactivas también están en el menú.", screens: ["Canvas 2D", "Táctil y teclado", "Sin motor"] }
     }
   },
